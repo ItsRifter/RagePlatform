@@ -13,11 +13,8 @@ ARageCharacter::ARageCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Skeleton = CreateDefaultSubobject<USkeletalMeshComponent>("Player");
-	Skeleton->SetupAttachment(GetRootComponent());
-
 	Camera = CreateDefaultSubobject<UCameraComponent>("MainCamera");
-	Camera->SetupAttachment(Skeleton);
+	Camera->SetupAttachment(GetComponentByClass<USkeletalMeshComponent>());
 	Camera->bUsePawnControlRotation = true;
 }
 
