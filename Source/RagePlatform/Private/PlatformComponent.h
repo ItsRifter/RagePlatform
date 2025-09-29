@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "PlatformComponent.generated.h"
 
-UCLASS( Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup = ("Entity"), meta = (BlueprintSpawnableComponent))
 class UPlatformComponent : public UActorComponent
 {
 	GENERATED_BODY()
