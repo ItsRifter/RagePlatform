@@ -20,19 +20,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly)
-	APlatformPath* NextPath;
-
-	UPROPERTY(EditDefaultsOnly)
 	float NewDuration;
 
 	UPROPERTY(EditDefaultsOnly)
 	bool TeleportToNext;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPass(AActor* platform);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnPass(class UPlatformComponent* platform);
 };

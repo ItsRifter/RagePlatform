@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "PlatformComponent.generated.h"
 
-class APlatformPath;
 
 UCLASS( Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UPlatformComponent : public UActorComponent
@@ -36,20 +35,11 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void StopMoving();
 
-	UFUNCTION()
-	void SetPath(APlatformPath* NewPath);
-	
-	bool IsMoving;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	APlatformPath* StartPath;
-
-	/*UPROPERTY(EditDefaultsOnly)
-	TArray<APlatformPath*> Paths;*/
-
+	//bool IsMoving;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+
+		
 };
