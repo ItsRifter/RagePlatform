@@ -25,8 +25,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	bool TeleportToNext;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnPass(AActor* platform);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float MoveMultiplier;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnPass();
 
 public:	
 	// Called every frame

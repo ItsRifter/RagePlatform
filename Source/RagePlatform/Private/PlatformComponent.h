@@ -6,12 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "PlatformComponent.generated.h"
 
-
 UCLASS( Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UPlatformComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
+	
 public:	
 	// Sets default values for this component's properties
 	UPlatformComponent();
@@ -20,14 +19,21 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere)
 	bool MoveOnStart;
 
 	UPROPERTY(EditDefaultsOnly)
 	float MoveDuration;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UInterpToMovementComponent* MoveComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class APlatformPath*> Paths;
+
+	bool IsMoving;
+
+	int NodeIndex;
 
 	UFUNCTION(BlueprintCallable)
 	void StartMoving();
@@ -35,11 +41,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void StopMoving();
 
-	//bool IsMoving;
-
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };
