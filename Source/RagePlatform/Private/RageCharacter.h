@@ -37,6 +37,21 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* LookAction;
 
+	UPROPERTY()
+	bool IsAlive;
+
+	UFUNCTION(BlueprintCallable)
+	void Death();
+
+	UFUNCTION()
+	void Respawn();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeath();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRespawn();
+
 	void Move(const FInputActionValue& Value);
 	void Jump();
 	void Look(const FInputActionValue& Value);

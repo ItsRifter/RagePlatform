@@ -23,6 +23,8 @@ void ARageCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	IsAlive = true;
+
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -82,4 +84,22 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookValue.X);
 		AddControllerPitchInput(LookValue.Y);
 	}
+}
+
+void ARageCharacter::Death()
+{
+	if (!IsAlive) return;
+
+	IsAlive = false;
+
+	OnDeath();
+}
+
+void ARageCharacter::Respawn()
+{
+	if (IsAlive) return;
+
+	IsAlive = true;
+
+	OnRespawn();
 }
