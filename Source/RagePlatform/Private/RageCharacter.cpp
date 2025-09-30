@@ -1,20 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "RageCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "InputActionValue.h"
+#include "RageCharacter.h"
 
 // Sets default values
 ARageCharacter::ARageCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("MainCamera");
-	Camera->SetupAttachment(GetComponentByClass<USkeletalMeshComponent>());
+	Camera->SetupAttachment(GetMesh());
+
 	Camera->bUsePawnControlRotation = true;
 }
 
@@ -29,15 +31,8 @@ void ARageCharacter::BeginPlay()
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
-		//Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(InputMapping, 0);
 	}
-}
-
-// Called every frame
-void ARageCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -88,7 +83,8 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 
 void ARageCharacter::Death()
 {
-	if (!IsAlive) return;
+	if (!IsAlive) 
+	return;
 
 	IsAlive = false;
 
@@ -97,7 +93,8 @@ void ARageCharacter::Death()
 
 void ARageCharacter::Respawn()
 {
-	if (IsAlive) return;
+	if (IsAlive) 
+	return;
 
 	IsAlive = true;
 
