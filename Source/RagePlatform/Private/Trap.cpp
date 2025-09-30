@@ -32,8 +32,22 @@ void ATrap::BeginPlay()
 
 	IsTrapReady = StartReady;
 
-	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::TrapOverlap);
-	KillBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::KillBoxOverlap);
+	if(!DisableTrigger)
+		TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::TrapOverlap);
+
+	if(!DisableKill)
+		KillBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::KillBoxOverlap);
+
+	if (KillAttachment)
+		KillBox->SetupAttachment(KillAttachment);
+
+	if (DisableTrigger && DisableKill)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, GetOwner()->GetActorNameOrLabel() + " has both trigger and kill boxes disabled");
+		}
+	}
 }
 
 // Called every frame

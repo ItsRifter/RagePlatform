@@ -35,14 +35,23 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float HoldBeforeReset;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* TriggerBox;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* KillBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UStaticMeshComponent* KillAttachment;
 
 	FTimerHandle TrapActiveHandle;
 	FTimerHandle TrapResetHandle;
+
+	UPROPERTY(EditAnywhere)
+	bool DisableTrigger;
+
+	UPROPERTY(EditAnywhere)
+	bool DisableKill;
 
 	UPROPERTY(EditAnywhere)
 	bool StartReady;
