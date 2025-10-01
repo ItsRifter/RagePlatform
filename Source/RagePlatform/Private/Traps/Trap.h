@@ -44,9 +44,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UStaticMeshComponent* KillAttachment;
 
-	FTimerHandle TrapActiveHandle;
-	FTimerHandle TrapResetHandle;
-
 	UPROPERTY(EditAnywhere)
 	bool DisableTrigger;
 
@@ -83,8 +80,6 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
 	void OnTrapOverlap(ARageCharacter* player);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	FTimerHandle TrapActiveHandle;
+	FTimerHandle TrapResetHandle;
 };

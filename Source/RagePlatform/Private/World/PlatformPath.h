@@ -30,8 +30,4 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnPass();
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };

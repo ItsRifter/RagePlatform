@@ -4,26 +4,28 @@
 #include "PlatformComponent.h"
 #include "Components/InterpToMovementComponent.h"
 #include "Components/BoxComponent.h"
-#include "PlatformPath.h"
+#include "World/PlatformPath.h"
 
 // Sets default values for this component's properties
 UPlatformComponent::UPlatformComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bStartWithTickEnabled = false;
+
+	MoveComponent = CreateDefaultSubobject<UInterpToMovementComponent>("Mover");
+	MoveComponent->bSweep = true;
+	MoveComponent->BehaviourType = EInterpToBehaviourType::Loop_Reset;
 
 	MoveOnStart = false;
 	MoveDuration = 5.0f;
-
-	MoveComponent = CreateDefaultSubobject<UInterpToMovementComponent>("Mover");
-	MoveComponent->Duration = MoveDuration;
-	MoveComponent->bSweep = true;
-	MoveComponent->BehaviourType = EInterpToBehaviourType::Loop_Reset;
 }
 
 // Called when the game starts
 void UPlatformComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	MoveComponent->Duration = MoveDuration;
 
 	NodeIndex = 0;
 
@@ -59,7 +61,10 @@ void UPlatformComponent::BeginPlay()
 
 void UPlatformComponent::StartMoving()
 {
-	if (IsMoving) return;
+	if (IsMoving)
+	{
+		return;
+	}
 
 	MoveComponent->Activate();
 	IsMoving = true;
@@ -67,15 +72,12 @@ void UPlatformComponent::StartMoving()
 
 void UPlatformComponent::StopMoving()
 {
-	if (!IsMoving) return;
+	if (!IsMoving)
+	{
+		return;
+	}
 
 	MoveComponent->Deactivate();
 	IsMoving = false;
-}
-
-// Called every frame
-void UPlatformComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 

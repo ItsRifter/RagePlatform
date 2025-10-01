@@ -26,22 +26,11 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool TrapStartReady;
 
-	bool IsTrapReady;
-
 	UPROPERTY(EditAnywhere)
 	float ReactivationTime;
 
 	UPROPERTY(EditAnywhere)
 	float HoldBeforeReset;
-
-	FTimerHandle TrapActiveHandle;
-	FTimerHandle TrapResetHandle;
-
-	UFUNCTION(BlueprintCallable)
-	void SetEnabled();
-	
-	UFUNCTION(BlueprintCallable)
-	void SetDisabled();
 
 	UFUNCTION()
 	void StartTrap();
@@ -63,9 +52,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
 	void OnTrapOverlap(ARageCharacter* player);
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	bool IsTrapReady;
+	FTimerHandle TrapActiveHandle;
+	FTimerHandle TrapResetHandle;
 };

@@ -19,21 +19,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere)
-	bool MoveOnStart;
-
-	UPROPERTY(EditDefaultsOnly)
-	float MoveDuration;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UInterpToMovementComponent* MoveComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class APlatformPath*> Paths;
 
-	bool IsMoving;
+	UPROPERTY(EditAnywhere)
+	bool MoveOnStart;
 
-	int NodeIndex;
+	UPROPERTY(EditDefaultsOnly)
+	float MoveDuration;
 
 	UFUNCTION(BlueprintCallable)
 	void StartMoving();
@@ -41,7 +37,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void StopMoving();
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	bool IsMoving;
+	int NodeIndex;
 };

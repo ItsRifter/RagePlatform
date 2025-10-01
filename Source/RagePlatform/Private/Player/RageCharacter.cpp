@@ -83,8 +83,10 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 
 void ARageCharacter::Death()
 {
-	if (!IsAlive) 
-	return;
+	if (!IsAlive)
+	{
+		return;
+	}
 
 	IsAlive = false;
 
@@ -93,8 +95,10 @@ void ARageCharacter::Death()
 
 void ARageCharacter::Respawn()
 {
-	if (IsAlive) 
-	return;
+	if (IsAlive)
+	{
+		return;
+	} 
 
 	IsAlive = true;
 

@@ -6,7 +6,8 @@
 APlatformPath::APlatformPath()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	MoveMultiplier = 1.0f;
 }
@@ -16,11 +17,4 @@ void APlatformPath::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void APlatformPath::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }

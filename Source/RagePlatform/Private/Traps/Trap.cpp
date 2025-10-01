@@ -1,14 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/BoxComponent.h"
-#include "RageCharacter.h"
+#include "Player/RageCharacter.h"
 #include "Trap.h"
 
 // Sets default values
 ATrap::ATrap()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	DefaultSceneRoot = CreateDefaultSubobject<UStaticMeshComponent>("Root");
 	SetRootComponent(DefaultSceneRoot);
@@ -48,12 +49,6 @@ void ATrap::BeginPlay()
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, GetOwner()->GetActorNameOrLabel() + " has both trigger and kill boxes disabled");
 		}
 	}
-}
-
-// Called every frame
-void ATrap::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void ATrap::StartTrap()
