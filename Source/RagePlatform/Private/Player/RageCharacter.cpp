@@ -3,6 +3,8 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Framework/RGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "InputActionValue.h"
 #include "RageCharacter.h"
@@ -25,7 +27,12 @@ void ARageCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IsAlive = true;
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->OnPlayerDeath.AddDynamic(this, &ARageCharacter::OnDeathDelegate);
+		GameInstance->OnPlayerDeath.Broadcast(false);
+	}
 
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 
@@ -45,6 +52,18 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARageCharacter::Move);
 		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::Jump);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARageCharacter::Look);
+	}
+}
+
+void ARageCharacter::OnDeathDelegate(bool bIsDead)
+{
+	if (bIsDead)
+	{
+		OnDeath();
+	}
+	else
+	{
+		OnRespawn();
 	}
 }
 
@@ -80,7 +99,9 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookValue.Y);
 	}
 }
-
+/// <summary>
+/// TODO: Need to remove these.
+/// </summary>
 void ARageCharacter::Death()
 {
 	if (!IsAlive)
