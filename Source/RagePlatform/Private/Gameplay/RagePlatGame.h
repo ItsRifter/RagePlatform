@@ -6,7 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "RagePlatGame.generated.h"
 
-
 UCLASS()
 class ARagePlatGame : public AGameModeBase
 {
