@@ -45,6 +45,8 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARageCharacter::Move);
 		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::Jump);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARageCharacter::Look);
+		Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &ARageCharacter::DoCrouch);
+		Input->BindAction(CrouchAction, ETriggerEvent::Completed, this, &ARageCharacter::Standup);
 	}
 }
 
@@ -79,6 +81,16 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookValue.X);
 		AddControllerPitchInput(LookValue.Y);
 	}
+}
+
+void ARageCharacter::DoCrouch()
+{
+	Crouch();
+}
+
+void ARageCharacter::Standup()
+{
+	UnCrouch();
 }
 
 void ARageCharacter::Death()
