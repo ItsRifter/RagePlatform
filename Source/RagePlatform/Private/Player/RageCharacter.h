@@ -7,6 +7,9 @@
 #include "RageCharacter.generated.h"
 
 class UInputAction;
+class UCameraComponent;
+class UInputMappingContext;
+class URGameInstance;
 struct FInputActionValue;
 
 UCLASS()
@@ -23,10 +26,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Player")
-	class UCameraComponent* Camera;
+	UCameraComponent* Camera;
+
+	UPROPERTY()
+	URGameInstance* GameInstance;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
-	class UInputMappingContext* InputMapping;
+	UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* MoveAction;
@@ -40,8 +46,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* CrouchAction;
 
+	/// <summary>
+	/// TODO: Remove
+	/// </summary>
+
 	UPROPERTY()
 	bool IsAlive;
+
+	UFUNCTION()
+	void OnDeathDelegate(bool bIsDead);
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
@@ -52,6 +65,10 @@ protected:
 public:	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	/// <summary>
+	/// TODO: Remove
+	/// </summary>
 
 	UFUNCTION(BlueprintCallable)
 	void Death();

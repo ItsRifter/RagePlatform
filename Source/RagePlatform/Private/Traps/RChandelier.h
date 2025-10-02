@@ -43,6 +43,12 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	FRotator StartRotation;
 
+	UPROPERTY()
+	URGameInstance* GameInstance;
+
+	UFUNCTION()
+	void OnDeathDelegate(bool bIsDead);
+
 	UFUNCTION()
 	void OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, 
 								AActor* OtherActor, UPrimitiveComponent* OtherComp,
