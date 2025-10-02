@@ -13,8 +13,8 @@ UCLASS()
 class ARChandelier : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ARChandelier();
 
@@ -39,7 +39,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;
-	
+
 	UPROPERTY(BlueprintReadWrite)
 	FRotator StartRotation;
 
@@ -50,17 +50,16 @@ protected:
 	void OnDeathDelegate(bool bIsDead);
 
 	UFUNCTION()
-	void OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, 
-								AActor* OtherActor, UPrimitiveComponent* OtherComp,
-								int32 OtherBodyIndex, bool bFromSweep,
-								const FHitResult& SweepResult);
-	
+	void OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent,
+	                                    AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                                    int32 OtherBodyIndex, bool bFromSweep,
+	                                    const FHitResult& SweepResult);
+
 	UFUNCTION()
-	void OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* OverlappedComponent, 
-								AActor* OtherActor, UPrimitiveComponent* OtherComp,
-								int32 OtherBodyIndex, bool bFromSweep,
-								const FHitResult& SweepResult);
+	void OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* OverlappedComponent,
+	                                      AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                                      int32 OtherBodyIndex, bool bFromSweep,
+	                                      const FHitResult& SweepResult);
 
 	bool bChandelierFell;
-
 };

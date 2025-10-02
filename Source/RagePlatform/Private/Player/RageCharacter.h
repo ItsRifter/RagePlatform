@@ -31,6 +31,12 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Wigets")
+	TSubclassOf<UUserWidget> RestartWidgetBP;
+
+	UPROPERTY()
+	UUserWidget* RestartWidget;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputMappingContext* InputMapping;
 
@@ -81,4 +87,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnRespawn();
+
+	UFUNCTION()
+	void RestartMenu();
 };

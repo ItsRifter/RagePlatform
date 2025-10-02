@@ -3,3 +3,7 @@
 
 #include "Framework/RGameInstance.h"
 
+void URGameInstance::SetOnPlayerDeath(bool bIsDead)
+{
+	OnPlayerDeath.Broadcast(bIsDead);
+}

@@ -9,6 +9,8 @@
 #include "InputActionValue.h"
 #include "RageCharacter.h"
 
+#include "Blueprint/UserWidget.h"
+
 // Sets default values
 ARageCharacter::ARageCharacter()
 {
@@ -31,10 +33,9 @@ void ARageCharacter::BeginPlay()
 	if (GameInstance)
 	{
 		GameInstance->OnPlayerDeath.AddDynamic(this, &ARageCharacter::OnDeathDelegate);
-		GameInstance->OnPlayerDeath.Broadcast(false);
 	}
 
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	const APlayerController* PlayerController = Cast<APlayerController>(Controller);
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
@@ -69,7 +70,7 @@ void ARageCharacter::OnDeathDelegate(bool bIsDead)
 
 void ARageCharacter::Move(const FInputActionValue& Value)
 {
-	FVector2D MoveValue = Value.Get<FVector2D>();
+	const FVector2D MoveValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
 	{
@@ -124,4 +125,22 @@ void ARageCharacter::Respawn()
 	IsAlive = true;
 
 	OnRespawn();
+}
+
+void ARageCharacter::RestartMenu()
+{
+	if (RestartWidgetBP)
+	{
+		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
+		RestartWidget->AddToViewport();
+
+		if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this,0))
+		{
+			PlayerController->SetShowMouseCursor(true);
+			PlayerController->SetPause(true);
+
+			const FInputModeUIOnly InputModeDataUI;
+			PlayerController->SetInputMode(InputModeDataUI);
+		}
+	}
 }

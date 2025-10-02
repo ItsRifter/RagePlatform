@@ -17,6 +17,9 @@ class URGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintAssignable)
 	FOnPlayerDeath OnPlayerDeath;
+
+	UFUNCTION(BlueprintCallable)
+	void SetOnPlayerDeath(bool bIsDead);
 };

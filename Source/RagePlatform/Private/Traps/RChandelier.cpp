@@ -11,11 +11,11 @@
 // Sets default values
 ARChandelier::ARChandelier()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-	SetRootComponent(CreateDefaultSubobject<USceneComponent>("DefauultSceneRoot"));
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("DefaultSceneRoot"));
 
 	ChandelierMesh = CreateDefaultSubobject<UStaticMeshComponent>("ChandelierMesh");
 	ChandelierMesh->SetupAttachment(GetRootComponent());
@@ -41,22 +41,19 @@ void ARChandelier::BeginPlay()
 	{
 		GameInstance->OnPlayerDeath.AddDynamic(this, &ARChandelier::OnDeathDelegate);
 	}
-	
+
 	KillBox->OnComponentBeginOverlap.AddDynamic(this, &ARChandelier::OnComponentBeginOverlapKillBox);
 	PlayerOverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARChandelier::OnComponentBeginOverlapPlayerBox);
 
 	ChandelierMesh->SetSimulatePhysics(false);
 
-	/*FTimerHandle StartDelay;
-	GetWorld()->GetTimerManager().SetTimer(StartDelay, [this] 
-		{*/
-			StartLocation = ChandelierMesh->GetComponentLocation();
-			StartRotation = ChandelierMesh->GetComponentRotation();
-	/*	}
-	, 2.f, false);*/
+	StartLocation = ChandelierMesh->GetComponentLocation();
+	StartRotation = ChandelierMesh->GetComponentRotation();
 }
 
-void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                                  const FHitResult& SweepResult)
 {
 	if (Cast<ARageCharacter>(OtherActor))
 	{
@@ -64,7 +61,9 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 	}
 }
 
-void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                                                    bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bChandelierFell)
 	{
@@ -75,7 +74,7 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 	{
 		ChandelierMesh->SetSimulatePhysics(true);
 
-		float ImpulseZ = UKismetMathLibrary::MapRangeClamped(FallSpeed, 1.f, 10.f, 100.f, 600.f) * -1;
+		const float ImpulseZ = UKismetMathLibrary::MapRangeClamped(FallSpeed, 1.f, 10.f, 100.f, 600.f) * -1;
 		ChandelierMesh->AddImpulse(FVector(0.f, 0.f, ImpulseZ), NAME_None, true);
 		bChandelierFell = true;
 	}
@@ -83,11 +82,12 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 
 void ARChandelier::OnDeathDelegate(bool bIsDead)
 {
-	if (!bIsDead)
+	if (bIsDead)
 	{
+		PlayerCharacter->RestartMenu();
 		ChandelierMesh->SetSimulatePhysics(false);
+		bChandelierFell = false;
 		ChandelierMesh->SetWorldLocation(StartLocation);
 		ChandelierMesh->SetWorldRotation(StartRotation);
 	}
 }
-
