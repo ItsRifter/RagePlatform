@@ -5,15 +5,17 @@
 #include "Framework/RGameInstance.h"
 #include "UI/RRestartWidget.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/RageCharacter.h"
 
 void URRestartWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
+	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
 
 	RestartButton->OnClicked.AddDynamic(this, &URRestartWidget::OnButtonClicked);
 }
@@ -22,14 +24,17 @@ void URRestartWidget::OnButtonClicked()
 {
 	if (GameInstance)
 	{
-		GameInstance->OnPlayerDeath.Broadcast(false);
+		GameInstance->OnGameRestart.Broadcast();
 	}
 	if (PlayerController)
 	{
-		PlayerController->SetPause(false);
+		SetVisibility(ESlateVisibility::Hidden);
+		if (PlayerCharacter)
+		{
+			PlayerCharacter->GetCharacterMovement()->MaxAcceleration = 3072.0f;
+		}
 		PlayerController->SetShowMouseCursor(false);
 		const FInputModeGameOnly InputModeDataGame;
 		PlayerController->SetInputMode(InputModeDataGame);
-		RemoveFromParent();
 	}
 }

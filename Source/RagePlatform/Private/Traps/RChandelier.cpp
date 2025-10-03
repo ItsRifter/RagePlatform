@@ -39,7 +39,8 @@ void ARChandelier::BeginPlay()
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
-		GameInstance->OnPlayerDeath.AddDynamic(this, &ARChandelier::OnDeathDelegate);
+		GameInstance->OnDeath.AddDynamic(this, &ARChandelier::OnDeathDelegate);
+		GameInstance->OnGameRestart.AddDynamic(this,&ARChandelier::OnRestartDelegate);
 	}
 
 	KillBox->OnComponentBeginOverlap.AddDynamic(this, &ARChandelier::OnComponentBeginOverlapKillBox);
@@ -57,7 +58,7 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 {
 	if (Cast<ARageCharacter>(OtherActor))
 	{
-		GameInstance->OnPlayerDeath.Broadcast(true);
+		GameInstance->OnDeath.Broadcast();
 	}
 }
 
@@ -80,14 +81,15 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 	}
 }
 
-void ARChandelier::OnDeathDelegate(bool bIsDead)
+void ARChandelier::OnDeathDelegate()
 {
-	if (bIsDead)
-	{
-		PlayerCharacter->RestartMenu();
-		ChandelierMesh->SetSimulatePhysics(false);
-		bChandelierFell = false;
-		ChandelierMesh->SetWorldLocation(StartLocation);
-		ChandelierMesh->SetWorldRotation(StartRotation);
-	}
+	PlayerCharacter->RestartMenu();
+	bChandelierFell = false;
+}
+
+void ARChandelier::OnRestartDelegate()
+{
+	ChandelierMesh->SetSimulatePhysics(false);
+	ChandelierMesh->SetWorldLocation(StartLocation);
+	ChandelierMesh->SetWorldRotation(StartRotation);
 }

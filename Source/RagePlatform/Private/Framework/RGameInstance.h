@@ -6,7 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "RGameInstance.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDeath ,bool, bIsDead);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
 
 /**
  * 
@@ -18,8 +19,11 @@ class URGameInstance : public UGameInstance
 	
 public:
 	UPROPERTY(BlueprintAssignable)
-	FOnPlayerDeath OnPlayerDeath;
+	FOnDeath OnDeath;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGameRestart OnGameRestart;
 
 	UFUNCTION(BlueprintCallable)
-	void SetOnPlayerDeath(bool bIsDead);
+	void SetOnPlayerDeath();
 };

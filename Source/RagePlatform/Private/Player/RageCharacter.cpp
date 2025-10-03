@@ -5,11 +5,11 @@
 #include "EnhancedInputComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "InputActionValue.h"
 #include "RageCharacter.h"
 
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ARageCharacter::ARageCharacter()
@@ -32,14 +32,28 @@ void ARageCharacter::BeginPlay()
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
-		GameInstance->OnPlayerDeath.AddDynamic(this, &ARageCharacter::OnDeathDelegate);
+		GameInstance->OnDeath.AddDynamic(this, &ARageCharacter::OnDeathDelegate);
+		GameInstance->OnGameRestart.AddDynamic(this, &ARageCharacter::OnRestartDelegate);
 	}
 
-	const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	PlayerController = Cast<APlayerController>(Controller);
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(InputMapping, 0);
+	}
+
+	if (RestartWidgetBP)
+	{
+		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
+		RestartWidget->AddToViewport();
+	}
+
+	StartLocation = GetActorLocation();
+	StartRotation = GetActorRotation();
+	if (PlayerController)
+	{
+		StartControllerRotation = PlayerController->GetControlRotation();
 	}
 }
 
@@ -56,16 +70,23 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	}
 }
 
-void ARageCharacter::OnDeathDelegate(bool bIsDead)
+void ARageCharacter::OnDeathDelegate()
 {
-	if (bIsDead)
-	{
-		OnDeath();
-	}
-	else
-	{
-		OnRespawn();
-	}
+	// if (bIsDead)
+	// {
+	// 	OnDeath();
+	// }
+	// else
+	// {
+	// 	OnRespawn();
+	// }
+}
+
+void ARageCharacter::OnRestartDelegate()
+{
+	SetActorLocation(StartLocation);
+	SetActorRotation(StartRotation);
+	PlayerController->SetControlRotation(StartControllerRotation);
 }
 
 void ARageCharacter::Move(const FInputActionValue& Value)
@@ -127,20 +148,15 @@ void ARageCharacter::Respawn()
 	OnRespawn();
 }
 
-void ARageCharacter::RestartMenu()
+void ARageCharacter::RestartMenu() const
 {
-	if (RestartWidgetBP)
+	if (PlayerController)
 	{
-		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
-		RestartWidget->AddToViewport();
+		RestartWidget->SetVisibility(ESlateVisibility::Visible);
+		PlayerController->SetShowMouseCursor(true);
+		GetCharacterMovement()->MaxAcceleration = 0.f;
 
-		if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this,0))
-		{
-			PlayerController->SetShowMouseCursor(true);
-			PlayerController->SetPause(true);
-
-			const FInputModeUIOnly InputModeDataUI;
-			PlayerController->SetInputMode(InputModeDataUI);
-		}
+		const FInputModeUIOnly InputModeDataUI;
+		PlayerController->SetInputMode(InputModeDataUI);
 	}
 }

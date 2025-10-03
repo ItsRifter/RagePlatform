@@ -47,7 +47,10 @@ protected:
 	URGameInstance* GameInstance;
 
 	UFUNCTION()
-	void OnDeathDelegate(bool bIsDead);
+	void OnDeathDelegate();
+
+	UFUNCTION()
+	void OnRestartDelegate();
 
 	UFUNCTION()
 	void OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent,

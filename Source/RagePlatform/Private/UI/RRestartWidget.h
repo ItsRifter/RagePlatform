@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RRestartWidget.generated.h"
 
+class ARageCharacter;
 class URGameInstance;
 class UButton;
 /**
@@ -24,6 +25,9 @@ protected:
 
 	UPROPERTY()
 	APlayerController* PlayerController;
+	
+	UPROPERTY()
+	ARageCharacter* PlayerCharacter;
 
 	UPROPERTY()
 	URGameInstance* GameInstance;

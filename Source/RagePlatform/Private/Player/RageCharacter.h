@@ -31,11 +31,23 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
+	UPROPERTY()
+	APlayerController* PlayerController;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Wigets")
 	TSubclassOf<UUserWidget> RestartWidgetBP;
 
 	UPROPERTY()
 	UUserWidget* RestartWidget;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector StartLocation;
+
+	UPROPERTY(BlueprintReadWrite)
+	FRotator StartRotation;
+
+	UPROPERTY(BlueprintReadWrite)
+	FRotator StartControllerRotation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputMappingContext* InputMapping;
@@ -60,7 +72,10 @@ protected:
 	bool IsAlive;
 
 	UFUNCTION()
-	void OnDeathDelegate(bool bIsDead);
+	void OnDeathDelegate();
+
+	UFUNCTION()
+	void OnRestartDelegate();
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
@@ -89,5 +104,5 @@ public:
 	void OnRespawn();
 
 	UFUNCTION()
-	void RestartMenu();
+	void RestartMenu() const;
 };
