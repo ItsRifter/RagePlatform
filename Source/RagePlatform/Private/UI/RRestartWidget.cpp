@@ -31,7 +31,7 @@ void URRestartWidget::OnButtonClicked()
 		SetVisibility(ESlateVisibility::Hidden);
 		if (PlayerCharacter)
 		{
-			PlayerCharacter->GetCharacterMovement()->MaxAcceleration = 3072.0f;
+			PlayerCharacter->GetCharacterMovement()->MaxAcceleration = PlayerCharacter->SavedMaxAcceleration;
 		}
 		PlayerController->SetShowMouseCursor(false);
 		const FInputModeGameOnly InputModeDataGame;

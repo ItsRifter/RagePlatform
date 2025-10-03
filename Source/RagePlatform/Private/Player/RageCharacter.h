@@ -91,6 +91,9 @@ public:
 	/// TODO: Remove
 	/// </summary>
 
+	UPROPERTY()
+	float SavedMaxAcceleration;
+	
 	UFUNCTION(BlueprintCallable)
 	void Death();
 

@@ -75,7 +75,7 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 	{
 		ChandelierMesh->SetSimulatePhysics(true);
 
-		const float ImpulseZ = UKismetMathLibrary::MapRangeClamped(FallSpeed, 1.f, 10.f, 100.f, 600.f) * -1;
+		const float ImpulseZ = UKismetMathLibrary::MapRangeClamped(FallSpeed, 1.f, 10.f, 500.f, 1500.f) * -1;
 		ChandelierMesh->AddImpulse(FVector(0.f, 0.f, ImpulseZ), NAME_None, true);
 		bChandelierFell = true;
 	}

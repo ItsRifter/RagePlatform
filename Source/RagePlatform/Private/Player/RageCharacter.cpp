@@ -49,6 +49,8 @@ void ARageCharacter::BeginPlay()
 		RestartWidget->AddToViewport();
 	}
 
+	SavedMaxAcceleration = GetCharacterMovement()->MaxAcceleration;
+
 	StartLocation = GetActorLocation();
 	StartRotation = GetActorRotation();
 	if (PlayerController)
