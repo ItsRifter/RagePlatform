@@ -83,7 +83,6 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 
 void ARChandelier::OnDeathDelegate()
 {
-	PlayerCharacter->RestartMenu();
 	bChandelierFell = false;
 }
 

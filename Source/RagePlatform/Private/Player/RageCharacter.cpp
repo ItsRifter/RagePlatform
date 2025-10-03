@@ -74,14 +74,7 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ARageCharacter::OnDeathDelegate()
 {
-	// if (bIsDead)
-	// {
-	// 	OnDeath();
-	// }
-	// else
-	// {
-	// 	OnRespawn();
-	// }
+	RestartMenu();
 }
 
 void ARageCharacter::OnRestartDelegate()
