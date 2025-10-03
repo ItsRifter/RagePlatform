@@ -4,14 +4,14 @@
 #include "World/PatrolNodes.h"
 
 // Sets default values
-APatrolNodes::APatrolNodes()
+APatrolNode::APatrolNode()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 }
 
 // Called when the game starts or when spawned
-void APatrolNodes::BeginPlay()
+void APatrolNode::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -19,13 +19,22 @@ void APatrolNodes::BeginPlay()
 	if (!NextNode)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s is missing a patrol node to proceed next"), *GetName());
+		return;
 	} 
-	else if (!CastChecked<APatrolNodes>(NextNode))
+	else if (!CastChecked<APatrolNode>(NextNode))
 	{
 		UE_LOG(LogTemp, Error, TEXT("The next node for %s is not a patrol node"), *GetName());
+		return;
 	}
 
-	if (OptionalNode && !CastChecked<APatrolNodes>(OptionalNode))
+	APatrolNode* node = Cast<APatrolNode>(NextNode);
+	
+	if (!node->BackNode)
+	{
+		node->BackNode = this;
+	}
+	
+	if (OptionalNode && !CastChecked<APatrolNode>(OptionalNode))
 	{
 		UE_LOG(LogTemp, Error, TEXT("The optional node for %s is not a patrol node"), *GetName());
 	}

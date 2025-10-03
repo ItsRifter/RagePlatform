@@ -7,27 +7,28 @@
 #include "PatrolNodes.generated.h"
 
 UCLASS()
-class APatrolNodes : public AActor
+class APatrolNode : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APatrolNodes();
+	APatrolNode();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:	
 	UPROPERTY(EditAnywhere)
 	float HoldPositionTime;
 
 	UPROPERTY(EditAnywhere)
-	AActor* NextNode;
+	TObjectPtr<AActor> NextNode;
 
 	UPROPERTY(EditAnywhere)
-	AActor* OptionalNode;
+	TObjectPtr<AActor> OptionalNode;
 
-public:	
-
+	UPROPERTY(VisibleDefaultsOnly)
+	TObjectPtr<AActor> BackNode;
 };
