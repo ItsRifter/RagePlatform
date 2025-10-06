@@ -150,6 +150,7 @@ void ARageCharacter::RestartMenu() const
 		RestartWidget->SetVisibility(ESlateVisibility::Visible);
 		PlayerController->SetShowMouseCursor(true);
 		GetCharacterMovement()->MaxAcceleration = 0.f;
+		GetCharacterMovement()->StopMovementImmediately();
 
 		const FInputModeUIOnly InputModeDataUI;
 		PlayerController->SetInputMode(InputModeDataUI);
