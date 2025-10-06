@@ -7,6 +7,9 @@
 #include "RageCharacter.generated.h"
 
 class UInputAction;
+class UCameraComponent;
+class UInputMappingContext;
+class URGameInstance;
 struct FInputActionValue;
 
 UCLASS()
@@ -22,11 +25,32 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
-	class UCameraComponent* Camera;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Player")
+	UCameraComponent* Camera;
+
+	UPROPERTY()
+	URGameInstance* GameInstance;
+
+	UPROPERTY()
+	APlayerController* PlayerController;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Wigets")
+	TSubclassOf<UUserWidget> RestartWidgetBP;
+
+	UPROPERTY()
+	UUserWidget* RestartWidget;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector StartLocation;
+
+	UPROPERTY(BlueprintReadWrite)
+	FRotator StartRotation;
+
+	UPROPERTY(BlueprintReadWrite)
+	FRotator StartControllerRotation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
-	class UInputMappingContext* InputMapping;
+	UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* MoveAction;
@@ -37,17 +61,39 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* LookAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	UInputAction* CrouchAction;
+
+	/// <summary>
+	/// TODO: Remove
+	/// </summary>
+
 	UPROPERTY()
 	bool IsAlive;
+
+	UFUNCTION()
+	void OnDeathDelegate();
+
+	UFUNCTION()
+	void OnRestartDelegate();
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
 	void Look(const FInputActionValue& Value);
+	void DoCrouch();
+	void Standup();
 
 public:	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/// <summary>
+	/// TODO: Remove
+	/// </summary>
+
+	UPROPERTY()
+	float SavedMaxAcceleration;
+	
 	UFUNCTION(BlueprintCallable)
 	void Death();
 
@@ -59,4 +105,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnRespawn();
+
+	UFUNCTION()
+	void RestartMenu() const;
 };
