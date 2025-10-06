@@ -6,6 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "InteractComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class EInteractHandle : uint8
+{
+	DeleteActor				UMETA(DisplayName = "Delete"),
+	SetActorVisibility		UMETA(DisplayName = "Set Visiblity"),
+	ToggleComponent			UMETA(DisplayName = "Toggle Component")
+};
+
 UCLASS( Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UInteractComponent : public UActorComponent
 {
@@ -20,10 +28,26 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
-	FName TargetDeletionTag;
+	EInteractHandle InteractType;
+
+	UPROPERTY(EditAnywhere)
+	FName TargetFindTag;
+
+	/*Depending on 'InteractType' will toggle behaviours of that actor,
+	This won't work with specific 'InteractType' values*/
+	UPROPERTY(EditAnywhere)
+	bool Toggle;
+
+	/*Delete this actor after using*/
+	UPROPERTY(EditAnywhere)
+	bool DeleteOnUse;
 
 	UFUNCTION(BlueprintCallable)
-	void Obtain();
+	void Use();
+
+private:
+	UPROPERTY()
+	TArray<AActor*> FoundActors;
 
 public:	
 		
