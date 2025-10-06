@@ -15,8 +15,7 @@
 ARageCharacter::ARageCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("MainCamera");
 	Camera->SetupAttachment(GetMesh());
@@ -70,6 +69,13 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::Jump);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARageCharacter::Look);
 	}
+}
+
+void ARageCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	CameraShake();
 }
 
 void ARageCharacter::OnDeathDelegate()
@@ -154,5 +160,23 @@ void ARageCharacter::RestartMenu() const
 
 		const FInputModeUIOnly InputModeDataUI;
 		PlayerController->SetInputMode(InputModeDataUI);
+	}
+}
+
+void ARageCharacter::CameraShake()
+{
+	if (GetVelocity().Length() > 0 && CanJump())
+	{
+		if (WalkCameraShake)
+		{
+			PlayerController->ClientStartCameraShake(WalkCameraShake);
+		}
+	}
+	else
+	{
+		if (IdleCameraShake)
+		{
+			PlayerController->ClientStartCameraShake(IdleCameraShake);
+		}
 	}
 }
