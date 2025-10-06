@@ -108,8 +108,6 @@ void APatrolEnemy::OnNodePass(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 		if (Node->HoldPositionTime > 0)
 		{
-			MoveComponent->Deactivate();
-
 			GetWorld()->GetTimerManager().SetTimer(WaitHandle, this,
 				&APatrolEnemy::MoveToNext, Node->HoldPositionTime, false);
 		}
@@ -122,8 +120,6 @@ void APatrolEnemy::OnNodePass(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 void APatrolEnemy::MoveToNext()
 {
-	MoveComponent->Activate();
-
 	MoveComponent->ResetControlPoints();
 
 	MoveComponent->AddControlPointPosition(LastNode->GetActorLocation(), false);
