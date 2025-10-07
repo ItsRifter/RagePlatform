@@ -9,7 +9,6 @@
 // Sets default values
 APatrolEnemy::APatrolEnemy()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
@@ -58,14 +57,7 @@ void APatrolEnemy::BeginPlay()
 	LastNode = node;
 	TargetNode = node->NextNode;
 
-	MoveComponent->ResetControlPoints();
-
-	//Get the last node for a control point otherwise the actor just stays in place
-	MoveComponent->AddControlPointPosition(LastNode->GetActorLocation(), false);
-	MoveComponent->AddControlPointPosition(TargetNode->GetActorLocation(), false);
-	
-	MoveComponent->RestartMovement();
-	MoveComponent->FinaliseControlPoints();
+	MoveToNext();
 }
 
 void APatrolEnemy::OnNodePass(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -122,11 +114,15 @@ void APatrolEnemy::MoveToNext()
 {
 	MoveComponent->ResetControlPoints();
 
+	FVector NewLocation = TargetNode->GetActorLocation();
+
 	MoveComponent->AddControlPointPosition(LastNode->GetActorLocation(), false);
-	MoveComponent->AddControlPointPosition(TargetNode->GetActorLocation(), false);
+	MoveComponent->AddControlPointPosition(NewLocation, false);
 
 	MoveComponent->FinaliseControlPoints();
 	MoveComponent->RestartMovement();
+
+	OnNewTarget(NewLocation);
 }
 
 bool APatrolEnemy::CheckPathing(AActor* Goto, AActor* From)

@@ -31,6 +31,9 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsPoison;
+
 	UFUNCTION()
 	void OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent,
 										AActor* OtherActor, UPrimitiveComponent* OtherComp,

@@ -49,6 +49,12 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	FRotator StartControllerRotation;
 
+	UPROPERTY(EditDefaultsOnly, Category = "CameraShake")
+	TSubclassOf<UCameraShakeBase> IdleCameraShake;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CameraShake")
+	TSubclassOf<UCameraShakeBase> WalkCameraShake;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputMappingContext* InputMapping;
 
@@ -87,6 +93,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	/// <summary>
 	/// TODO: Remove
 	/// </summary>
@@ -108,4 +116,7 @@ public:
 
 	UFUNCTION()
 	void RestartMenu() const;
+
+	UFUNCTION()
+	void CameraShake();
 };

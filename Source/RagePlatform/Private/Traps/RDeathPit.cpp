@@ -22,6 +22,8 @@ ARDeathPit::ARDeathPit()
 
 	DeathTrigger = CreateDefaultSubobject<UBoxComponent>("DeathTrigger");
 	DeathTrigger->SetupAttachment(GetRootComponent());
+
+	bIsPoison = false;
 }
 
 // Called when the game starts or when spawned
