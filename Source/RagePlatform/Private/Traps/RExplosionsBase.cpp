@@ -29,6 +29,7 @@ ARExplosionsBase::ARExplosionsBase()
 	ExplosionSound = nullptr;
 	ExplosionParticleSystem = nullptr;
 	bExploded = false;
+	KillText = FText::FromString(TEXT("Something You Touched Exploded!!"));
 }
 
 // Called when the game starts or when spawned
@@ -75,7 +76,7 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 		StaticMesh->SetVisibility(false);
 		StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		DeathOverlap->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GameInstance->OnDeath.Broadcast();
+		GameInstance->OnDeath.Broadcast(KillText);
 		bExploded = true;
 	}
 }

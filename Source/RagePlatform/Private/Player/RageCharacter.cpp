@@ -9,7 +9,9 @@
 #include "RageCharacter.h"
 
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "UI/RRestartWidget.h"
 
 // Sets default values
 ARageCharacter::ARageCharacter()
@@ -47,6 +49,7 @@ void ARageCharacter::BeginPlay()
 	{
 		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
 		RestartWidget->AddToViewport();
+		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
 	}
 
 	SavedMaxAcceleration = GetCharacterMovement()->MaxAcceleration;
@@ -74,6 +77,7 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARageCharacter::Move);
 		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::Jump);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARageCharacter::Look);
+		Input->BindAction(PauseAction, ETriggerEvent::Triggered, this, &ARageCharacter::PauseGame);
 	}
 }
 
@@ -84,8 +88,12 @@ void ARageCharacter::Tick(float DeltaSeconds)
 	CameraShake();
 }
 
-void ARageCharacter::OnDeathDelegate()
+void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 {
+	if (RestartWidgetRef)
+	{
+		RestartWidgetRef->DeathText->SetText(DeathText);
+	}
 	RestartMenu();
 }
 
@@ -117,6 +125,11 @@ void ARageCharacter::Move(const FInputActionValue& Value)
 void ARageCharacter::Jump()
 {
 	ACharacter::Jump();
+}
+
+void ARageCharacter::PauseGame()
+{
+	UGameplayStatics::SetGamePaused(this,true);
 }
 
 void ARageCharacter::Look(const FInputActionValue& Value)

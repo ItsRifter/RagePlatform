@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(EditAnywhere, meta = (UIMin = "1", UIMax = "10"))
 	int32 FallSpeed;
 
+	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
+	FText KillText;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	UStaticMeshComponent* ChandelierMesh;
 
@@ -47,7 +50,7 @@ protected:
 	URGameInstance* GameInstance;
 
 	UFUNCTION()
-	void OnDeathDelegate();
+	void OnDeathDelegate(const FText& DeathText);
 
 	UFUNCTION()
 	void OnRestartDelegate();

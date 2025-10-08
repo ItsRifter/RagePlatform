@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	USphereComponent* DeathOverlap;
 
+	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
+	FText KillText;
+
 	UPROPERTY(EditDefaultsOnly)
 	USoundBase* ExplosionSound;
 

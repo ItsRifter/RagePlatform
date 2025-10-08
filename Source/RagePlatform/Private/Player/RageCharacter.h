@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RageCharacter.generated.h"
 
+class URRestartWidget;
 class UInputAction;
 class UCameraComponent;
 class UInputMappingContext;
@@ -40,6 +41,9 @@ protected:
 	UPROPERTY()
 	UUserWidget* RestartWidget;
 
+	UPROPERTY()
+	URRestartWidget* RestartWidgetRef;
+
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;
 
@@ -70,14 +74,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* CrouchAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	UInputAction* PauseAction;
+
 	UFUNCTION()
-	void OnDeathDelegate();
+	void OnDeathDelegate(const FText& DeathText);
 
 	UFUNCTION()
 	void OnRestartDelegate();
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
+	void PauseGame();
 	void Look(const FInputActionValue& Value);
 	void DoCrouch();
 	void Standup();

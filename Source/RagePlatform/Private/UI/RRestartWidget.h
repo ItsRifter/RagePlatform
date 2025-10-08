@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RRestartWidget.generated.h"
 
+class UTextBlock;
 class ARageCharacter;
 class URGameInstance;
 class UButton;
@@ -34,4 +35,9 @@ protected:
 
 	UFUNCTION()
 	void OnButtonClicked();
+
+public:
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* DeathText;
 };
