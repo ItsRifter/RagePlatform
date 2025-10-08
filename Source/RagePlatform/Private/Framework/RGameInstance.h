@@ -6,7 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "RGameInstance.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
 
 /**
@@ -25,5 +25,5 @@ public:
 	FOnGameRestart OnGameRestart;
 
 	UFUNCTION(BlueprintCallable)
-	void SetOnPlayerDeath();
+	void SetOnPlayerDeath(const FText& DeathText);
 };

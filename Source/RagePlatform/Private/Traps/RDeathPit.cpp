@@ -24,6 +24,7 @@ ARDeathPit::ARDeathPit()
 	DeathTrigger->SetupAttachment(GetRootComponent());
 
 	bIsPoison = false;
+	KillText = FText::FromString(TEXT("You Tried to Swim in Lava!!"));
 }
 
 // Called when the game starts or when spawned
@@ -39,9 +40,10 @@ void ARDeathPit::BeginPlay()
 void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (Cast<ARageCharacter>(OtherActor))
+	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
-		GameInstance->OnDeath.Broadcast();
+		GameInstance->OnDeath.Broadcast(KillText);
+		PlayerCharacter->DrownPlayer(PlayerCharacter->GetActorLocation() - FVector(0.f,0.f,60.f) + PlayerCharacter->GetActorForwardVector() * 20.f);
 	}
 }
 
