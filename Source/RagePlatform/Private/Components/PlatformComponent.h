@@ -19,7 +19,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	class UInterpToMovementComponent* MoveComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

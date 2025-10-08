@@ -3,16 +3,19 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Framework/RGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "InputActionValue.h"
 #include "RageCharacter.h"
+
+#include "Blueprint/UserWidget.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ARageCharacter::ARageCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("MainCamera");
 	Camera->SetupAttachment(GetMesh());
@@ -25,13 +28,33 @@ void ARageCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IsAlive = true;
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->OnDeath.AddDynamic(this, &ARageCharacter::OnDeathDelegate);
+		GameInstance->OnGameRestart.AddDynamic(this, &ARageCharacter::OnRestartDelegate);
+	}
 
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	PlayerController = Cast<APlayerController>(Controller);
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(InputMapping, 0);
+	}
+
+	if (RestartWidgetBP)
+	{
+		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
+		RestartWidget->AddToViewport();
+	}
+
+	SavedMaxAcceleration = GetCharacterMovement()->MaxAcceleration;
+
+	StartLocation = GetActorLocation();
+	StartRotation = GetActorRotation();
+	if (PlayerController)
+	{
+		StartControllerRotation = PlayerController->GetControlRotation();
 	}
 }
 
@@ -48,9 +71,28 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	}
 }
 
+void ARageCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	CameraShake();
+}
+
+void ARageCharacter::OnDeathDelegate()
+{
+	RestartMenu();
+}
+
+void ARageCharacter::OnRestartDelegate()
+{
+	SetActorLocation(StartLocation);
+	SetActorRotation(StartRotation);
+	PlayerController->SetControlRotation(StartControllerRotation);
+}
+
 void ARageCharacter::Move(const FInputActionValue& Value)
 {
-	FVector2D MoveValue = Value.Get<FVector2D>();
+	const FVector2D MoveValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
 	{
@@ -80,7 +122,9 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookValue.Y);
 	}
 }
-
+/// <summary>
+/// TODO: Need to remove these.
+/// </summary>
 void ARageCharacter::Death()
 {
 	if (!IsAlive)
@@ -103,4 +147,36 @@ void ARageCharacter::Respawn()
 	IsAlive = true;
 
 	OnRespawn();
+}
+
+void ARageCharacter::RestartMenu() const
+{
+	if (PlayerController)
+	{
+		RestartWidget->SetVisibility(ESlateVisibility::Visible);
+		PlayerController->SetShowMouseCursor(true);
+		GetCharacterMovement()->MaxAcceleration = 0.f;
+		GetCharacterMovement()->StopMovementImmediately();
+
+		const FInputModeUIOnly InputModeDataUI;
+		PlayerController->SetInputMode(InputModeDataUI);
+	}
+}
+
+void ARageCharacter::CameraShake()
+{
+	if (GetVelocity().Length() > 0 && CanJump())
+	{
+		if (WalkCameraShake)
+		{
+			PlayerController->ClientStartCameraShake(WalkCameraShake);
+		}
+	}
+	else
+	{
+		if (IdleCameraShake)
+		{
+			PlayerController->ClientStartCameraShake(IdleCameraShake);
+		}
+	}
 }
