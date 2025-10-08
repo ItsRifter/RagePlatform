@@ -70,13 +70,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* CrouchAction;
 
-	/// <summary>
-	/// TODO: Remove
-	/// </summary>
-
-	UPROPERTY()
-	bool IsAlive;
-
 	UFUNCTION()
 	void OnDeathDelegate();
 
@@ -95,24 +88,29 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	/// <summary>
-	/// TODO: Remove
-	/// </summary>
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsAlive;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bRestarted;
+	
 	UPROPERTY()
 	float SavedMaxAcceleration;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector StartCameraRelativeLocation;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector DeathLocation;
 	
 	UFUNCTION(BlueprintCallable)
 	void Death();
-
-	UFUNCTION()
-	void Respawn();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDeath();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnRespawn();
+	void DrownPlayer(FVector HitLocation);
 
 	UFUNCTION()
 	void RestartMenu() const;

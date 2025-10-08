@@ -21,6 +21,7 @@ ARageCharacter::ARageCharacter()
 	Camera->SetupAttachment(GetMesh());
 
 	Camera->bUsePawnControlRotation = true;
+	StartCameraRelativeLocation = FVector::ZeroVector;
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +57,11 @@ void ARageCharacter::BeginPlay()
 	{
 		StartControllerRotation = PlayerController->GetControlRotation();
 	}
+
+	StartCameraRelativeLocation = Camera->GetRelativeLocation();
+
+	bIsAlive = true;
+	bRestarted = true;
 }
 
 // Called to bind functionality to input
@@ -87,6 +93,7 @@ void ARageCharacter::OnRestartDelegate()
 {
 	SetActorLocation(StartLocation);
 	SetActorRotation(StartRotation);
+	Camera->SetRelativeLocation(StartCameraRelativeLocation);
 	PlayerController->SetControlRotation(StartControllerRotation);
 }
 
@@ -127,26 +134,14 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 /// </summary>
 void ARageCharacter::Death()
 {
-	if (!IsAlive)
+	if (!bIsAlive)
 	{
 		return;
 	}
 
-	IsAlive = false;
+	bIsAlive = false;
 
 	OnDeath();
-}
-
-void ARageCharacter::Respawn()
-{
-	if (IsAlive)
-	{
-		return;
-	} 
-
-	IsAlive = true;
-
-	OnRespawn();
 }
 
 void ARageCharacter::RestartMenu() const

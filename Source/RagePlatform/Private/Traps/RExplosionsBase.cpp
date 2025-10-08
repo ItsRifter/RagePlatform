@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/RageCharacter.h"
 
@@ -41,23 +42,35 @@ void ARExplosionsBase::BeginPlay()
 }
 
 void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                                                      bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bExploded)
 	{
 		return;
 	}
-	
-	if (Cast<ARageCharacter>(OtherActor))
+
+	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
 		if (ExplosionSound)
 		{
-			UGameplayStatics::PlaySound2D(this,ExplosionSound);
+			UGameplayStatics::PlaySound2D(this, ExplosionSound);
 		}
 		if (ExplosionParticleSystem)
 		{
-			ParticleSystemComponent = UGameplayStatics::SpawnEmitterAtLocation(this,ExplosionParticleSystem,GetActorLocation());
+			ParticleSystemComponent = UGameplayStatics::SpawnEmitterAtLocation(
+				this, ExplosionParticleSystem, GetActorLocation());
 		}
+
+		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
+			PlayerCharacter->GetActorLocation(),
+			GetActorLocation());
+		const FVector LaunchVelocity = LookAtRotation.Vector() * -750.f;
+
+		PlayerCharacter->LaunchCharacter(
+			FVector(LaunchVelocity.X, LaunchVelocity.Y, 250.f),
+			true,
+			true);
 
 		StaticMesh->SetVisibility(false);
 		StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -78,4 +91,3 @@ void ARExplosionsBase::OnRestartDelegate()
 	DeathOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	bExploded = false;
 }
-
