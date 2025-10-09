@@ -1,6 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/BoxComponent.h"
+#include "Components/AudioComponent.h"
+#include "Framework/RGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 #include "Trap.h"
 
@@ -20,7 +24,8 @@ ATrap::ATrap()
 	KillBox = CreateDefaultSubobject<UBoxComponent>("KillBox");
 	KillBox->SetupAttachment(DefaultSceneRoot);
 
-	StartReady = true;
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
+	AudioComponent->SetupAttachment(DefaultSceneRoot);
 
 	ReactivationTime = 5.0f;
 	HoldBeforeReset = 1.0f;
@@ -31,29 +36,33 @@ void ATrap::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IsTrapReady = StartReady;
+	bIsTrapReady = true;
 
-	if(!DisableTrigger)
-		TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::TrapOverlap);
+	if (LoopSound)
+	{
+		AudioComponent->SetSound(LoopSound);
+		AudioComponent->Play();
+	}
 
-	if(!DisableKill)
-		KillBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::KillBoxOverlap);
+	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::TrapOverlap);
+	KillBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::KillBoxOverlap);
 
 	if (KillAttachment)
 		KillBox->SetupAttachment(KillAttachment);
 
-	if (DisableTrigger && DisableKill)
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, GetOwner()->GetActorNameOrLabel() + " has both trigger and kill boxes disabled");
-		}
+		GameInstance->OnDeath.AddDynamic(this, &ATrap::OnDeathDelegate);
+		GameInstance->OnGameRestart.AddDynamic(this, &ATrap::OnRestartDelegate);
 	}
 }
 
 void ATrap::StartTrap()
 {
-	IsTrapReady = false;
+	bIsTrapReady = false;
+
+	UGameplayStatics::PlaySoundAtLocation(this, ActivateSound, GetActorLocation());
 
 	GetWorld()->GetTimerManager().SetTimer(TrapActiveHandle, this,
 		&ATrap::TrapRetract, HoldBeforeReset, false);
@@ -74,13 +83,14 @@ void ATrap::TrapRetract()
 
 void ATrap::TrapReset()
 {
+	UGameplayStatics::PlaySoundAtLocation(this, ResetSound, GetActorLocation());
 	OnTrapReset();
-	IsTrapReady = true;
+	bIsTrapReady = true;
 }
 
 void ATrap::TrapOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!IsTrapReady) return;
+	if (!bIsTrapReady) return;
 
 	ARageCharacter* player = Cast<ARageCharacter>(OtherActor);
 
@@ -97,6 +107,20 @@ void ATrap::KillBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 
 	if (player)
 	{
-		player->Death();
+		UGameplayStatics::PlaySound2D(this, KillSound);
+
+		GameInstance->OnDeath.Broadcast(KillText);
+		OnKilledPlayer(player);
 	}
+}
+
+void ATrap::OnDeathDelegate(const FText& DeathText)
+{
+}
+
+void ATrap::OnRestartDelegate()
+{
+	TrapMesh->SetSimulatePhysics(false);
+	TrapMesh->SetWorldLocation(StartLocation);
+	TrapMesh->SetWorldRotation(StartRotation);
 }

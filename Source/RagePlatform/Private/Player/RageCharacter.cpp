@@ -9,7 +9,9 @@
 #include "RageCharacter.h"
 
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "UI/RRestartWidget.h"
 
 // Sets default values
 ARageCharacter::ARageCharacter()
@@ -21,6 +23,7 @@ ARageCharacter::ARageCharacter()
 	Camera->SetupAttachment(GetMesh());
 
 	Camera->bUsePawnControlRotation = true;
+	StartCameraRelativeLocation = FVector::ZeroVector;
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +49,7 @@ void ARageCharacter::BeginPlay()
 	{
 		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
 		RestartWidget->AddToViewport();
+		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
 	}
 
 	SavedMaxAcceleration = GetCharacterMovement()->MaxAcceleration;
@@ -56,6 +60,11 @@ void ARageCharacter::BeginPlay()
 	{
 		StartControllerRotation = PlayerController->GetControlRotation();
 	}
+
+	StartCameraRelativeLocation = Camera->GetRelativeLocation();
+
+	bIsAlive = true;
+	bRestarted = true;
 }
 
 // Called to bind functionality to input
@@ -68,6 +77,7 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARageCharacter::Move);
 		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::Jump);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARageCharacter::Look);
+		Input->BindAction(PauseAction, ETriggerEvent::Triggered, this, &ARageCharacter::PauseGame);
 	}
 }
 
@@ -78,8 +88,12 @@ void ARageCharacter::Tick(float DeltaSeconds)
 	CameraShake();
 }
 
-void ARageCharacter::OnDeathDelegate()
+void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 {
+	if (RestartWidgetRef)
+	{
+		RestartWidgetRef->DeathText->SetText(DeathText);
+	}
 	RestartMenu();
 }
 
@@ -87,6 +101,7 @@ void ARageCharacter::OnRestartDelegate()
 {
 	SetActorLocation(StartLocation);
 	SetActorRotation(StartRotation);
+	Camera->SetRelativeLocation(StartCameraRelativeLocation);
 	PlayerController->SetControlRotation(StartControllerRotation);
 }
 
@@ -112,6 +127,11 @@ void ARageCharacter::Jump()
 	ACharacter::Jump();
 }
 
+void ARageCharacter::PauseGame()
+{
+	UGameplayStatics::SetGamePaused(this,true);
+}
+
 void ARageCharacter::Look(const FInputActionValue& Value)
 {
 	FVector2D LookValue = Value.Get<FVector2D>();
@@ -127,26 +147,14 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 /// </summary>
 void ARageCharacter::Death()
 {
-	if (!IsAlive)
+	if (!bIsAlive)
 	{
 		return;
 	}
 
-	IsAlive = false;
+	bIsAlive = false;
 
 	OnDeath();
-}
-
-void ARageCharacter::Respawn()
-{
-	if (IsAlive)
-	{
-		return;
-	} 
-
-	IsAlive = true;
-
-	OnRespawn();
 }
 
 void ARageCharacter::RestartMenu() const

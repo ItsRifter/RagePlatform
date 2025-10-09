@@ -27,6 +27,7 @@ ARChandelier::ARChandelier()
 	PlayerOverlapBox->SetupAttachment(GetRootComponent());
 
 	FallSpeed = 7;
+	KillText = FText::FromString(TEXT("Chandelier Fell On Your Head!!"));
 }
 
 // Called when the game starts or when spawned
@@ -58,7 +59,8 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 {
 	if (Cast<ARageCharacter>(OtherActor))
 	{
-		GameInstance->OnDeath.Broadcast();
+		GameInstance->OnDeath.Broadcast(KillText);
+		PlayerCharacter->PlayerFall();
 	}
 }
 
@@ -81,7 +83,7 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 	}
 }
 
-void ARChandelier::OnDeathDelegate()
+void ARChandelier::OnDeathDelegate(const FText& DeathText)
 {
 	bChandelierFell = false;
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RageCharacter.generated.h"
 
+class URRestartWidget;
 class UInputAction;
 class UCameraComponent;
 class UInputMappingContext;
@@ -40,6 +41,9 @@ protected:
 	UPROPERTY()
 	UUserWidget* RestartWidget;
 
+	UPROPERTY()
+	URRestartWidget* RestartWidgetRef;
+
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;
 
@@ -70,21 +74,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* CrouchAction;
 
-	/// <summary>
-	/// TODO: Remove
-	/// </summary>
-
-	UPROPERTY()
-	bool IsAlive;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	UInputAction* PauseAction;
 
 	UFUNCTION()
-	void OnDeathDelegate();
+	void OnDeathDelegate(const FText& DeathText);
 
 	UFUNCTION()
 	void OnRestartDelegate();
 
 	void Move(const FInputActionValue& Value);
 	void Jump();
+	void PauseGame();
 	void Look(const FInputActionValue& Value);
 	void DoCrouch();
 	void Standup();
@@ -95,24 +96,32 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	/// <summary>
-	/// TODO: Remove
-	/// </summary>
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsAlive;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bRestarted;
+	
 	UPROPERTY()
 	float SavedMaxAcceleration;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector StartCameraRelativeLocation;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector DeathLocation;
 	
 	UFUNCTION(BlueprintCallable)
 	void Death();
-
-	UFUNCTION()
-	void Respawn();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDeath();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnRespawn();
+	void DrownPlayer(FVector HitLocation);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayerFall();
 
 	UFUNCTION()
 	void RestartMenu() const;
