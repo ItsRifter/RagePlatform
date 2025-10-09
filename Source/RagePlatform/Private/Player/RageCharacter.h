@@ -120,6 +120,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DrownPlayer(FVector HitLocation);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayerFall();
+
 	UFUNCTION()
 	void RestartMenu() const;
 
