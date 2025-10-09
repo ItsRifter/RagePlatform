@@ -10,6 +10,7 @@ class UPrimitiveComponent;
 class AActor;
 class UBoxComponent;
 class ARageCharacter;
+class USoundBase;
 
 struct FHitResult;
 
@@ -44,25 +45,55 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UStaticMeshComponent* KillAttachment;
 
-	UPROPERTY(EditAnywhere)
-	bool DisableTrigger;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UStaticMeshComponent* TrapMesh;
 
-	UPROPERTY(EditAnywhere)
-	bool DisableKill;
+	UPROPERTY()
+	URGameInstance* GameInstance;
 
-	UPROPERTY(EditAnywhere)
-	bool StartReady;
+	UPROPERTY(BlueprintReadWrite)
+	FVector StartLocation;
 
-	bool IsTrapReady;
+	UPROPERTY(BlueprintReadWrite)
+	FRotator StartRotation;
+
+	UPROPERTY(EditDefaultsOnly)
+	FText KillText;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UAudioComponent* AudioComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* ActivateSound;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* LoopSound;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* ResetSound;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* KillSound;
+
+	bool bIsTrapReady;
 
 	UFUNCTION()
-	void StartTrap();
+	virtual void StartTrap();
 
 	UFUNCTION()
-	void TrapReset();
+	virtual void TrapReset();
 
+	/*Called when player is being reset*/
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
 	void OnTrapReset();
+
+	/*Called when trap was tripped by the player*/
+	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
+	void OnTrapOverlap(ARageCharacter* player);
+
+	/*Called when trap has managed to kill the player*/
+	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
+	void OnKilledPlayer(ARageCharacter* player);
 
 	UFUNCTION()
 	void TrapRetract();
@@ -77,8 +108,11 @@ protected:
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 		bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
-	void OnTrapOverlap(ARageCharacter* player);
+	UFUNCTION()
+	virtual void OnDeathDelegate(const FText& DeathText);
+
+	UFUNCTION()
+	virtual void OnRestartDelegate();
 
 	FTimerHandle TrapActiveHandle;
 	FTimerHandle TrapResetHandle;

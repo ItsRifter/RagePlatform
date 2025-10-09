@@ -1,62 +1,70 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TriggerComponent.h"
+#include "Components/BoxComponent.h"
 #include "Player/RageCharacter.h"
+#include "TriggerComponent.h"
 
 // Sets default values for this component's properties
 UTriggerComponent::UTriggerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
-	StartActive = true;
+	TriggerBox = CreateDefaultSubobject<UBoxComponent>("Triggerbox");
+
+	bStartActive = true;
 }
 
 // Called when the game starts
 void UTriggerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &UTriggerComponent::Trigger);
+
+	if (!bStartActive)
+	{
+		TriggerBox->Deactivate();
+	}
 }
 
-void UTriggerComponent::StartTrap()
+void UTriggerComponent::Trigger()
 {
-	IsTrapReady = false;
+	bIsTrapReady = false;
 
 	GetWorld()->GetTimerManager().SetTimer(TrapActiveHandle, this,
-		&UTriggerComponent::TrapRetract, HoldBeforeReset, false);
+		&UTriggerComponent::DoReset, HoldBeforeReset, false);
 }
 
-void UTriggerComponent::TrapRetract()
+void UTriggerComponent::DoReset()
 {
 	if (ReactivationTime > 0.0f)
 	{
 		GetWorld()->GetTimerManager().SetTimer(TrapResetHandle, this,
-			&UTriggerComponent::TrapReset, ReactivationTime, false);
+			&UTriggerComponent::Reset, ReactivationTime, false);
 	}
 	else
 	{
-		TrapReset();
+		Reset();
 	}
 }
 
-void UTriggerComponent::TrapReset()
+void UTriggerComponent::Reset()
 {
-	OnTrapReset();
-	IsTrapReady = true;
+	OnReset();
+	bIsTrapReady = true;
 }
 
-void UTriggerComponent::TrapOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void UTriggerComponent::TriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!IsTrapReady) return;
+	if (!bIsTrapReady) return;
 
 	ARageCharacter* player = Cast<ARageCharacter>(OtherActor);
 
 	if (player)
 	{
-		StartTrap();
-		OnTrapOverlap(player);
+		Trigger();
+		OnOverlap(player);
 	}
 }

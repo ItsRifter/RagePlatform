@@ -27,19 +27,19 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly)
 	EInteractHandle InteractType;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly)
 	FName TargetFindTag;
 
 	/*Depending on 'InteractType' will toggle behaviours of that actor,
 	This won't work with specific 'InteractType' values*/
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly)
 	bool Toggle;
 
 	/*Delete this actor after using*/
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly)
 	bool DeleteOnUse;
 
 	UFUNCTION(BlueprintCallable)

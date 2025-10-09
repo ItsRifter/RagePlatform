@@ -20,39 +20,42 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere)
-	bool StartActive;
+	UPROPERTY(EditInstanceOnly)
+	bool bStartActive;
 
-	UPROPERTY(EditAnywhere)
-	bool TrapStartReady;
+	UPROPERTY(EditInstanceOnly)
+	EInteractHandle InteractType;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly)
 	float ReactivationTime;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditInstanceOnly)
 	float HoldBeforeReset;
 
-	UFUNCTION()
-	void StartTrap();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UBoxComponent* TriggerBox;
 
 	UFUNCTION()
-	void TrapReset();
+	void Trigger();
+
+	UFUNCTION()
+	void Reset();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
-	void OnTrapReset();
+	void OnReset();
 
 	UFUNCTION()
-	void TrapRetract();
+	void DoReset();
 
 	UFUNCTION()
-	void TrapOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	void TriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 		bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
-	void OnTrapOverlap(ARageCharacter* player);
+	void OnOverlap(ARageCharacter* player);
 
-	bool IsTrapReady;
+	bool bIsTrapReady;
 	FTimerHandle TrapActiveHandle;
 	FTimerHandle TrapResetHandle;
 };
