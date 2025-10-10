@@ -134,7 +134,7 @@ void ARageCharacter::PauseGame()
 
 void ARageCharacter::Look(const FInputActionValue& Value)
 {
-	FVector2D LookValue = Value.Get<FVector2D>();
+	const FVector2D LookValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
 	{
