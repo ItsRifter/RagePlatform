@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "RExplosionsBase.generated.h"
 
+class UBoxComponent;
 class URGameInstance;
-class USphereComponent;
 
 UCLASS()
 class RAGEPLATFORM_API ARExplosionsBase : public AActor
@@ -26,7 +26,7 @@ protected:
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(VisibleDefaultsOnly)
-	USphereComponent* DeathOverlap;
+	UBoxComponent* DeathOverlap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
 	FText KillText;

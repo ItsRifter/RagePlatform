@@ -3,7 +3,7 @@
 
 #include "RExplosionsBase.h"
 
-#include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -23,7 +23,7 @@ ARExplosionsBase::ARExplosionsBase()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	StaticMesh->SetupAttachment(GetRootComponent());
 
-	DeathOverlap = CreateDefaultSubobject<USphereComponent>("DeathOverlap");
+	DeathOverlap = CreateDefaultSubobject<UBoxComponent>("DeathOverlap");
 	DeathOverlap->SetupAttachment(GetRootComponent());
 
 	ExplosionSound = nullptr;
