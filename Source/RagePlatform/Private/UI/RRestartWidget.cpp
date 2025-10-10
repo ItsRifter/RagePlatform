@@ -17,10 +17,12 @@ void URRestartWidget::NativeConstruct()
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
 	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
 
-	RestartButton->OnClicked.AddDynamic(this, &URRestartWidget::OnButtonClicked);
+	RestartButton->OnClicked.AddDynamic(this, &URRestartWidget::OnRestartButtonClicked);
+	MenuButton->OnClicked.AddDynamic(this, &URRestartWidget::OnMainMenuButtonClicked);
+	QuitButton->OnClicked.AddDynamic(this, &URRestartWidget::OnQuitButtonClicked);
 }
 
-void URRestartWidget::OnButtonClicked()
+void URRestartWidget::OnRestartButtonClicked()
 {
 	if (GameInstance)
 	{
@@ -37,4 +39,18 @@ void URRestartWidget::OnButtonClicked()
 		const FInputModeGameOnly InputModeDataGame;
 		PlayerController->SetInputMode(InputModeDataGame);
 	}
+}
+
+void URRestartWidget::OnMainMenuButtonClicked()
+{
+	if (MainMenuLevel != NAME_None)
+	{
+		UGameplayStatics::OpenLevel(this,MainMenuLevel);
+	}
+}
+
+void URRestartWidget::OnQuitButtonClicked()
+{
+	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
+	UKismetSystemLibrary::QuitGame(this,PlayerController,QuitPreference,false);
 }

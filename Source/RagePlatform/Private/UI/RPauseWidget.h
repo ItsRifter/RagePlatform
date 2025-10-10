@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RPauseWidget.generated.h"
 
+class UButton;
 /**
  * 
  */
@@ -13,5 +14,31 @@ UCLASS()
 class URPauseWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void NativeConstruct() override;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* ResumeButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* MainMenuButton;
 	
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* QuitButton;
+
+	UPROPERTY()
+	APlayerController* PlayerController;
+
+	UPROPERTY(EditDefaultsOnly)
+	FName MainMenuLevelName;
+	
+	UFUNCTION()
+	void OnResumeButtonClicked();
+
+	UFUNCTION()
+	void OnMainMenuButtonClicked();
+
+	UFUNCTION()
+	void OnQuitButtonClicked();
 };
