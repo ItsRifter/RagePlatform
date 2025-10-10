@@ -24,6 +24,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* RestartButton;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* MenuButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* QuitButton;
+
 	UPROPERTY()
 	APlayerController* PlayerController;
 	
@@ -33,8 +39,17 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
+	UPROPERTY(EditDefaultsOnly)
+	FName MainMenuLevel;
+
 	UFUNCTION()
-	void OnButtonClicked();
+	void OnRestartButtonClicked();
+
+	UFUNCTION()
+	void OnMainMenuButtonClicked();
+
+	UFUNCTION()
+	void OnQuitButtonClicked();
 
 public:
 
