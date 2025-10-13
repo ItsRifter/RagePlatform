@@ -60,7 +60,7 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 	if (Cast<ARageCharacter>(OtherActor))
 	{
 		GameInstance->OnDeath.Broadcast(KillText);
-		PlayerCharacter->PlayerFall();
+		PlayerCharacter->PlayerFall(FVector::ZeroVector);
 	}
 }
 

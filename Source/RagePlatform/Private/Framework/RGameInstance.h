@@ -25,5 +25,5 @@ public:
 	FOnGameRestart OnGameRestart;
 
 	UFUNCTION(BlueprintCallable)
-	void SetOnPlayerDeath(const FText& DeathText) const;
+	void SetOnPlayerDeath(const FText& DeathText);
 };

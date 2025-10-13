@@ -3,7 +3,7 @@
 
 #include "Framework/RGameInstance.h"
 
-void URGameInstance::SetOnPlayerDeath(const FText& DeathText) const
+void URGameInstance::SetOnPlayerDeath(const FText& DeathText)
 {
 	OnDeath.Broadcast(DeathText);
 }

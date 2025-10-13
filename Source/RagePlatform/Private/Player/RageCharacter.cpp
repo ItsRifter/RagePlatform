@@ -157,10 +157,11 @@ void ARageCharacter::Death()
 	OnDeath();
 }
 
-void ARageCharacter::RestartMenu() const
+void ARageCharacter::RestartMenu() 
 {
 	if (PlayerController)
 	{
+		bIsAlive = false;
 		RestartWidget->SetVisibility(ESlateVisibility::Visible);
 		PlayerController->SetShowMouseCursor(true);
 		GetCharacterMovement()->MaxAcceleration = 0.f;
