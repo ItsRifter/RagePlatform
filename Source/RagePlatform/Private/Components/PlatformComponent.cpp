@@ -34,7 +34,7 @@ void UPlatformComponent::BeginPlay()
 		if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, GetOwner()->GetActorNameOrLabel() + " has only 1 or no paths set.");
-			UE_LOG(LogTemp, Error, TEXT("%s has only 1 or no path set"), *GetOwner()->GetActorNameOrLabel())
+			UE_LOG(LogTemp, Error, TEXT("%s has only 1 or no path set"), *GetOwner()->GetActorNameOrLabel());
 		}
 
 		return;
