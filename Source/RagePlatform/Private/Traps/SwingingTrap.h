@@ -25,9 +25,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	class USkeletalMeshComponent* SkeletalMesh;
 
-	UPROPERTY(EditDefaultsOnly)
-	FName SocketName;
-
 	virtual void OnRestartDelegate() override;
 
 	virtual void OnDeathDelegate(const FText& DeathText) override;

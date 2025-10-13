@@ -10,7 +10,6 @@ ASwingingTrap::ASwingingTrap()
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
 	SkeletalMesh->SetupAttachment(GetRootComponent());
 
-	SocketName = "";
 	KillBox->SetupAttachment(SkeletalMesh, SocketName);
 }
 
@@ -25,7 +24,12 @@ void ASwingingTrap::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TriggerBox->Deactivate();
+	bDoPlayerKill = true;
+
+	if (TriggerBox)
+	{
+		TriggerBox->Deactivate();
+	}
 
 	if (SocketName != NAME_None)
 	{

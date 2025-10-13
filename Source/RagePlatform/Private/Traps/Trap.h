@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float ReactivationTime;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FText DeathMessage;
+
 	UPROPERTY(EditAnywhere)
 	float HoldBeforeReset;
 
@@ -44,11 +47,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* KillBox;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UStaticMeshComponent* KillAttachment;
-
 	UPROPERTY()
 	class URGameInstance* GameInstance;
+
+	//Used for traps in cases the player is overlapping the trap but hasn't activated,
+	//this is to fix trap not killing in this case.
+	UPROPERTY()
+	class ARageCharacter* OverlappingPlayer;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;
@@ -56,7 +61,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	FRotator StartRotation;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
 	FText KillText;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
@@ -74,7 +79,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	USoundBase* KillSound;
 
+	UPROPERTY()
 	bool bIsTrapReady;
+
+	UPROPERTY()
+	bool bDoPlayerKill;
+
+	UPROPERTY(EditDefaultsOnly)
+	FName SocketName;
+
+	FTimerHandle TrapActiveHandle;
+	FTimerHandle TrapResetHandle;
 
 	UFUNCTION()
 	virtual void StartTrap();
@@ -82,9 +97,12 @@ protected:
 	UFUNCTION()
 	virtual void TrapReset();
 
-	/*Called when player is being reset*/
+	UFUNCTION()
+	virtual void TrapRetract();
+
+	/*Called when trap is being reset | bGameRestart: if game has restarted*/
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
-	void OnTrapReset();
+	void OnTrapReset(bool bGameRestart);
 
 	/*Called when trap was tripped by the player*/
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
@@ -93,9 +111,6 @@ protected:
 	/*Called when trap has managed to kill the player*/
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trap Logic")
 	void OnKilledPlayer(ARageCharacter* player);
-
-	UFUNCTION()
-	void TrapRetract();
 
 	UFUNCTION()
 	void TrapOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -108,11 +123,12 @@ protected:
 		bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
+	void KillBoxLeave(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, 
+		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
 	virtual void OnDeathDelegate(const FText& DeathText);
 
 	UFUNCTION()
 	virtual void OnRestartDelegate();
-
-	FTimerHandle TrapActiveHandle;
-	FTimerHandle TrapResetHandle;
 };
