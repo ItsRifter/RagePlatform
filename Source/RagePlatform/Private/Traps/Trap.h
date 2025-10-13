@@ -27,6 +27,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* DefaultSceneRoot;
 
@@ -45,11 +47,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UStaticMeshComponent* KillAttachment;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
-	UStaticMeshComponent* TrapMesh;
-
 	UPROPERTY()
-	URGameInstance* GameInstance;
+	class URGameInstance* GameInstance;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;

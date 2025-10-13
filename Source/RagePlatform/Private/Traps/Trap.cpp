@@ -11,7 +11,6 @@
 // Sets default values
 ATrap::ATrap()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
@@ -29,6 +28,11 @@ ATrap::ATrap()
 
 	ReactivationTime = 5.0f;
 	HoldBeforeReset = 1.0f;
+}
+
+void ATrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
 // Called when the game starts or when spawned
@@ -120,7 +124,4 @@ void ATrap::OnDeathDelegate(const FText& DeathText)
 
 void ATrap::OnRestartDelegate()
 {
-	TrapMesh->SetSimulatePhysics(false);
-	TrapMesh->SetWorldLocation(StartLocation);
-	TrapMesh->SetWorldRotation(StartRotation);
 }
