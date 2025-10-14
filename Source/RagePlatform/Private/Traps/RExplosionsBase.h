@@ -28,8 +28,8 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	UBoxComponent* DeathOverlap;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
-	FText KillText;
+	UPROPERTY(EditAnywhere, Category = "DeathScreen")
+	TArray<FText> KillTexts;
 
 	UPROPERTY(EditDefaultsOnly)
 	USoundBase* ExplosionSound;
@@ -51,6 +51,4 @@ protected:
 
 	UFUNCTION()
 	void OnRestartDelegate();
-
-	bool bExploded;
 };

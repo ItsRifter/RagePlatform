@@ -28,8 +28,8 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* DeathTrigger;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
-	FText KillText;
+	UPROPERTY(EditAnywhere, Category = "DeathScreen")
+	TArray<FText> KillTexts;
 
 	UPROPERTY()
 	URGameInstance* GameInstance;
