@@ -28,7 +28,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* DeathTrigger;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
+	UPROPERTY(EditAnywhere, Category = "DeathScreen")
 	FText KillText;
 
 	UPROPERTY()

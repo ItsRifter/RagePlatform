@@ -42,6 +42,11 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 {
 	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
+		if (!PlayerCharacter->bIsAlive)
+		{
+			return;
+		}
+		
 		GameInstance->OnDeath.Broadcast(KillText);
 		PlayerCharacter->DrownPlayer(PlayerCharacter->GetActorLocation() - FVector(0.f,0.f,60.f) + PlayerCharacter->GetActorForwardVector() * 20.f);
 	}

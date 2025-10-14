@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
 
@@ -29,7 +30,7 @@ ARSpikes::ARSpikes()
 	OverlapBox->SetBoxExtent(FVector(50.f));
 
 	bSpikeResetComplete = true;
-	PlayerImpact = FVector(0.f, 0.f, 250.f);
+	PlayerImpact = FVector::ZeroVector;
 	KillText = FText::FromString(TEXT("You were Spiked!!"));
 	SpikeUpDuration = 0.05f;
 	SpikeDownDuration = 1.f;
@@ -71,6 +72,13 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (bSpikeResetComplete && PlayerCharacter->bIsAlive)
 		{
 			bSpikeResetComplete = false;
+
+			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
+			PlayerCharacter->GetActorLocation(),
+			GetActorLocation());
+			const FVector LaunchVelocity = LookAtRotation.Vector() * -200.f;
+			PlayerImpact = FVector(LaunchVelocity.X,LaunchVelocity.Y,250.f);
+			
 			PlayerCharacter->PlayerFall(PlayerImpact);
 
 			if (PlayerCharacter->Temp_Camera)

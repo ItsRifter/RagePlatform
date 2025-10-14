@@ -51,6 +51,4 @@ protected:
 
 	UFUNCTION()
 	void OnRestartDelegate();
-
-	bool bExploded;
 };
