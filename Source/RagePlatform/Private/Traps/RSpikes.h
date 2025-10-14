@@ -51,8 +51,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FVector PlayerImpact;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
-	FText KillText;
+	UPROPERTY(EditAnywhere, Category = "DeathScreen")
+	TArray<FText> KillTexts;
 
 	UFUNCTION()
 	void OnRestartDelegate();
