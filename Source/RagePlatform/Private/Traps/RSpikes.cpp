@@ -31,7 +31,7 @@ ARSpikes::ARSpikes()
 
 	bSpikeResetComplete = true;
 	PlayerImpact = FVector::ZeroVector;
-	KillText = FText::FromString(TEXT("You were Spiked!!"));
+	KillTexts.Add(FText::FromString(TEXT("You were Spiked!!")));
 	SpikeUpDuration = 0.05f;
 	SpikeDownDuration = 1.f;
 }
@@ -109,7 +109,8 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 void ARSpikes::OnMoveFinished()
 {
-	GameInstance->OnDeath.Broadcast(KillText);
+	const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
+	GameInstance->OnDeath.Broadcast(KillTexts[Index]);
 	
 	GetWorld()->GetTimerManager().SetTimer(ReverseTimerHandle, this, &ARSpikes::ReverseSpike, 2.f, false);
 }

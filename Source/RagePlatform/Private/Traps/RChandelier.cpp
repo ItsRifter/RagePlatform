@@ -27,7 +27,7 @@ ARChandelier::ARChandelier()
 	PlayerOverlapBox->SetupAttachment(GetRootComponent());
 
 	FallSpeed = 7;
-	KillText = FText::FromString(TEXT("Chandelier Fell On Your Head!!"));
+	KillTexts.Add(FText::FromString(TEXT("Chandelier Fell On Your Head!!")));
 }
 
 // Called when the game starts or when spawned
@@ -41,7 +41,7 @@ void ARChandelier::BeginPlay()
 	if (GameInstance)
 	{
 		GameInstance->OnDeath.AddDynamic(this, &ARChandelier::OnDeathDelegate);
-		GameInstance->OnGameRestart.AddDynamic(this,&ARChandelier::OnRestartDelegate);
+		GameInstance->OnGameRestart.AddDynamic(this, &ARChandelier::OnRestartDelegate);
 	}
 
 	KillBox->OnComponentBeginOverlap.AddDynamic(this, &ARChandelier::OnComponentBeginOverlapKillBox);
@@ -61,10 +61,12 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 	{
 		return;
 	}
-	
+
 	if (Cast<ARageCharacter>(OtherActor))
 	{
-		GameInstance->OnDeath.Broadcast(KillText);
+		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
+		
+		GameInstance->OnDeath.Broadcast(KillTexts[Index]);
 		PlayerCharacter->PlayerFall(FVector::ZeroVector);
 	}
 }
@@ -82,7 +84,12 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 	{
 		ChandelierMesh->SetSimulatePhysics(true);
 
-		const float ImpulseZ = UKismetMathLibrary::MapRangeClamped(FallSpeed, 1.f, 10.f, 500.f, 1500.f) * -1;
+		const float ImpulseZ = UKismetMathLibrary::MapRangeClamped(
+			FallSpeed,
+			1.f,
+			10.f,
+			500.f,
+			1500.f) * -1;
 		ChandelierMesh->AddImpulse(FVector(0.f, 0.f, ImpulseZ), NAME_None, true);
 		bChandelierFell = true;
 	}

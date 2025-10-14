@@ -52,7 +52,7 @@ protected:
 	FVector PlayerImpact;
 
 	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
-	FText KillText;
+	TArray<FText> KillTexts;
 
 	UFUNCTION()
 	void OnRestartDelegate();
