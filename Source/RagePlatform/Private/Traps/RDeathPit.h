@@ -29,7 +29,7 @@ protected:
 	UBoxComponent* DeathTrigger;
 
 	UPROPERTY(EditAnywhere, Category = "DeathScreen")
-	FText KillText;
+	TArray<FText> KillTexts;
 
 	UPROPERTY()
 	URGameInstance* GameInstance;

@@ -28,8 +28,8 @@ protected:
 	UPROPERTY(EditAnywhere, meta = (UIMin = "1", UIMax = "10"))
 	int32 FallSpeed;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
-	FText KillText;
+	UPROPERTY(EditAnywhere, Category = "DeathScreen")
+	TArray<FText> KillTexts;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	UStaticMeshComponent* ChandelierMesh;

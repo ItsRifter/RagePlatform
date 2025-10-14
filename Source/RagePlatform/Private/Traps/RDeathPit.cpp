@@ -6,12 +6,13 @@
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 
 // Sets default values
 ARDeathPit::ARDeathPit()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
@@ -24,7 +25,7 @@ ARDeathPit::ARDeathPit()
 	DeathTrigger->SetupAttachment(GetRootComponent());
 
 	bIsPoison = false;
-	KillText = FText::FromString(TEXT("You Tried to Swim in Lava!!"));
+	KillTexts.Add(FText::FromString(TEXT("You Tried to Swim in Lava!!")));
 }
 
 // Called when the game starts or when spawned
@@ -33,12 +34,13 @@ void ARDeathPit::BeginPlay()
 	Super::BeginPlay();
 
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
-	
+
 	DeathTrigger->OnComponentBeginOverlap.AddDynamic(this, &ARDeathPit::OnComponentBeginOverlapKillBox);
 }
 
 void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                                const FHitResult& SweepResult)
 {
 	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
@@ -46,9 +48,12 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 		{
 			return;
 		}
+
+		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
 		
-		GameInstance->OnDeath.Broadcast(KillText);
-		PlayerCharacter->DrownPlayer(PlayerCharacter->GetActorLocation() - FVector(0.f,0.f,60.f) + PlayerCharacter->GetActorForwardVector() * 20.f);
+		GameInstance->OnDeath.Broadcast(KillTexts[Index]);
+		PlayerCharacter->DrownPlayer(
+			PlayerCharacter->GetActorLocation() - FVector(0.f, 0.f, 60.f) +
+			PlayerCharacter->GetActorForwardVector() * 20.f);
 	}
 }
-
