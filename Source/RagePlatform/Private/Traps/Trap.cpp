@@ -11,7 +11,6 @@
 // Sets default values
 ATrap::ATrap()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
@@ -27,8 +26,17 @@ ATrap::ATrap()
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
 	AudioComponent->SetupAttachment(DefaultSceneRoot);
 
-	ReactivationTime = 5.0f;
+	KillText = FText::FromString(TEXT(""));
+	
+	SocketName = "";
+
+	ReactivationTime = 1.0f;
 	HoldBeforeReset = 1.0f;
+}
+
+void ATrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +45,7 @@ void ATrap::BeginPlay()
 	Super::BeginPlay();
 
 	bIsTrapReady = true;
+	bDoPlayerKill = false;
 
 	if (LoopSound)
 	{
@@ -46,9 +55,7 @@ void ATrap::BeginPlay()
 
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::TrapOverlap);
 	KillBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::KillBoxOverlap);
-
-	if (KillAttachment)
-		KillBox->SetupAttachment(KillAttachment);
+	KillBox->OnComponentEndOverlap.AddDynamic(this, &ATrap::KillBoxLeave);
 
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
@@ -60,9 +67,24 @@ void ATrap::BeginPlay()
 
 void ATrap::StartTrap()
 {
-	bIsTrapReady = false;
+	//Trap is currently activated
+	if (!bIsTrapReady)
+	{
+		return;
+	}
 
-	UGameplayStatics::PlaySoundAtLocation(this, ActivateSound, GetActorLocation());
+	bIsTrapReady = false;
+	bDoPlayerKill = true;
+
+	if (OverlappingPlayer)
+	{
+		UGameplayStatics::PlaySound2D(this, KillSound);
+
+		GameInstance->OnDeath.Broadcast(KillText);
+		OnKilledPlayer(OverlappingPlayer);
+
+		OverlappingPlayer = nullptr;
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(TrapActiveHandle, this,
 		&ATrap::TrapRetract, HoldBeforeReset, false);
@@ -72,23 +94,35 @@ void ATrap::TrapRetract()
 {
 	if (ReactivationTime > 0.0f)
 	{
+		OnTrapReset(false);
+		bDoPlayerKill = false;
+
 		GetWorld()->GetTimerManager().SetTimer(TrapResetHandle, this,
 			&ATrap::TrapReset, ReactivationTime, false);
 	}
 	else 
 	{
+
 		TrapReset();
+		bDoPlayerKill = false;
+		OnTrapReset(false);
 	}
 }
 
 void ATrap::TrapReset()
 {
-	UGameplayStatics::PlaySoundAtLocation(this, ResetSound, GetActorLocation());
-	OnTrapReset();
+	//Trap is already on for activation
+	if (bIsTrapReady)
+	{
+		return;
+	}
+
 	bIsTrapReady = true;
 }
 
-void ATrap::TrapOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATrap::TrapOverlap(UPrimitiveComponent* OverlappedComponent, 
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, 
+	bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!bIsTrapReady) return;
 
@@ -101,9 +135,18 @@ void ATrap::TrapOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 	}
 }
 
-void ATrap::KillBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATrap::KillBoxOverlap(UPrimitiveComponent* OverlappedComponent, 
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, 
+	bool bFromSweep, const FHitResult& SweepResult)
 {
 	ARageCharacter* player = Cast<ARageCharacter>(OtherActor);
+
+	//Trap hasn't yet activated
+	if (!bDoPlayerKill)
+	{
+		OverlappingPlayer = player;
+		return;
+	}
 
 	if (player)
 	{
@@ -114,13 +157,24 @@ void ATrap::KillBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 	}
 }
 
+void ATrap::KillBoxLeave(class UPrimitiveComponent* OverlappedComp, 
+	class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OverlappingPlayer)
+	{
+		OverlappingPlayer = nullptr;
+	}
+}
+
 void ATrap::OnDeathDelegate(const FText& DeathText)
 {
 }
 
 void ATrap::OnRestartDelegate()
 {
-	TrapMesh->SetSimulatePhysics(false);
-	TrapMesh->SetWorldLocation(StartLocation);
-	TrapMesh->SetWorldRotation(StartRotation);
+	GetWorldTimerManager().ClearTimer(TrapActiveHandle);
+	GetWorldTimerManager().ClearTimer(TrapResetHandle);
+
+	OnTrapReset(true);
+	TrapReset();
 }

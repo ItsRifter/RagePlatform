@@ -3,7 +3,7 @@
 
 #include "RExplosionsBase.h"
 
-#include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -23,12 +23,11 @@ ARExplosionsBase::ARExplosionsBase()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	StaticMesh->SetupAttachment(GetRootComponent());
 
-	DeathOverlap = CreateDefaultSubobject<USphereComponent>("DeathOverlap");
+	DeathOverlap = CreateDefaultSubobject<UBoxComponent>("DeathOverlap");
 	DeathOverlap->SetupAttachment(GetRootComponent());
 
 	ExplosionSound = nullptr;
 	ExplosionParticleSystem = nullptr;
-	bExploded = false;
 	KillText = FText::FromString(TEXT("Something You Touched Exploded!!"));
 }
 
@@ -46,13 +45,13 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
                                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
                                                       bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (bExploded)
-	{
-		return;
-	}
-
 	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
+		if (!PlayerCharacter->bIsAlive)
+		{
+			return;
+		}
+		
 		if (ExplosionSound)
 		{
 			UGameplayStatics::PlaySound2D(this, ExplosionSound);
@@ -77,7 +76,6 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 		StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		DeathOverlap->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GameInstance->OnDeath.Broadcast(KillText);
-		bExploded = true;
 	}
 }
 
@@ -90,5 +88,4 @@ void ARExplosionsBase::OnRestartDelegate()
 	StaticMesh->SetVisibility(true);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	DeathOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	bExploded = false;
 }

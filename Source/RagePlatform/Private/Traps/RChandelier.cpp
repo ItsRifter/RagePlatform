@@ -57,10 +57,15 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
                                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                                   const FHitResult& SweepResult)
 {
+	if (!bChandelierFell)
+	{
+		return;
+	}
+	
 	if (Cast<ARageCharacter>(OtherActor))
 	{
 		GameInstance->OnDeath.Broadcast(KillText);
-		PlayerCharacter->PlayerFall();
+		PlayerCharacter->PlayerFall(FVector::ZeroVector);
 	}
 }
 
@@ -68,7 +73,7 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
                                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
                                                     bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (bChandelierFell)
+	if (!PlayerCharacter->bIsAlive)
 	{
 		return;
 	}

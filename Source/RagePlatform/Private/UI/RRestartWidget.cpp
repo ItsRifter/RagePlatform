@@ -27,6 +27,7 @@ void URRestartWidget::OnRestartButtonClicked()
 	if (GameInstance)
 	{
 		GameInstance->OnGameRestart.Broadcast();
+		PlayerCharacter->bIsAlive = true;
 	}
 	if (PlayerController)
 	{

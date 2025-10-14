@@ -20,9 +20,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
-	float SwingSpeed;
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
-	float SwingDistance;
+	UPROPERTY(EditDefaultsOnly)
+	class USkeletalMeshComponent* SkeletalMesh;
+
+	virtual void OnRestartDelegate() override;
+
+	virtual void OnDeathDelegate(const FText& DeathText) override;
 };

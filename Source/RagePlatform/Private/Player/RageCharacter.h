@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RageCharacter.generated.h"
 
+class ARTempCamera;
 class URRestartWidget;
 class UInputAction;
 class UCameraComponent;
@@ -101,6 +102,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bRestarted;
+
+	UPROPERTY(BlueprintReadWrite)
+	ARTempCamera* Temp_Camera;
 	
 	UPROPERTY()
 	float SavedMaxAcceleration;
@@ -120,11 +124,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DrownPlayer(FVector HitLocation);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void PlayerFall();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void PlayerFall(FVector Impulse);
 
 	UFUNCTION()
-	void RestartMenu() const;
+	void RestartMenu() ;
 
 	UFUNCTION()
 	void CameraShake();
