@@ -6,7 +6,6 @@
 #include "Traps/Trap.h"
 #include "SwingingTrap.generated.h"
 
-
 UCLASS(Blueprintable)
 class ASwingingTrap : public ATrap
 {
@@ -23,9 +22,29 @@ protected:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	UPROPERTY(EditDefaultsOnly)
+	class UStaticMeshComponent* SwingPivot;
+
+	UPROPERTY(EditDefaultsOnly)
 	class USkeletalMeshComponent* SkeletalMesh;
 
 	virtual void OnRestartDelegate() override;
 
 	virtual void OnDeathDelegate(const FText& DeathText) override;
+
+	virtual void KillPlayer(class ARageCharacter* Player) override;
+
+private:
+	UPROPERTY(EditAnywhere)
+	class UTimelineComponent* TimelineComponent;
+
+	bool bGoReverse;
+
+	bool bSwingingLeft;
+	float LastVal;
+
+	float SwingSpeed;
+	float SwingAngle;
+
+	UFUNCTION()
+	void OnTimelineProgress(float val);
 };

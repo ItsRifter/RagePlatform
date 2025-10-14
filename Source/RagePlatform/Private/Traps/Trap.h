@@ -35,9 +35,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float ReactivationTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FText DeathMessage;
-
 	UPROPERTY(EditAnywhere)
 	float HoldBeforeReset;
 
@@ -88,6 +85,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	FName SocketName;
 
+	UPROPERTY(EditAnywhere)
+	FVector ImpactVelocity;
+
 	FTimerHandle TrapActiveHandle;
 	FTimerHandle TrapResetHandle;
 
@@ -131,4 +131,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRestartDelegate();
+
+	UFUNCTION()
+	virtual void KillPlayer(class ARageCharacter* Player);
 };
