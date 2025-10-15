@@ -46,8 +46,8 @@ void ASwingingTrap::BeginPlay()
 
 	Curve->FloatCurve.UpdateOrAddKey(0.0f, 0.0f);
 	Curve->FloatCurve.UpdateOrAddKey(1.0f, 1.0f);
-	Curve->FloatCurve.UpdateOrAddKey(2.05f, -0.01f);
-	Curve->FloatCurve.UpdateOrAddKey(2.10f, 0.0f);
+	Curve->FloatCurve.UpdateOrAddKey(2.05f, -0.05f);
+	Curve->FloatCurve.UpdateOrAddKey(2.15f, 0.0f);
 
 	TimelineProgressFunc.BindUFunction(this, TEXT("OnTimelineProgress"));
 
@@ -101,6 +101,8 @@ void ASwingingTrap::OnDeathDelegate(const FText& DeathText)
 
 void ASwingingTrap::KillPlayer(ARageCharacter* Player)
 {
+	Super::KillPlayer(Player);
+
 	float CurRoll = FMath::Abs(GetRootComponent()->GetRelativeRotation().Roll);
 
 	float Velocity = 0.0f;
@@ -130,9 +132,7 @@ void ASwingingTrap::KillPlayer(ARageCharacter* Player)
 	if (Player->Temp_Camera)
 	{
 		Player->Temp_Camera->FocusVar = this;
-		Player->Temp_Camera->FocusOffset = FVector(0, 0, -350.0f);
+		Player->Temp_Camera->FocusOffset = DeathFocusOffset;
 		Player->Temp_Camera->StartFocus();
 	}
-
-	Super::KillPlayer(Player);
 }
