@@ -35,6 +35,12 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	ARSpikes* SpikeVar;
 
+	UPROPERTY(BlueprintReadWrite)
+	class AActor* FocusVar;
+
+	UPROPERTY()
+	FVector FocusOffset;
+
 	UFUNCTION(BlueprintCallable)
 	void StartFocus();
 	

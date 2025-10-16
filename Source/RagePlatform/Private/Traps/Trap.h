@@ -35,9 +35,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float ReactivationTime;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FText DeathMessage;
-
 	UPROPERTY(EditAnywhere)
 	float HoldBeforeReset;
 
@@ -67,16 +64,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UAudioComponent* AudioComponent;
 
-	UPROPERTY(EditDefaultsOnly)
+	//Sound when trap is activated
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* ActivateSound;
 
-	UPROPERTY(EditDefaultsOnly)
+	//Sound when trap is currently active - looping
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* LoopSound;
 
-	UPROPERTY(EditDefaultsOnly)
+	//Sound when trap is resetting
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* ResetSound;
 
-	UPROPERTY(EditDefaultsOnly)
+	//The sound when killing the player
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* KillSound;
 
 	UPROPERTY()
@@ -87,6 +88,15 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FName SocketName;
+
+	/*The impact velocity to apply when killing the player
+	!! SOME TRAPS MAY SET THEIR OWN VALUES !!*/
+	UPROPERTY(EditDefaultsOnly)
+	FVector ImpactVelocity;
+
+	//The offset to apply for the player camera when looking at this actor on killed
+	UPROPERTY(EditDefaultsOnly)
+	FVector DeathFocusOffset;
 
 	FTimerHandle TrapActiveHandle;
 	FTimerHandle TrapResetHandle;
@@ -131,4 +141,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRestartDelegate();
+
+	UFUNCTION()
+	virtual void KillPlayer(class ARageCharacter* Player);
 };

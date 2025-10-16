@@ -24,6 +24,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnGameRestart OnGameRestart;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 DeathCount = 0;
+
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const FText& DeathText);
 };

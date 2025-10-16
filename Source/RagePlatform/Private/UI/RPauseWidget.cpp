@@ -4,6 +4,7 @@
 #include "UI/RPauseWidget.h"
 
 #include "Components/Button.h"
+#include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void URPauseWidget::NativeConstruct()
@@ -11,6 +12,7 @@ void URPauseWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	ResumeButton->OnClicked.AddDynamic(this, &URPauseWidget::OnResumeButtonClicked);
 	MainMenuButton->OnClicked.AddDynamic(this, &URPauseWidget::OnMainMenuButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &URPauseWidget::OnQuitButtonClicked);
@@ -29,6 +31,10 @@ void URPauseWidget::OnMainMenuButtonClicked()
 {
 	if (MainMenuLevelName != NAME_None)
 	{
+		if (GameInstance)
+		{
+			GameInstance->DeathCount = 0;
+		}
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}
 }
