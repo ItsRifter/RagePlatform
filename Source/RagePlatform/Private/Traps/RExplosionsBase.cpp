@@ -10,6 +10,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/RageCharacter.h"
 
+
 // Sets default values
 ARExplosionsBase::ARExplosionsBase()
 {

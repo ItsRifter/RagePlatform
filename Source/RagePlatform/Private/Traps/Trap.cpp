@@ -1,12 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/AudioComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
-#include "Player/RTempCamera.h"
 #include "Trap.h"
 
 // Sets default values
@@ -27,14 +26,12 @@ ATrap::ATrap()
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
 	AudioComponent->SetupAttachment(DefaultSceneRoot);
 
-	KillText = FText::FromString(TEXT("You died"));
+	KillText = FText::FromString(TEXT(""));
 	
 	SocketName = "";
 
 	ReactivationTime = 1.0f;
 	HoldBeforeReset = 1.0f;
-
-	ImpactVelocity = FVector(0.0f, 0.0f, -50.0f);
 }
 
 void ATrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -81,7 +78,11 @@ void ATrap::StartTrap()
 
 	if (OverlappingPlayer)
 	{
-		KillPlayer(OverlappingPlayer);
+		UGameplayStatics::PlaySound2D(this, KillSound);
+
+		GameInstance->OnDeath.Broadcast(KillText);
+		OnKilledPlayer(OverlappingPlayer);
+
 		OverlappingPlayer = nullptr;
 	}
 
@@ -101,6 +102,7 @@ void ATrap::TrapRetract()
 	}
 	else 
 	{
+
 		TrapReset();
 		bDoPlayerKill = false;
 		OnTrapReset(false);
@@ -148,7 +150,10 @@ void ATrap::KillBoxOverlap(UPrimitiveComponent* OverlappedComponent,
 
 	if (player)
 	{
-		KillPlayer(player);
+		UGameplayStatics::PlaySound2D(this, KillSound);
+
+		GameInstance->OnDeath.Broadcast(KillText);
+		OnKilledPlayer(player);
 	}
 }
 
@@ -172,18 +177,4 @@ void ATrap::OnRestartDelegate()
 
 	OnTrapReset(true);
 	TrapReset();
-}
-
-void ATrap::KillPlayer(ARageCharacter* Player)
-{
-	if (!Player->bIsAlive)
-	{
-		return;
-	}
-
-	UGameplayStatics::PlaySound2D(this, KillSound);
-
-	GameInstance->OnDeath.Broadcast(KillText);
-	
-	Player->bIsAlive = false;
 }

@@ -128,7 +128,7 @@ public:
 	void PlayerFall(FVector Impulse);
 
 	UFUNCTION()
-	void RestartMenu();
+	void RestartMenu() ;
 
 	UFUNCTION()
 	void CameraShake();

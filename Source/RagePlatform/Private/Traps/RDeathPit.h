@@ -34,12 +34,6 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class UAudioComponent* AudioComponent;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class USoundBase* LoopSound;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsPoison;
 

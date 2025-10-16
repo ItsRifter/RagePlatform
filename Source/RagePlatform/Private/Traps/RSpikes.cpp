@@ -3,7 +3,6 @@
 
 #include "RSpikes.h"
 
-#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,11 +29,6 @@ ARSpikes::ARSpikes()
 	OverlapBox->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
 	OverlapBox->SetBoxExtent(FVector(50.f));
 
-	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
-	
-	SpikeSound = nullptr;
-	KillSound = nullptr;
-
 	bSpikeResetComplete = true;
 	PlayerImpact = FVector::ZeroVector;
 	KillTexts.Add(FText::FromString(TEXT("You were Spiked!!")));
@@ -54,12 +48,8 @@ void ARSpikes::BeginPlay()
 		GameInstance->OnGameRestart.AddDynamic(this, &ARSpikes::OnRestartDelegate);
 	}
 
-	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARSpikes::OnComponentBeginOverlap);
 
-	if (SpikeSound)
-	{
-		AudioComponent->SetSound(SpikeSound);
-	}
+	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARSpikes::OnComponentBeginOverlap);
 }
 
 void ARSpikes::OnRestartDelegate()
@@ -81,7 +71,6 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	{
 		if (bSpikeResetComplete && PlayerCharacter->bIsAlive)
 		{
-			PlayerCharacter->bIsAlive = false;
 			bSpikeResetComplete = false;
 
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
@@ -98,13 +87,6 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 				PlayerCharacter->Temp_Camera->StartFocus();
 			}
 			
-			AudioComponent->Play();
-
-			if (KillSound)
-			{
-				UGameplayStatics::PlaySound2D(this, KillSound);
-			}
-
 			constexpr EMoveComponentAction::Type MoveAction = EMoveComponentAction::Type::Move;
 			LatentInfoSpikeUP.CallbackTarget = this;
 			LatentInfoSpikeUP.UUID = 2;

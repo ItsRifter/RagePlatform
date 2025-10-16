@@ -52,7 +52,7 @@ void ARageCharacter::BeginPlay()
 		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
 	}
 
-	SavedMaxAcceleration = 3072.0;
+	SavedMaxAcceleration = GetCharacterMovement()->MaxAcceleration;
 
 	StartLocation = GetActorLocation();
 	StartRotation = GetActorRotation();
@@ -93,8 +93,6 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 	if (RestartWidgetRef)
 	{
 		RestartWidgetRef->DeathText->SetText(DeathText);
-		GameInstance->DeathCount++;
-		RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
 	}
 	RestartMenu();
 }
