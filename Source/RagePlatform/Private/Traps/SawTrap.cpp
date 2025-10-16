@@ -26,27 +26,48 @@ void ASawTrap::BeginPlay()
 {
 	Super::BeginPlay();
 
+	bIsReversed = false;
 	StartLocation = DefaultSceneRoot->GetRelativeLocation();
 
 	FOnTimelineFloat TimelineProgressFunc;
+
+	FOnTimelineEvent TimelineFinish;
 
 	UCurveFloat* Curve = NewObject<UCurveFloat>(this);
 
 	Curve->FloatCurve.UpdateOrAddKey(0.0f, 0.0f);
 	Curve->FloatCurve.UpdateOrAddKey(1.0f, 1.0f);
-	Curve->FloatCurve.UpdateOrAddKey(2.0f, 0.0f);
 
 	TimelineProgressFunc.BindUFunction(this, TEXT("OnTimelineProgress"));
+	TimelineFinish.BindUFunction(this, TEXT("OnTimelineFinish"));
+
+	TimelineComponent->SetTimelineFinishedFunc(TimelineFinish);
 
 	TimelineComponent->AddInterpFloat(Curve, TimelineProgressFunc);
 	TimelineComponent->SetTimelineLengthMode(TL_LastKeyFrame);
 
-	TimelineComponent->SetLooping(true);
 	TimelineComponent->PlayFromStart();
 
 	if (TriggerBox)
 	{
 		TriggerBox->Deactivate();
+	}
+}
+
+
+void ASawTrap::OnTimelineFinish()
+{
+	bIsReversed = !bIsReversed;
+
+	if (bIsReversed)
+	{
+		OnReverseDirection();
+		TimelineComponent->Reverse();
+	}
+	else 
+	{
+		OnForwardDirection();
+		TimelineComponent->Play();
 	}
 }
 

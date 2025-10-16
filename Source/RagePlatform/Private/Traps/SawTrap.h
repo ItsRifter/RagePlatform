@@ -6,9 +6,8 @@
 #include "Traps/Trap.h"
 #include "SawTrap.generated.h"
 
-/**
- * 
- */
+class UAnimationAsset;
+
 UCLASS()
 class ASawTrap : public ATrap
 {
@@ -20,7 +19,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USkeletalMeshComponent* SkeletalMesh;
 
 	UPROPERTY(EditInstanceOnly, Category = "Trap")
@@ -32,9 +31,23 @@ protected:
 
 	virtual void KillPlayer(class ARageCharacter* Player) override;
 
+	//Fired when saw trap is going forward (not in reverse)
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnForwardDirection();
+
+	//Fired when saw trap is in reverse
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnReverseDirection();
+
 private:
 	class UTimelineComponent* TimelineComponent;
 
+	UPROPERTY()
+	bool bIsReversed;
+
 	UFUNCTION()
 	void OnTimelineProgress(float val);
+
+	UFUNCTION()
+	void OnTimelineFinish();
 };
