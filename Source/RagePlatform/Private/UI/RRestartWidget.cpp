@@ -46,6 +46,10 @@ void URRestartWidget::OnMainMenuButtonClicked()
 {
 	if (MainMenuLevel != NAME_None)
 	{
+		if (GameInstance)
+		{
+			GameInstance->DeathCount = 0;
+		}
 		UGameplayStatics::OpenLevel(this,MainMenuLevel);
 	}
 }
