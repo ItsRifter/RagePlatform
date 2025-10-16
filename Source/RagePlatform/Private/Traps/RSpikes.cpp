@@ -81,6 +81,7 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	{
 		if (bSpikeResetComplete && PlayerCharacter->bIsAlive)
 		{
+			PlayerCharacter->bIsAlive = false;
 			bSpikeResetComplete = false;
 
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
