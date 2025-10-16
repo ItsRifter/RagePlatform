@@ -23,6 +23,8 @@ ARTempCamera::ARTempCamera()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(Sphere);
+
+	FocusOffset = FVector(0,0,0);
 }
 
 // Called when the game starts or when spawned
@@ -50,11 +52,27 @@ void ARTempCamera::Tick(float DeltaTime)
 
 		Camera->SetWorldRotation(FinalRotation);
 	}
+
+	if (FocusVar)
+	{
+		const FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(
+			Camera->GetComponentLocation(),
+			FocusVar->GetActorLocation() + (FocusOffset + FVector(0.f, 0.f, 50.f)));
+
+		const FRotator FinalRotation = UKismetMathLibrary::RInterpTo(
+			Camera->GetComponentRotation(),
+			TargetRotation,
+			UGameplayStatics::GetWorldDeltaSeconds(this),
+			3.f);
+
+		Camera->SetWorldRotation(FinalRotation);
+	}
 }
 
 void ARTempCamera::StartFocus()
 {
-	SetActorTickEnabled(true);}
+	SetActorTickEnabled(true);
+}
 
 void ARTempCamera::StopFocus()
 {
