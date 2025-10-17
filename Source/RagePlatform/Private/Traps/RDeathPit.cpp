@@ -3,6 +3,7 @@
 
 #include "Traps/RDeathPit.h"
 
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -24,6 +25,9 @@ ARDeathPit::ARDeathPit()
 	DeathTrigger = CreateDefaultSubobject<UBoxComponent>("DeathTrigger");
 	DeathTrigger->SetupAttachment(GetRootComponent());
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
+	LoopSound = nullptr;
+
 	bIsPoison = false;
 	KillTexts.Add(FText::FromString(TEXT("You Tried to Swim in Lava!!")));
 }
@@ -32,6 +36,12 @@ ARDeathPit::ARDeathPit()
 void ARDeathPit::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (LoopSound)
+	{
+		AudioComponent->SetSound(LoopSound);
+		AudioComponent->Play();
+	}
 
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
 

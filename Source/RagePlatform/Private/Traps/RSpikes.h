@@ -39,6 +39,15 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UAudioComponent* AudioComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class USoundBase* SpikeSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class USoundBase* KillSound;
+
 	UPROPERTY()
 	float SpikeUpDuration;
 
