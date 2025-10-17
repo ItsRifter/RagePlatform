@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/TimelineComponent.h"
@@ -18,8 +19,18 @@ ASawTrap::ASawTrap()
 
 	KillText = FText::FromString(TEXT("You got cut up by a Sawblade!"));
 
-	//ImpactVelocity = FVector(0.0f, 0.0f, 50.0f);
 	MoveDistance = 45.0f;
+	SpeedMultiplier = 1.0f;
+
+	DistanceVisualizer = CreateDefaultSubobject<UArrowComponent>("DistanceHelper");
+	DistanceVisualizer->SetArrowLength(MoveDistance * 1.75f);
+	DistanceVisualizer->SetupAttachment(GetRootComponent());
+}
+
+void ASawTrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	DistanceVisualizer->SetArrowLength(MoveDistance * 1.75f);
 }
 
 void ASawTrap::BeginPlay()
@@ -45,6 +56,8 @@ void ASawTrap::BeginPlay()
 
 	TimelineComponent->AddInterpFloat(Curve, TimelineProgressFunc);
 	TimelineComponent->SetTimelineLengthMode(TL_LastKeyFrame);
+
+	TimelineComponent->SetPlayRate(SpeedMultiplier);
 
 	TimelineComponent->PlayFromStart();
 

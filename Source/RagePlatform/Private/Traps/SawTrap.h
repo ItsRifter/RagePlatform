@@ -25,11 +25,17 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "Trap")
 	float MoveDistance;
 
+	//Multiplies the move rate
+	UPROPERTY(EditInstanceOnly, Category = "Trap", meta = (ClampMin = 0.1f, ClampMax = 3.0f))
+	float SpeedMultiplier;
+
 	virtual void OnDeathDelegate(const FText& DeathText) override;
 
 	virtual void OnRestartDelegate() override;
 
 	virtual void KillPlayer(class ARageCharacter* Player) override;
+
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	//Fired when saw trap is going forward (not in reverse)
 	UFUNCTION(BlueprintImplementableEvent)
@@ -38,6 +44,9 @@ protected:
 	//Fired when saw trap is in reverse
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnReverseDirection();
+
+	UPROPERTY()
+	TObjectPtr<class UArrowComponent> DistanceVisualizer;
 
 private:
 	class UTimelineComponent* TimelineComponent;
