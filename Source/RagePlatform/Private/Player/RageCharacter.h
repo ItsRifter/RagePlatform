@@ -36,8 +36,11 @@ protected:
 	UPROPERTY()
 	APlayerController* PlayerController;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Wigets")
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget> RestartWidgetBP;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UUserWidget> FadeWidgetBP;
 
 	UPROPERTY()
 	UUserWidget* RestartWidget;

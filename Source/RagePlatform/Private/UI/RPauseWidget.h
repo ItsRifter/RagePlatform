@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RPauseWidget.generated.h"
 
+class URGameInstance;
 class UButton;
 /**
  * 
@@ -26,6 +27,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
+	
+	UPROPERTY()
+	URGameInstance* GameInstance;
 
 	UPROPERTY()
 	APlayerController* PlayerController;

@@ -27,6 +27,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	class USkeletalMeshComponent* SkeletalMesh;
 
+	UPROPERTY(EditInstanceOnly, Category = "Trap", meta = (ClampMin = 0.1f, ClampMax = 5.0f))
+	float SwingSpeed;
+
+	//UPROPERTY()
+	//float SwingAngle;
+
 	virtual void OnRestartDelegate() override;
 
 	virtual void OnDeathDelegate(const FText& DeathText) override;
@@ -34,16 +40,13 @@ protected:
 	virtual void KillPlayer(class ARageCharacter* Player) override;
 
 private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	class UTimelineComponent* TimelineComponent;
 
 	bool bGoReverse;
 
 	bool bSwingingLeft;
 	float LastVal;
-
-	float SwingSpeed;
-	float SwingAngle;
 
 	UFUNCTION()
 	void OnTimelineProgress(float val);
