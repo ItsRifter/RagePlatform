@@ -53,6 +53,8 @@ void ASwingingTrap::BeginPlay()
 	TimelineComponent->AddInterpFloat(Curve, TimelineProgressFunc);
 	TimelineComponent->SetTimelineLengthMode(TL_LastKeyFrame);
 
+	TimelineComponent->SetPlayRate(SwingSpeed);
+
 	TimelineComponent->SetLooping(true);
 	TimelineComponent->PlayFromStart();
 

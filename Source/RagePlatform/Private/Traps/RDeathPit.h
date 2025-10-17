@@ -8,6 +8,7 @@
 
 class URGameInstance;
 class UBoxComponent;
+class USoundBase;
 
 UCLASS()
 class ARDeathPit : public AActor
@@ -38,7 +39,10 @@ protected:
 	class UAudioComponent* AudioComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class USoundBase* LoopSound;
+	USoundBase* LoopSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	USoundBase* KillSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsPoison;

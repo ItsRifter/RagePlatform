@@ -62,6 +62,12 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
 		
 		GameInstance->OnDeath.Broadcast(KillTexts[Index]);
+		
+		if (KillSound)
+		{
+			UGameplayStatics::PlaySound2D(this, KillSound);
+		}
+		
 		PlayerCharacter->DrownPlayer(
 			PlayerCharacter->GetActorLocation() - FVector(0.f, 0.f, 60.f) +
 			PlayerCharacter->GetActorForwardVector() * 20.f);
