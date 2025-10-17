@@ -20,8 +20,8 @@ ASwingingTrap::ASwingingTrap()
 
 	KillText = FText::FromString(TEXT("You got chopped by a Swinging Axe!"));
 
-	SwingSpeed = 1.5f;
-	SwingAngle = 180.0f;
+	SwingSpeed = 1.0f;
+	//SwingAngle = 180.0f;
 }
 
 void ASwingingTrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -46,8 +46,7 @@ void ASwingingTrap::BeginPlay()
 
 	Curve->FloatCurve.UpdateOrAddKey(0.0f, 0.0f);
 	Curve->FloatCurve.UpdateOrAddKey(1.0f, 1.0f);
-	Curve->FloatCurve.UpdateOrAddKey(2.05f, -0.05f);
-	Curve->FloatCurve.UpdateOrAddKey(2.15f, 0.0f);
+	Curve->FloatCurve.UpdateOrAddKey(2.0f, 0.0f);
 
 	TimelineProgressFunc.BindUFunction(this, TEXT("OnTimelineProgress"));
 
@@ -56,6 +55,8 @@ void ASwingingTrap::BeginPlay()
 
 	TimelineComponent->SetLooping(true);
 	TimelineComponent->PlayFromStart();
+
+	SkeletalMesh->SetPlayRate(SwingSpeed);
 
 	if (TriggerBox)
 	{
@@ -69,10 +70,9 @@ void ASwingingTrap::BeginPlay()
 	}
 }
 
+//Handles kill impact direction for player death
 void ASwingingTrap::OnTimelineProgress(float val)
-{
-	float CurrentAngle = FMath::Sin(val * SwingSpeed) * SwingAngle;
-	
+{	
 	if (LastVal > val)
 	{
 		bSwingingLeft = true;
@@ -83,12 +83,6 @@ void ASwingingTrap::OnTimelineProgress(float val)
 	}
 
 	LastVal = val;
-
-	FRotator SwingRotation(0.0f, 0.0f, CurrentAngle);
-
-	SwingRotation += StartRotation;
-
-	DefaultSceneRoot->SetRelativeRotation(SwingRotation);
 }
 
 void ASwingingTrap::OnRestartDelegate()
