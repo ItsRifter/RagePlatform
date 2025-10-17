@@ -73,9 +73,6 @@ protected:
 	UInputAction* LookAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
-	UInputAction* CrouchAction;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* PauseAction;
 
 	UFUNCTION()
@@ -85,13 +82,11 @@ protected:
 	void OnRestartDelegate();
 
 	void Move(const FInputActionValue& Value);
-	void Jump();
-	void PauseGame();
 	void Look(const FInputActionValue& Value);
-	void DoCrouch();
-	void Standup();
+	void JumpTrigger();
+	void PauseGame();
 
-public:	
+public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -105,7 +100,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	ARTempCamera* Temp_Camera;
-	
+
 	UPROPERTY()
 	float SavedMaxAcceleration;
 
@@ -114,12 +109,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector DeathLocation;
-	
-	UFUNCTION(BlueprintCallable)
-	void Death();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnDeath();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void DrownPlayer(FVector HitLocation);
@@ -131,5 +120,5 @@ public:
 	void RestartMenu();
 
 	UFUNCTION()
-	void CameraShake();
+	void CameraShake() const;
 };
