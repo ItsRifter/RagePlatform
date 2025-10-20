@@ -60,7 +60,6 @@ void ARSpikes::BeginPlay()
 	if (SpikeSound)
 	{
 		AudioComponent->SetSound(SpikeSound);
-		AudioComponent->Play();
 	}
 }
 
@@ -106,7 +105,8 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 			if (KillSound)
 			{
-				UGameplayStatics::PlaySound2D(this, KillSound);
+				AudioComponent->SetSound(KillSound);
+				AudioComponent->Play();
 			}
 
 			constexpr EMoveComponentAction::Type MoveAction = EMoveComponentAction::Type::Move;
