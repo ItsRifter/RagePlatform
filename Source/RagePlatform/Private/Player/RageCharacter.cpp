@@ -39,10 +39,13 @@ void ARageCharacter::BeginPlay()
 	}
 
 	PlayerController = Cast<APlayerController>(Controller);
-
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	
+	if (PlayerController)
 	{
-		Subsystem->AddMappingContext(InputMapping, 0);
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMapping, 0);
+		}
 	}
 
 	if (RestartWidgetBP)
@@ -176,6 +179,11 @@ void ARageCharacter::RestartMenu()
 
 void ARageCharacter::CameraShake()
 {
+	if (!PlayerController)
+	{
+		return;
+	}
+
 	if (GetVelocity().Length() > 0 && CanJump())
 	{
 		if (WalkCameraShake)
