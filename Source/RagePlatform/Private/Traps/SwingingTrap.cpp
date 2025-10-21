@@ -18,8 +18,6 @@ ASwingingTrap::ASwingingTrap()
 
 	TimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("SwingTimeline"));
 
-	KillText = FText::FromString(TEXT("You got chopped by a Swinging Axe!"));
-
 	SwingSpeed = 1.0f;
 	//SwingAngle = 180.0f;
 }

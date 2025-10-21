@@ -39,10 +39,13 @@ void ARageCharacter::BeginPlay()
 	}
 
 	PlayerController = Cast<APlayerController>(Controller);
-
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	
+	if (PlayerController)
 	{
-		Subsystem->AddMappingContext(InputMapping, 0);
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMapping, 0);
+		}
 	}
 
 	if (RestartWidgetBP)
@@ -124,9 +127,9 @@ void ARageCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void ARageCharacter::Jump()
+void ARageCharacter::JumpTrigger()
 {
-	ACharacter::Jump();
+	ARageCharacter::Jump();
 }
 
 void ARageCharacter::PauseGame()
@@ -144,20 +147,6 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookValue.Y);
 	}
 }
-/// <summary>
-/// TODO: Need to remove these.
-/// </summary>
-void ARageCharacter::Death()
-{
-	if (!bIsAlive)
-	{
-		return;
-	}
-
-	bIsAlive = false;
-
-	OnDeath();
-}
 
 void ARageCharacter::RestartMenu() 
 {
@@ -174,8 +163,13 @@ void ARageCharacter::RestartMenu()
 	}
 }
 
-void ARageCharacter::CameraShake()
+void ARageCharacter::CameraShake() const
 {
+	if (!PlayerController)
+	{
+		return;
+	}
+
 	if (GetVelocity().Length() > 0 && CanJump())
 	{
 		if (WalkCameraShake)

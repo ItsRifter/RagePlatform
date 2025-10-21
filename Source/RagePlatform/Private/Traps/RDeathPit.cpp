@@ -26,6 +26,8 @@ ARDeathPit::ARDeathPit()
 	DeathTrigger->SetupAttachment(GetRootComponent());
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
+	AudioComponent->SetupAttachment(GetRootComponent());
+
 	LoopSound = nullptr;
 
 	bIsPoison = false;
@@ -65,11 +67,14 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 		
 		if (KillSound)
 		{
-			UGameplayStatics::PlaySound2D(this, KillSound);
+			AudioComponent->SetSound(KillSound);
+			AudioComponent->Play();
 		}
 		
 		PlayerCharacter->DrownPlayer(
 			PlayerCharacter->GetActorLocation() - FVector(0.f, 0.f, 60.f) +
 			PlayerCharacter->GetActorForwardVector() * 20.f);
+
+		OnKilledPlayer(PlayerCharacter);
 	}
 }

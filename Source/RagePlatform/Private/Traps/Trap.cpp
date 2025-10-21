@@ -26,8 +26,6 @@ ATrap::ATrap()
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
 	AudioComponent->SetupAttachment(DefaultSceneRoot);
-
-	KillText = FText::FromString(TEXT("You died"));
 	
 	SocketName = "";
 
@@ -183,7 +181,14 @@ void ATrap::KillPlayer(ARageCharacter* Player)
 
 	UGameplayStatics::PlaySound2D(this, KillSound);
 
-	GameInstance->OnDeath.Broadcast(KillText);
+	if (KillTexts.Max() != 0)
+	{
+		FText RandomDeathText = KillTexts[
+			UKismetMathLibrary::RandomIntegerInRange(0, KillTexts.Num()-1)
+		];
+
+		GameInstance->OnDeath.Broadcast(RandomDeathText);
+	}
 	
 	Player->bIsAlive = false;
 }

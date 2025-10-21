@@ -1,11 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
+#include "Player/RTempCamera.h"
 #include "Traps/RChandelier.h"
 
 // Sets default values
@@ -22,6 +22,9 @@ ARChandelier::ARChandelier()
 
 	KillBox = CreateDefaultSubobject<UBoxComponent>("KillBox");
 	KillBox->SetupAttachment(ChandelierMesh);
+
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
+	AudioComponent->SetupAttachment(ChandelierMesh);
 
 	PlayerOverlapBox = CreateDefaultSubobject<UBoxComponent>("PlayerOverlap");
 	PlayerOverlapBox->SetupAttachment(GetRootComponent());
@@ -64,10 +67,21 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{
+		if (KillSound)
+		{
+			UGameplayStatics::PlaySound2D(this, KillSound);
+		}
+
 		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
 		
 		GameInstance->OnDeath.Broadcast(KillTexts[Index]);
 		PlayerCharacter->PlayerFall(FVector::ZeroVector);
+
+		if (PlayerCharacter->Temp_Camera)
+		{
+			PlayerCharacter->Temp_Camera->FocusVar = this;
+			PlayerCharacter->Temp_Camera->StartFocus();
+		}
 	}
 }
 
@@ -82,6 +96,12 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{
+		if (ActivateSound)
+		{
+			AudioComponent->SetSound(ActivateSound);
+			AudioComponent->Play();
+		}
+
 		ChandelierMesh->SetSimulatePhysics(true);
 
 		const float ImpulseZ = UKismetMathLibrary::MapRangeClamped(
