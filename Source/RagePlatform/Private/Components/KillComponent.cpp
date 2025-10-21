@@ -27,7 +27,7 @@ void UKillComponent::KillBoxOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 	if (player)
 	{
-		player->Death();
+		
 	}
 }
 
