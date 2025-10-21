@@ -9,6 +9,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/RageCharacter.h"
+#include "Player/RTempCamera.h"
 
 // Sets default values
 ARExplosionsBase::ARExplosionsBase()
@@ -55,6 +56,7 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 		{
 			UGameplayStatics::PlaySound2D(this, ExplosionSound);
 		}
+
 		if (ExplosionParticleSystem)
 		{
 			ParticleSystemComponent = UGameplayStatics::SpawnEmitterAtLocation(
@@ -64,12 +66,21 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
 			PlayerCharacter->GetActorLocation(),
 			GetActorLocation());
-		const FVector LaunchVelocity = LookAtRotation.Vector() * -750.f;
 
-		PlayerCharacter->LaunchCharacter(
+		const FVector LaunchVelocity = LookAtRotation.Vector() * -450.0f;
+
+		/*PlayerCharacter->LaunchCharacter(
 			FVector(LaunchVelocity.X, LaunchVelocity.Y, 250.f),
 			true,
-			true);
+			true);*/
+
+		PlayerCharacter->PlayerFall(FVector(LaunchVelocity.X, LaunchVelocity.Y, 200.0f));
+
+		if (PlayerCharacter->Temp_Camera)
+		{
+			PlayerCharacter->Temp_Camera->FocusVar = this;
+			PlayerCharacter->Temp_Camera->StartFocus();
+		}
 
 		StaticMesh->SetVisibility(false);
 		StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);

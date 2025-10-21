@@ -31,7 +31,8 @@ ARSpikes::ARSpikes()
 	OverlapBox->SetBoxExtent(FVector(50.f));
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>("Audio");
-	
+	AudioComponent->SetupAttachment(GetRootComponent());
+
 	SpikeSound = nullptr;
 	KillSound = nullptr;
 
@@ -65,8 +66,10 @@ void ARSpikes::BeginPlay()
 void ARSpikes::OnRestartDelegate()
 {
 	bSpikeResetComplete = true;
+	
 	StopSpike();
 	SpikeMesh->SetRelativeLocation(FVector(0.f, 0.f, -100.f));
+	
 	if (PlayerCharacter->Temp_Camera)
 	{
 		PlayerCharacter->Temp_Camera->StopFocus();
@@ -102,7 +105,8 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 			if (KillSound)
 			{
-				UGameplayStatics::PlaySound2D(this, KillSound);
+				AudioComponent->SetSound(KillSound);
+				AudioComponent->Play();
 			}
 
 			constexpr EMoveComponentAction::Type MoveAction = EMoveComponentAction::Type::Move;
