@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "InputActionValue.h"
 #include "RageCharacter.h"
+
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -15,7 +16,7 @@
 // Sets default values
 ARageCharacter::ARageCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("MainCamera");
@@ -38,11 +39,13 @@ void ARageCharacter::BeginPlay()
 	}
 
 	PlayerController = Cast<APlayerController>(Controller);
-
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-		PlayerController->GetLocalPlayer()))
+	
+	if (PlayerController)
 	{
-		Subsystem->AddMappingContext(InputMapping, 0);
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMapping, 0);
+		}
 	}
 
 	if (RestartWidgetBP)
@@ -75,7 +78,7 @@ void ARageCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARageCharacter::Move);
-		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::JumpTrigger);
+		Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ARageCharacter::Jump);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARageCharacter::Look);
 		Input->BindAction(PauseAction, ETriggerEvent::Triggered, this, &ARageCharacter::PauseGame);
 	}
@@ -129,10 +132,9 @@ void ARageCharacter::JumpTrigger()
 	ARageCharacter::Jump();
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
 void ARageCharacter::PauseGame()
 {
-	UGameplayStatics::SetGamePaused(this, true);
+	UGameplayStatics::SetGamePaused(this,true);
 }
 
 void ARageCharacter::Look(const FInputActionValue& Value)
@@ -146,7 +148,7 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void ARageCharacter::RestartMenu()
+void ARageCharacter::RestartMenu() 
 {
 	if (PlayerController)
 	{
@@ -163,6 +165,11 @@ void ARageCharacter::RestartMenu()
 
 void ARageCharacter::CameraShake() const
 {
+	if (!PlayerController)
+	{
+		return;
+	}
+
 	if (GetVelocity().Length() > 0 && CanJump())
 	{
 		if (WalkCameraShake)
