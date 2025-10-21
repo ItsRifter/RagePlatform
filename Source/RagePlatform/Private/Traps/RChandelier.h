@@ -37,6 +37,15 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* KillBox;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UAudioComponent* AudioComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* KillSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* ActivateSound;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	UBoxComponent* PlayerOverlapBox;
 

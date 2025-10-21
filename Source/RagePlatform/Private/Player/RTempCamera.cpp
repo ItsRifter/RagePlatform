@@ -38,21 +38,6 @@ void ARTempCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (SpikeVar)
-	{
-		const FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(
-			Camera->GetComponentLocation(),
-			SpikeVar->GetActorLocation() + FVector(0.f, 0.f, 50.f));
-
-		const FRotator FinalRotation = UKismetMathLibrary::RInterpTo(
-			Camera->GetComponentRotation(),
-			TargetRotation,
-			UGameplayStatics::GetWorldDeltaSeconds(this),
-			3.f);
-
-		Camera->SetWorldRotation(FinalRotation);
-	}
-
 	if (FocusVar)
 	{
 		const FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(
