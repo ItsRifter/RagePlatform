@@ -17,8 +17,6 @@ ASawTrap::ASawTrap()
 	
 	TimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("SawTimeline"));
 
-	KillText = FText::FromString(TEXT("You got cut up by a Sawblade!"));
-
 	MoveDistance = 45.0f;
 	SpeedMultiplier = 1.0f;
 

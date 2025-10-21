@@ -59,7 +59,7 @@ protected:
 	FRotator StartRotation;
 
 	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
-	FText KillText;
+	TArray<FText> KillTexts;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UAudioComponent* AudioComponent;
