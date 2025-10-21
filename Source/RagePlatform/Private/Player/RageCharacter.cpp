@@ -127,9 +127,9 @@ void ARageCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void ARageCharacter::Jump()
+void ARageCharacter::JumpTrigger()
 {
-	ACharacter::Jump();
+	ARageCharacter::Jump();
 }
 
 void ARageCharacter::PauseGame()
@@ -147,20 +147,6 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookValue.Y);
 	}
 }
-/// <summary>
-/// TODO: Need to remove these.
-/// </summary>
-void ARageCharacter::Death()
-{
-	if (!bIsAlive)
-	{
-		return;
-	}
-
-	bIsAlive = false;
-
-	OnDeath();
-}
 
 void ARageCharacter::RestartMenu() 
 {
@@ -177,7 +163,7 @@ void ARageCharacter::RestartMenu()
 	}
 }
 
-void ARageCharacter::CameraShake()
+void ARageCharacter::CameraShake() const
 {
 	if (!PlayerController)
 	{
