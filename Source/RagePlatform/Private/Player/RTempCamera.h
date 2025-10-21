@@ -33,9 +33,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(BlueprintReadWrite)
-	ARSpikes* SpikeVar;
-
-	UPROPERTY(BlueprintReadWrite)
 	class AActor* FocusVar;
 
 	UPROPERTY()

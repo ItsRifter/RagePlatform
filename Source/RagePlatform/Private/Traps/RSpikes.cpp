@@ -56,11 +56,6 @@ void ARSpikes::BeginPlay()
 	}
 
 	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARSpikes::OnComponentBeginOverlap);
-
-	if (SpikeSound)
-	{
-		AudioComponent->SetSound(SpikeSound);
-	}
 }
 
 void ARSpikes::OnRestartDelegate()
@@ -97,11 +92,9 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 			if (PlayerCharacter->Temp_Camera)
 			{
-				PlayerCharacter->Temp_Camera->SpikeVar = this;
+				PlayerCharacter->Temp_Camera->FocusVar = this;
 				PlayerCharacter->Temp_Camera->StartFocus();
-			}
-			
-			AudioComponent->Play();
+			}			
 
 			if (KillSound)
 			{
