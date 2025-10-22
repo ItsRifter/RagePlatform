@@ -37,7 +37,7 @@ ATrap::ATrap()
 
 void ATrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	Super::PostEditChangeProperty(PropertyChangedEvent);
+	
 }
 
 // Called when the game starts or when spawned
