@@ -37,7 +37,7 @@ ATrap::ATrap()
 
 void ATrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	Super::PostEditChangeProperty(PropertyChangedEvent);
+	
 }
 
 // Called when the game starts or when spawned
@@ -181,14 +181,15 @@ void ATrap::KillPlayer(ARageCharacter* Player)
 
 	UGameplayStatics::PlaySound2D(this, KillSound);
 
+	FText DeathText = FText::FromString(TEXT(""));
+
 	if (KillTexts.Max() != 0)
 	{
-		FText RandomDeathText = KillTexts[
-			UKismetMathLibrary::RandomIntegerInRange(0, KillTexts.Num()-1)
-		];
-
-		GameInstance->OnDeath.Broadcast(RandomDeathText);
+		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0, KillTexts.Num() - 1);
+		DeathText = KillTexts[Index];
 	}
 	
+	GameInstance->OnDeath.Broadcast(DeathText);
+
 	Player->bIsAlive = false;
 }

@@ -23,12 +23,12 @@ public:
 	// Sets default values for this actor's properties
 	ATrap();
 
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-
+	
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* DefaultSceneRoot;
 
@@ -58,7 +58,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	FRotator StartRotation;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DeathScreen")
+	UPROPERTY(EditAnywhere, Category = "DeathScreen")
 	TArray<FText> KillTexts;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
