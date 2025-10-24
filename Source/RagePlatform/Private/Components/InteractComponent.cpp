@@ -1,11 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Components/BoxComponent.h"
 #include "Components/InteractComponent.h"
-#include "Gameplay/RagePlatState.h"
 #include "Kismet/GameplayStatics.h"
-#include "Player/RageCharacter.h"
 
 // Sets default values for this component's properties
 UInteractComponent::UInteractComponent()

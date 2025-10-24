@@ -45,6 +45,9 @@ protected:
 	UPROPERTY()
 	UUserWidget* RestartWidget;
 
+	UPROPERTY(EditDefaultsOnly,Category = "Restart")
+	float RestartButtonVisibility;
+
 	UPROPERTY()
 	URRestartWidget* RestartWidgetRef;
 
