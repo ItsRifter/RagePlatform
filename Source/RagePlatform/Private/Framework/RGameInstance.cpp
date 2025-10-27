@@ -3,7 +3,10 @@
 
 #include "Framework/RGameInstance.h"
 
-void URGameInstance::SetOnPlayerDeath(const FText& DeathText)
+#include "Kismet/KismetMathLibrary.h"
+
+void URGameInstance::SetOnPlayerDeath(const TArray<FText>& DeathTexts)
 {
-	OnDeath.Broadcast(DeathText);
+	const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,DeathTexts.Num() - 1);
+	OnDeath.Broadcast(DeathTexts[Index]);
 }
