@@ -28,5 +28,5 @@ public:
 	int32 DeathCount = 0;
 
 	UFUNCTION(BlueprintCallable)
-	void SetOnPlayerDeath(const TArray<FText>& DeathTexts);
+	void SetOnPlayerDeath(const FText& DeathText);
 };
