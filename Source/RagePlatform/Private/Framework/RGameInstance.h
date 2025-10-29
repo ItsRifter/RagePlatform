@@ -31,5 +31,5 @@ public:
 	bool bIsEasyMode = false;
 
 	UFUNCTION(BlueprintCallable)
-	void SetOnPlayerDeath(const FText& DeathText);
+	void SetOnPlayerDeath(const TArray<FText>& DeathText);
 };
