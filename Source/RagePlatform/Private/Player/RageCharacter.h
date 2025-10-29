@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RageCharacter.generated.h"
 
+class URPauseWidget;
 class ARTempCamera;
 class URRestartWidget;
 class UInputAction;
@@ -81,6 +82,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* PauseAction;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> PauseWidgetBP;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FText> PauseTexts;
+
 	UFUNCTION()
 	void OnDeathDelegate(const FText& DeathText);
 
@@ -116,6 +123,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector DeathLocation;
 
+	UPROPERTY(BlueprintReadWrite)
+	URPauseWidget* PauseWidgetRef;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void DrownPlayer(FVector HitLocation);
 
@@ -127,4 +137,7 @@ public:
 
 	UFUNCTION()
 	void CameraShake() const;
+
+	UFUNCTION()
+	void TimeCounter() const;
 };

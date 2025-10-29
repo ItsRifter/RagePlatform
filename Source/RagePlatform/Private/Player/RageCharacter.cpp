@@ -11,6 +11,8 @@
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "UI/RPauseWidget.h"
 #include "UI/RRestartWidget.h"
 
 // Sets default values
@@ -25,6 +27,8 @@ ARageCharacter::ARageCharacter()
 	Camera->bUsePawnControlRotation = true;
 	StartCameraRelativeLocation = FVector::ZeroVector;
 	RestartButtonVisibility = 1.f;
+
+	PauseTexts.Add(FText::FromString(TEXT("You Paused the Game I Think you can't make it.")));
 }
 
 // Called when the game starts or when spawned
@@ -67,6 +71,13 @@ void ARageCharacter::BeginPlay()
 
 	StartCameraRelativeLocation = Camera->GetRelativeLocation();
 
+	if (PauseWidgetBP)
+	{
+		UUserWidget* PauseWidget = CreateWidget(GetWorld(),PauseWidgetBP);
+		PauseWidgetRef = Cast<URPauseWidget>(PauseWidget);
+		PauseWidget->AddToViewport();
+	}
+
 	bIsAlive = true;
 	bRestarted = true;
 }
@@ -90,6 +101,13 @@ void ARageCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	CameraShake();
+	TimeCounter();
+
+	/*if (GameInstance)
+	{
+		const FString TimeString = FString::Printf(TEXT("%f"),GameInstance->TimeVar);
+		GEngine->AddOnScreenDebugMessage(-1,.5f,FColor::Red,TimeString); 
+	}*/
 }
 
 void ARageCharacter::OnDeathDelegate(const FText& DeathText)
@@ -140,6 +158,16 @@ void ARageCharacter::JumpTrigger()
 
 void ARageCharacter::PauseGame()
 {
+	if (PauseWidgetRef)
+	{
+		PauseWidgetRef->SetVisibility(ESlateVisibility::Visible);
+		PlayerController->SetShowMouseCursor(true);
+		const FInputModeUIOnly InputModeUIOnly;
+		PlayerController->SetInputMode(InputModeUIOnly);
+
+		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,PauseTexts.Num() - 1);
+		PauseWidgetRef->PauseText->SetText(PauseTexts[Index]);
+	}
 	UGameplayStatics::SetGamePaused(this,true);
 }
 
@@ -188,6 +216,50 @@ void ARageCharacter::CameraShake() const
 		if (IdleCameraShake)
 		{
 			PlayerController->ClientStartCameraShake(IdleCameraShake);
+		}
+	}
+}
+
+void ARageCharacter::TimeCounter() const
+{
+	if (GameInstance)
+	{
+		if (GameInstance->bCanCountGameTime)
+		{
+			GameInstance->GameTimeVar += UGameplayStatics::GetWorldDeltaSeconds(this);
+
+			const int32 GameTotalSeconds = FMath::FloorToInt(GameInstance->GameTimeVar);
+			const int32 GameMinutes = (GameTotalSeconds % 3600) / 60;
+			const int32 GameSeconds = GameTotalSeconds % 60;
+			const int32 GameMilliseconds = FMath::RoundToInt((GameInstance->TimeVar - GameTotalSeconds) * 100.0f);
+
+			const FString GameTimeString = FString::Printf(TEXT("%02d:%02d:%02d"), GameMinutes, GameSeconds, GameMilliseconds);
+
+			if (PauseWidgetRef && RestartWidgetRef)
+			{
+				PauseWidgetRef->GameTimeText->SetText(FText::FromString(GameTimeString));
+				RestartWidgetRef->GameTimeText->SetText(FText::FromString(GameTimeString));
+			}
+		}
+		
+		if (!GameInstance->bCanCountLevelTime)
+		{
+			return;
+		}
+	
+		GameInstance->TimeVar += UGameplayStatics::GetWorldDeltaSeconds(this);
+
+		const int32 TotalSeconds = FMath::FloorToInt(GameInstance->TimeVar);
+		const int32 Minutes = (TotalSeconds % 3600) / 60;
+		const int32 Seconds = TotalSeconds % 60;
+		const int32 Milliseconds = FMath::RoundToInt((GameInstance->TimeVar - TotalSeconds) * 100.0f);
+
+		const FString TimeString = FString::Printf(TEXT("%02d:%02d:%02d"), Minutes, Seconds, Milliseconds);
+
+		if (PauseWidgetRef && RestartWidgetRef)
+		{
+			PauseWidgetRef->TimeText->SetText(FText::FromString(TimeString));
+			RestartWidgetRef->TimeText->SetText(FText::FromString(TimeString));
 		}
 	}
 }

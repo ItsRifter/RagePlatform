@@ -27,6 +27,18 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 DeathCount = 0;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanCountLevelTime;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanCountGameTime;
+
+	UPROPERTY(BlueprintReadWrite)
+	float TimeVar;
+
+	UPROPERTY(BlueprintReadWrite)
+	float GameTimeVar;
+
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathTexts);
 };

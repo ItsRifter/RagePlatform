@@ -57,6 +57,10 @@ void URRestartWidget::OnMainMenuButtonClicked()
 		if (GameInstance)
 		{
 			GameInstance->DeathCount = 0;
+			GameInstance->TimeVar = 0;
+			GameInstance->bCanCountLevelTime = false;
+			GameInstance->bCanCountGameTime = false;
+			GameInstance->GameTimeVar = 0;
 		}
 		UGameplayStatics::OpenLevel(this,MainMenuLevel);
 	}

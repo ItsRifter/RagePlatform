@@ -38,7 +38,10 @@ void ARExplosionsBase::BeginPlay()
 
 	DeathOverlap->OnComponentBeginOverlap.AddDynamic(this, &ARExplosionsBase::OnComponentBeginOverlapKillBox);
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
-	GameInstance->OnGameRestart.AddDynamic(this, &ARExplosionsBase::OnRestartDelegate);
+	if (GameInstance)
+	{
+		GameInstance->OnGameRestart.AddDynamic(this, &ARExplosionsBase::OnRestartDelegate);
+	}
 }
 
 void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -68,11 +71,6 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			GetActorLocation());
 
 		const FVector LaunchVelocity = LookAtRotation.Vector() * -450.0f;
-
-		/*PlayerCharacter->LaunchCharacter(
-			FVector(LaunchVelocity.X, LaunchVelocity.Y, 250.f),
-			true,
-			true);*/
 
 		PlayerCharacter->PlayerFall(FVector(LaunchVelocity.X, LaunchVelocity.Y, 200.0f));
 
