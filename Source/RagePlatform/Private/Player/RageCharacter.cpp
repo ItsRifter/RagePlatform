@@ -103,11 +103,11 @@ void ARageCharacter::Tick(float DeltaSeconds)
 	CameraShake();
 	TimeCounter();
 
-	/*if (GameInstance)
+	if (GameInstance)
 	{
-		const FString TimeString = FString::Printf(TEXT("%f"),GameInstance->TimeVar);
+		const FString TimeString = FString::Printf(TEXT("%f"),GameInstance->GameTimeVar);
 		GEngine->AddOnScreenDebugMessage(-1,.5f,FColor::Red,TimeString); 
-	}*/
+	}
 }
 
 void ARageCharacter::OnDeathDelegate(const FText& DeathText)
@@ -231,7 +231,7 @@ void ARageCharacter::TimeCounter() const
 			const int32 GameTotalSeconds = FMath::FloorToInt(GameInstance->GameTimeVar);
 			const int32 GameMinutes = (GameTotalSeconds % 3600) / 60;
 			const int32 GameSeconds = GameTotalSeconds % 60;
-			const int32 GameMilliseconds = FMath::RoundToInt((GameInstance->TimeVar - GameTotalSeconds) * 100.0f);
+			const int32 GameMilliseconds = FMath::RoundToInt((GameInstance->GameTimeVar - GameTotalSeconds) * 100.0f);
 
 			const FString GameTimeString = FString::Printf(TEXT("%02d:%02d:%02d"), GameMinutes, GameSeconds, GameMilliseconds);
 
