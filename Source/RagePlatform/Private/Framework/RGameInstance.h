@@ -27,6 +27,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 DeathCount = 0;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsEasyMode = false;
+
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const FText& DeathText);
 };

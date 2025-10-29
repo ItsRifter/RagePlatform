@@ -7,8 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "InputActionValue.h"
 #include "RageCharacter.h"
-
 #include "Blueprint/UserWidget.h"
+#include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/RRestartWidget.h"
@@ -24,6 +24,7 @@ ARageCharacter::ARageCharacter()
 
 	Camera->bUsePawnControlRotation = true;
 	StartCameraRelativeLocation = FVector::ZeroVector;
+	RestartButtonVisibility = 1.f;
 }
 
 // Called when the game starts or when spawned
@@ -67,7 +68,6 @@ void ARageCharacter::BeginPlay()
 	StartCameraRelativeLocation = Camera->GetRelativeLocation();
 
 	bIsAlive = true;
-	bRestarted = true;
 }
 
 // Called to bind functionality to input
@@ -98,16 +98,18 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 		RestartWidgetRef->DeathText->SetText(DeathText);
 		GameInstance->DeathCount++;
 		RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		GetWorld()->GetTimerManager().SetTimer(RestartWidgetRef->VisibilityTimer,[this]
+		{
+			RestartWidgetRef->PlayAnimation(RestartWidgetRef->RestartAnim);
+			RestartWidgetRef->SizeBoxButtons->SetVisibility(ESlateVisibility::Visible);
+		},RestartButtonVisibility,false);
 	}
 	RestartMenu();
 }
 
 void ARageCharacter::OnRestartDelegate()
 {
-	SetActorLocation(StartLocation);
-	SetActorRotation(StartRotation);
-	Camera->SetRelativeLocation(StartCameraRelativeLocation);
-	PlayerController->SetControlRotation(StartControllerRotation);
+	Respawn();
 }
 
 void ARageCharacter::Move(const FInputActionValue& Value)

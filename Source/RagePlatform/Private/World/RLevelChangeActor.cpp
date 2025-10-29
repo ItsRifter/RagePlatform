@@ -4,6 +4,7 @@
 #include "World/RLevelChangeActor.h"
 
 #include "Components/BoxComponent.h"
+#include "Gameplay/RagePlatGame.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -78,6 +79,9 @@ void ARLevelChangeActor::OpenNextLevel()
 {
 	if (NextLevel != NAME_None)
 	{
+		ARagePlatGame* Gamemode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));
+		Gamemode->ResetCheckpoint();
+
 		UGameplayStatics::OpenLevel(this,NextLevel);
 	}
 }
