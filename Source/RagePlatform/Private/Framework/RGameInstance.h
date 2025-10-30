@@ -28,6 +28,9 @@ public:
 	int32 DeathCount = 0;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bIsEasyMode = false;
+
+	UPROPERTY(BlueprintReadWrite)
 	bool bCanCountLevelTime;
 
 	UPROPERTY(BlueprintReadWrite)
