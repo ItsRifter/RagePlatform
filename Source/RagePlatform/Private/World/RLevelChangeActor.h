@@ -52,4 +52,7 @@ protected:
 
 	UFUNCTION()
 	void OpenNextLevel();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CompletedLevel(float PlayerTime);
 };

@@ -86,6 +86,7 @@ void ARLevelChangeActor::OpenNextLevel()
 		GameInstance->bCanCountGameTime = false;
 		GameInstance->bCanCountLevelTime = false;
 		GameInstance->bCanLook = false;
+		CompletedLevel(GameInstance->GameTimeVar);
 	}
 }
 
