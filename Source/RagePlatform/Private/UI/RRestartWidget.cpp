@@ -5,6 +5,7 @@
 #include "Framework/RGameInstance.h"
 #include "UI/RRestartWidget.h"
 
+#include "Components/SizeBox.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
@@ -20,10 +21,17 @@ void URRestartWidget::NativeConstruct()
 	RestartButton->OnClicked.AddDynamic(this, &URRestartWidget::OnRestartButtonClicked);
 	MenuButton->OnClicked.AddDynamic(this, &URRestartWidget::OnMainMenuButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &URRestartWidget::OnQuitButtonClicked);
+	SizeBoxButtons->SetRenderOpacity(0.f);
+	SizeBoxButtons->SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
 void URRestartWidget::OnRestartButtonClicked()
 {
+	SizeBoxButtons->SetRenderOpacity(0.f);
+	StopAnimation(RestartAnim);
+	GetWorld()->GetTimerManager().ClearTimer(VisibilityTimer);
+	SizeBoxButtons->SetVisibility(ESlateVisibility::HitTestInvisible);
+	
 	if (GameInstance)
 	{
 		GameInstance->OnGameRestart.Broadcast();

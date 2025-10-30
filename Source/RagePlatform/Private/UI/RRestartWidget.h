@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Animation/WidgetAnimation.h"
 #include "Blueprint/UserWidget.h"
 #include "RRestartWidget.generated.h"
 
+class USizeBox;
 class UTextBlock;
 class ARageCharacter;
 class URGameInstance;
@@ -52,6 +54,14 @@ protected:
 	void OnQuitButtonClicked();
 
 public:
+	UPROPERTY()
+	FTimerHandle VisibilityTimer;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* SizeBoxButtons;
+
+	UPROPERTY(meta = (BindWidgetAnim),BlueprintReadWrite, Transient)
+	UWidgetAnimation* RestartAnim;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* DeathText;

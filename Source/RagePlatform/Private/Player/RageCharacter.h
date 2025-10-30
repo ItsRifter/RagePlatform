@@ -45,6 +45,9 @@ protected:
 	UPROPERTY()
 	UUserWidget* RestartWidget;
 
+	UPROPERTY(EditDefaultsOnly,Category = "Restart")
+	float RestartButtonVisibility;
+
 	UPROPERTY()
 	URRestartWidget* RestartWidgetRef;
 
@@ -99,9 +102,6 @@ public:
 	bool bIsAlive;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bRestarted;
-
-	UPROPERTY(BlueprintReadWrite)
 	ARTempCamera* Temp_Camera;
 
 	UPROPERTY()
@@ -118,6 +118,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void PlayerFall(FVector Impulse);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void Respawn();
 
 	UFUNCTION()
 	void RestartMenu();

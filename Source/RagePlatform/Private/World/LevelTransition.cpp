@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/BoxComponent.h"
-#include "Gameplay/RagePlatGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
 #include "World/LevelTransition.h"

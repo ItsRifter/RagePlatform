@@ -16,7 +16,6 @@ public:
 	ACheckpoint();
 
 private:
-	static int32 NextCheckpointIndex;
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,18 +23,25 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-//#if WITH_EDITOR
-//	virtual void OnConstruction(const FTransform& Transform) override;
-//#endif
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	class UBoxComponent* Triggerbox;
 
-	/*UPROPERTY(EditDefaultsOnly)
-	class UBoxComponent* TriggerBox;
+	UPROPERTY()
+	bool bHasActivated;
 
-	UPROPERTY(EditDefaultsOnly)
-	int32 CheckpointIndex;*/
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCheckpointActivation();
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
+	//An orientator which applys to the player when respawning
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	class UArrowComponent* RespawnOrientator;
+
+	UFUNCTION()
+	FRotator GetSpawnRotation();
 };

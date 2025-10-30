@@ -102,6 +102,11 @@ void ASawTrap::OnRestartDelegate()
 
 void ASawTrap::KillPlayer(ARageCharacter* Player)
 {
+	if (!Player->bIsAlive)
+	{
+		return;
+	}
+	
 	Super::KillPlayer(Player);
 
 	FVector LeftVector = -DefaultSceneRoot->GetRightVector() * 50.0f;
