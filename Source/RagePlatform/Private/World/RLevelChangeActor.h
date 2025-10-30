@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "RLevelChangeActor.generated.h"
 
+class URGameInstance;
 class ARageCharacter;
 class UBoxComponent;
 
@@ -33,6 +34,9 @@ protected:
 
 	UPROPERTY()
 	ARageCharacter* PlayerCharacter;
+
+	UPROPERTY()
+	URGameInstance* GameInstance;
 
 	UPROPERTY()
 	float FadeDelay;
