@@ -4,8 +4,10 @@
 #include "World/RLevelChangeActor.h"
 
 #include "Components/BoxComponent.h"
+#include "Framework/RGameInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Gameplay/RagePlatGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
 
