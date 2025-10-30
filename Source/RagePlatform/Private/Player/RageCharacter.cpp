@@ -79,7 +79,6 @@ void ARageCharacter::BeginPlay()
 	}
 
 	bIsAlive = true;
-	bRestarted = true;
 }
 
 // Called to bind functionality to input
@@ -128,10 +127,7 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 
 void ARageCharacter::OnRestartDelegate()
 {
-	SetActorLocation(StartLocation);
-	SetActorRotation(StartRotation);
-	Camera->SetRelativeLocation(StartCameraRelativeLocation);
-	PlayerController->SetControlRotation(StartControllerRotation);
+	Respawn();
 }
 
 void ARageCharacter::Move(const FInputActionValue& Value)

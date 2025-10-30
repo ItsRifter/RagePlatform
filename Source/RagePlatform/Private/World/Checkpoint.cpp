@@ -1,23 +1,46 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "World/Checkpoint.h"
+#include "Components/BoxComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Framework/RGameInstance.h"
+#include "Gameplay/RagePlatGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/RageCharacter.h"
+#include "World/Checkpoint.h"
 
 // Sets default values
 ACheckpoint::ACheckpoint()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bStartWithTickEnabled = false;
 
-	//CheckpointIndex = 0;
+    Triggerbox = CreateDefaultSubobject<UBoxComponent>("Triggerbox");
+    Triggerbox->SetupAttachment(GetRootComponent());
+    Triggerbox->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
+    Triggerbox->SetBoxExtent(FVector(50.0f));
+
+    RespawnOrientator = CreateDefaultSubobject<UArrowComponent>("SpawnRotation");
+    RespawnOrientator->SetupAttachment(Triggerbox);
+    RespawnOrientator->ArrowLength = 64.0f;
 }
 
 // Called when the game starts or when spawned
 void ACheckpoint::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	Triggerbox->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnOverlapBegin);
+    
+    if (URGameInstance* GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+    {
+        if (!GameInstance->bIsEasyMode)
+        {
+            SetActorHiddenInGame(true);
+            SetActorEnableCollision(false);
+            Triggerbox->SetActive(false);
+        }
+    }
 }
 
 void ACheckpoint::PostInitializeComponents()
@@ -35,24 +58,29 @@ void ACheckpoint::PostInitializeComponents()
     }*/
 }
 
-//#if WITH_EDITOR
-//void ACheckpoint::OnConstruction(const FTransform& Transform)
-//{
-//    Super::OnConstruction(Transform);
-//
-//    TArray<AActor*> FoundActors;
-//    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckpoint::StaticClass(), FoundActors);
-//
-//    CheckpointIndex = FoundActors.Num();
-//
-//    UE_LOG(LogTemp, Warning, TEXT("Editor Checkpoint assigned index: %d"), CheckpointIndex);
-//}
-//#endif
-
-// Called every frame
-void ACheckpoint::Tick(float DeltaTime)
+void ACheckpoint::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
+    if (Cast<ARageCharacter>(OtherActor))
+    {
+        if (bHasActivated)
+        {
+            return;
+        }
 
+        bHasActivated = true;
+
+		ARagePlatGame* Gamemode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(GetWorld()));
+
+        if (Gamemode)
+        {
+            Gamemode->SetCheckpoint(this);
+			OnCheckpointActivation();
+        }
+    }
 }
 
+FRotator ACheckpoint::GetSpawnRotation()
+{
+    return RespawnOrientator->GetComponentRotation();
+}

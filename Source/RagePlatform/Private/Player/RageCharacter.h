@@ -109,9 +109,6 @@ public:
 	bool bIsAlive;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bRestarted;
-
-	UPROPERTY(BlueprintReadWrite)
 	ARTempCamera* Temp_Camera;
 
 	UPROPERTY()
@@ -131,6 +128,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void PlayerFall(FVector Impulse);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void Respawn();
 
 	UFUNCTION()
 	void RestartMenu();
