@@ -37,10 +37,10 @@ protected:
 	UPROPERTY()
 	APlayerController* PlayerController;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<UUserWidget> RestartWidgetBP;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<UUserWidget> FadeWidgetBP;
 
 	UPROPERTY()
