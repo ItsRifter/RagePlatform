@@ -83,8 +83,9 @@ void ARLevelChangeActor::OpenNextLevel()
 	{
 		UGameplayStatics::OpenLevel(this,NextLevel);
 		GameInstance->TimeVar = 0;
-		GameInstance->bCanCountLevelTime = false;
 		GameInstance->bCanCountGameTime = false;
+		GameInstance->bCanCountLevelTime = false;
+		GameInstance->bCanLook = false;
 	}
 }
 

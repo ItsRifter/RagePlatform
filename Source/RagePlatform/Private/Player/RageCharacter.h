@@ -139,5 +139,5 @@ public:
 	void CameraShake() const;
 
 	UFUNCTION()
-	void TimeCounter() const;
+	void TimeCounter(float DeltaSeconds) const;
 };
