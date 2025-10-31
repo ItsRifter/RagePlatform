@@ -42,6 +42,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float GameTimeVar;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanLook;
+
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
 };

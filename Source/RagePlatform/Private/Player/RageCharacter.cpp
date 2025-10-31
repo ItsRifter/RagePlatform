@@ -100,13 +100,13 @@ void ARageCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	CameraShake();
-	TimeCounter();
+	TimeCounter(DeltaSeconds);
 
-	if (GameInstance)
+	/*if (GameInstance)
 	{
 		const FString TimeString = FString::Printf(TEXT("%f"),GameInstance->GameTimeVar);
 		GEngine->AddOnScreenDebugMessage(-1,.5f,FColor::Red,TimeString); 
-	}
+	}*/
 }
 
 void ARageCharacter::OnDeathDelegate(const FText& DeathText)
@@ -156,19 +156,35 @@ void ARageCharacter::PauseGame()
 {
 	if (PauseWidgetRef)
 	{
-		PauseWidgetRef->SetVisibility(ESlateVisibility::Visible);
-		PlayerController->SetShowMouseCursor(true);
-		const FInputModeUIOnly InputModeUIOnly;
-		PlayerController->SetInputMode(InputModeUIOnly);
+		if (UGameplayStatics::IsGamePaused(this))
+		{
+			UGameplayStatics::SetGamePaused(this,false);
+			const FInputModeGameOnly InputModeGameOnly;
+			PlayerController->SetInputMode(InputModeGameOnly);
+			PlayerController->SetShowMouseCursor(false);
+			PauseWidgetRef->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			PauseWidgetRef->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			PlayerController->SetShowMouseCursor(true);
+			const FInputModeGameAndUI InputModeGameAndUI;
+			PlayerController->SetInputMode(InputModeGameAndUI);
 
-		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,PauseTexts.Num() - 1);
-		PauseWidgetRef->PauseText->SetText(PauseTexts[Index]);
+			const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,PauseTexts.Num() - 1);
+			PauseWidgetRef->PauseText->SetText(PauseTexts[Index]);
+			UGameplayStatics::SetGamePaused(this,true);
+		}
 	}
-	UGameplayStatics::SetGamePaused(this,true);
 }
 
 void ARageCharacter::Look(const FInputActionValue& Value)
 {
+	if (!GameInstance->bCanLook)
+	{
+		return;
+	}
+	
 	const FVector2D LookValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
@@ -216,13 +232,13 @@ void ARageCharacter::CameraShake() const
 	}
 }
 
-void ARageCharacter::TimeCounter() const
+void ARageCharacter::TimeCounter(float DeltaSeconds) const
 {
 	if (GameInstance)
 	{
 		if (GameInstance->bCanCountGameTime)
 		{
-			GameInstance->GameTimeVar += UGameplayStatics::GetWorldDeltaSeconds(this);
+			GameInstance->GameTimeVar += DeltaSeconds;
 
 			const int32 GameTotalSeconds = FMath::FloorToInt(GameInstance->GameTimeVar);
 			const int32 GameMinutes = (GameTotalSeconds % 3600) / 60;
@@ -243,7 +259,7 @@ void ARageCharacter::TimeCounter() const
 			return;
 		}
 	
-		GameInstance->TimeVar += UGameplayStatics::GetWorldDeltaSeconds(this);
+		GameInstance->TimeVar += DeltaSeconds;
 
 		const int32 TotalSeconds = FMath::FloorToInt(GameInstance->TimeVar);
 		const int32 Minutes = (TotalSeconds % 3600) / 60;
