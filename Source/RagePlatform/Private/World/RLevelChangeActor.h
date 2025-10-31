@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "RLevelChangeActor.generated.h"
 
+class URGameInstance;
 class ARageCharacter;
 class UBoxComponent;
 
@@ -35,6 +36,9 @@ protected:
 	ARageCharacter* PlayerCharacter;
 
 	UPROPERTY()
+	URGameInstance* GameInstance;
+
+	UPROPERTY()
 	float FadeDelay;
 
 	FTimerHandle FadeHandle;
@@ -48,4 +52,7 @@ protected:
 
 	UFUNCTION()
 	void OpenNextLevel();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CompletedLevel(float PlayerTime);
 };

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RPauseWidget.generated.h"
 
+class UTextBlock;
 class URGameInstance;
 class UButton;
 /**
@@ -45,4 +46,14 @@ protected:
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
+
+public:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* TimeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* GameTimeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* PauseText;
 };

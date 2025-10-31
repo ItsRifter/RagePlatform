@@ -37,6 +37,9 @@ protected:
 
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
+	UPROPERTY()
+	TObjectPtr<class UArrowComponent> DistanceVisualizer;
+
 	//Fired when saw trap is going forward (not in reverse)
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnForwardDirection();
@@ -44,9 +47,6 @@ protected:
 	//Fired when saw trap is in reverse
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnReverseDirection();
-
-	UPROPERTY()
-	TObjectPtr<class UArrowComponent> DistanceVisualizer;
 
 private:
 	class UTimelineComponent* TimelineComponent;
