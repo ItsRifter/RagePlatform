@@ -4,7 +4,6 @@
 #include "UI/RPauseWidget.h"
 
 #include "Components/Button.h"
-#include "Components/TextBlock.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -35,10 +34,6 @@ void URPauseWidget::OnMainMenuButtonClicked()
 		if (GameInstance)
 		{
 			GameInstance->DeathCount = 0;
-			GameInstance->TimeVar = 0;
-			GameInstance->bCanCountLevelTime = false;
-			GameInstance->GameTimeVar = 0;
-			GameInstance->bCanCountGameTime = false;
 		}
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}

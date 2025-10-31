@@ -7,7 +7,9 @@
 #include "RMainMenu.generated.h"
 
 class UButton;
-
+/**
+ * 
+ */
 UCLASS()
 class RAGEPLATFORM_API URMainMenu : public UUserWidget
 {
@@ -25,9 +27,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
 
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UCheckBox* EasyToggleBox;
-
 	UPROPERTY()
 	APlayerController* PlayerController;
 
@@ -39,7 +38,4 @@ protected:
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
-
-	UFUNCTION()
-	void OnEasyToggle(bool bIsChecked);
 };

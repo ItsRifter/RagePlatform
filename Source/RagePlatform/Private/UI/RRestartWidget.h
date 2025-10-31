@@ -68,10 +68,4 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* DeathsCountText;
-	
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* TimeText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* GameTimeText;
 };
