@@ -54,5 +54,5 @@ protected:
 	void OpenNextLevel();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnLevelStartChange();
+	void CompletedLevel(float PlayerTime);
 };

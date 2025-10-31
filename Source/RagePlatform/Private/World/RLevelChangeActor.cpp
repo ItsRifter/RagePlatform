@@ -4,8 +4,10 @@
 #include "World/RLevelChangeActor.h"
 
 #include "Components/BoxComponent.h"
+#include "Framework/RGameInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Gameplay/RagePlatGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
 
@@ -87,8 +89,10 @@ void ARLevelChangeActor::OpenNextLevel()
 
 		UGameplayStatics::OpenLevel(this,NextLevel);
 		GameInstance->TimeVar = 0;
-		GameInstance->bCanCountLevelTime = false;
 		GameInstance->bCanCountGameTime = false;
+		GameInstance->bCanCountLevelTime = false;
+		GameInstance->bCanLook = false;
+		CompletedLevel(GameInstance->GameTimeVar);
 	}
 }
 

@@ -1,13 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Audio/VoicePlayer.h"
+
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Curves/CurveFloat.h" 
+
+#include "Framework/RGameInstance.h"
+#include <Kismet/GameplayStatics.h>
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
+
 #include "Traps/SawTrap.h"
 
 ASawTrap::ASawTrap()
@@ -34,6 +40,8 @@ void ASawTrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEven
 void ASawTrap::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 	bIsReversed = false;
 	StartLocation = DefaultSceneRoot->GetRelativeLocation();
@@ -107,6 +115,11 @@ void ASawTrap::KillPlayer(ARageCharacter* Player)
 		return;
 	}
 	
+	if (GameInstance->VoicelinePlayer)
+	{
+		GameInstance->VoicelinePlayer->PlayQuip(EQuip::Saw);
+	}
+
 	Super::KillPlayer(Player);
 
 	FVector LeftVector = -DefaultSceneRoot->GetRightVector() * 50.0f;

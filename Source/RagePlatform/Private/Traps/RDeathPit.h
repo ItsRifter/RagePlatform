@@ -10,6 +10,16 @@ class URGameInstance;
 class UBoxComponent;
 class USoundBase;
 
+UENUM()
+enum class EPitType : uint8
+{
+	Unspecified		UMETA(DisplayName = "Unspecified"),
+
+	Fall			UMETA(DisplayName = "Falling"),
+	Lava			UMETA(DisplayName = "Lava"),
+	Poison			UMETA(DisplayName = "Poison"),
+};
+
 UCLASS()
 class ARDeathPit : public AActor
 {
@@ -45,7 +55,9 @@ protected:
 	USoundBase* KillSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsPoison;
+	EPitType PitType;
+
+
 
 	UFUNCTION()
 	void OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent,

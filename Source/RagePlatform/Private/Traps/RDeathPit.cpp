@@ -3,6 +3,7 @@
 
 #include "Traps/RDeathPit.h"
 
+#include "Audio/VoicePlayer.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -30,7 +31,7 @@ ARDeathPit::ARDeathPit()
 
 	LoopSound = nullptr;
 
-	bIsPoison = false;
+	PitType = EPitType::Unspecified;
 	KillTexts.Add(FText::FromString(TEXT("You Tried to Swim in Lava!!")));
 }
 
@@ -65,6 +66,15 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 		
 		GameInstance->OnDeath.Broadcast(KillTexts[Index]);
 		
+		if (GameInstance->VoicelinePlayer)
+		{
+			switch (PitType)
+			{
+				case EPitType::Lava: GameInstance->VoicelinePlayer->PlayQuip(EQuip::LavaPit);
+				case EPitType::Poison: GameInstance->VoicelinePlayer->PlayQuip(EQuip::PoisonPit);
+			}
+		}
+
 		if (KillSound)
 		{
 			AudioComponent->SetSound(KillSound);

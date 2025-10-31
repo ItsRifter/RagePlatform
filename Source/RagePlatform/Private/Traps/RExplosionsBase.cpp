@@ -3,6 +3,7 @@
 
 #include "RExplosionsBase.h"
 
+#include "Audio/VoicePlayer.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -55,6 +56,11 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			return;
 		}
 		
+		if (GameInstance->VoicelinePlayer)
+		{
+			GameInstance->VoicelinePlayer->PlayQuip(EQuip::Explosion);
+		}
+
 		if (ExplosionSound)
 		{
 			UGameplayStatics::PlaySound2D(this, ExplosionSound);
@@ -95,6 +101,7 @@ void ARExplosionsBase::OnRestartDelegate()
 	{
 		ParticleSystemComponent->DestroyComponent();
 	}
+
 	StaticMesh->SetVisibility(true);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	DeathOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
