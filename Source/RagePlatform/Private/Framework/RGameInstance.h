@@ -9,15 +9,13 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
 
-/**
- * 
- */
 UCLASS()
 class URGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
 public:
+
 	UPROPERTY(BlueprintAssignable)
 	FOnDeath OnDeath;
 
@@ -44,6 +42,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bCanLook;
+
+	UPROPERTY(BlueprintReadOnly)
+	class AVoicePlayer* VoicelinePlayer;
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
