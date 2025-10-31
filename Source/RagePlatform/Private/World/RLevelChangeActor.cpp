@@ -4,7 +4,6 @@
 #include "World/RLevelChangeActor.h"
 
 #include "Components/BoxComponent.h"
-#include "Gameplay/RagePlatGame.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -35,6 +34,8 @@ void ARLevelChangeActor::BeginPlay()
 	bLevelChanged = false;
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
 	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
+
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	
 	PlayerOverlap->OnComponentBeginOverlap.AddDynamic(this,&ARLevelChangeActor::OnComponentBeginOverlap);
 }
@@ -50,6 +51,8 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{
+		OnLevelStartChange();
+
 		GetWorld()->GetTimerManager().SetTimer(
 			FadeHandle,
 			this, &ARLevelChangeActor::OpenNextLevel,
@@ -83,6 +86,9 @@ void ARLevelChangeActor::OpenNextLevel()
 		Gamemode->ResetCheckpoint();
 
 		UGameplayStatics::OpenLevel(this,NextLevel);
+		GameInstance->TimeVar = 0;
+		GameInstance->bCanCountLevelTime = false;
+		GameInstance->bCanCountGameTime = false;
 	}
 }
 
