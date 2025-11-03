@@ -45,6 +45,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bCanLook;
 
+	UPROPERTY(BlueprintReadWrite)
+	FText PlayerName;
+
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
 };
