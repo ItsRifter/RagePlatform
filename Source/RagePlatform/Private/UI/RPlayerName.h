@@ -4,42 +4,43 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "RMainMenu.generated.h"
+#include "RPlayerName.generated.h"
 
-class URPlayerName;
 class UButton;
+class URGameInstance;
+class UEditableText;
 /**
  * 
  */
 UCLASS()
-class RAGEPLATFORM_API URMainMenu : public UUserWidget
+class RAGEPLATFORM_API URPlayerName : public UUserWidget
 {
 	GENERATED_BODY()
 
 protected:
 	virtual void NativeConstruct() override;
-	
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UButton* PlayButton;
+
+	UPROPERTY(EditDefaultsOnly)
+	FName GameLevelName;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UButton* OptionsButton;
-	
+	UEditableText* PlayerNameEditable;
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UButton* QuitButton;
+	UButton* BackButton;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> MainMenuBP;
 
 	UPROPERTY()
 	APlayerController* PlayerController;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> PlayerNameBP;
-
 	UPROPERTY()
-	URPlayerName* PlayerNameWidget;
+	URGameInstance* GameInstance;
 
 	UFUNCTION()
-	void OnPlayButtonClicked();
+	void TextCommitted(const FText& Text, ETextCommit::Type CommitMethod);
 
 	UFUNCTION()
-	void OnQuitButtonClicked();
+	void OnBackButtonClicked();
 };
