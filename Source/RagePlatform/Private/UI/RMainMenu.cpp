@@ -3,7 +3,6 @@
 
 #include "RMainMenu.h"
 
-#include "RPlayerName.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -18,12 +17,13 @@ void URMainMenu::NativeConstruct()
 
 void URMainMenu::OnPlayButtonClicked()
 {
-	if (PlayerNameBP != nullptr)
+	if (GameLevelName != NAME_None)
 	{
-		UUserWidget* TempWidget = CreateWidget(GetWorld(), PlayerNameBP);
-		TempWidget->AddToViewport();
-		PlayerNameWidget = Cast<URPlayerName>(TempWidget);
-		RemoveFromParent();
+		UGameplayStatics::OpenLevel(this,GameLevelName,true);
+
+		const FInputModeGameOnly InputModeGameOnly;
+		PlayerController->SetInputMode(InputModeGameOnly);
+		PlayerController->SetShowMouseCursor(false);
 	}
 }
 
