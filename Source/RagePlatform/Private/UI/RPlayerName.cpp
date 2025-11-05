@@ -24,7 +24,7 @@ void URPlayerName::NativeConstruct()
 
 void URPlayerName::TextCommitted(const FText& Text, ETextCommit::Type CommitMethod)
 {
-	if (GameLevelName != NAME_None)
+	if (GameLevelName != NAME_None && !Text.IsEmpty())
 	{
 		UGameplayStatics::OpenLevel(this,GameLevelName,true);
 

@@ -48,6 +48,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FText PlayerName;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 LevelNumber;
+
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
 };

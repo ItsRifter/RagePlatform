@@ -53,6 +53,6 @@ protected:
 	UFUNCTION()
 	void OpenNextLevel();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void CompletedLevel(float PlayerTime);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void CompletedLevel(float PlayerTime, float GameTime);
 };

@@ -101,12 +101,6 @@ void ARageCharacter::Tick(float DeltaSeconds)
 
 	CameraShake();
 	TimeCounter(DeltaSeconds);
-
-	/*if (GameInstance)
-	{
-		const FString TimeString = FString::Printf(TEXT("%f"),GameInstance->GameTimeVar);
-		GEngine->AddOnScreenDebugMessage(-1,.5f,FColor::Red,TimeString); 
-	}*/
 }
 
 void ARageCharacter::OnDeathDelegate(const FText& DeathText)
