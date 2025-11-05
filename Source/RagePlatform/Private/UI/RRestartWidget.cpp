@@ -56,6 +56,7 @@ void URRestartWidget::OnMainMenuButtonClicked()
 	{
 		if (GameInstance)
 		{
+			GameInstance->OnGameEnd.Broadcast();
 			GameInstance->DeathCount = 0;
 			GameInstance->TimeVar = 0;
 			GameInstance->bCanCountLevelTime = false;

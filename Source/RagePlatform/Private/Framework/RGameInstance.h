@@ -6,8 +6,27 @@
 #include "Engine/GameInstance.h"
 #include "RGameInstance.generated.h"
 
+USTRUCT(BlueprintType)
+struct FPlayerStats
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, FString> LevelTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString DeathCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString GameTime;
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnd);
 
 /**
  * 
@@ -23,6 +42,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGameRestart OnGameRestart;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGameEnd OnGameEnd;
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 DeathCount = 0;
@@ -50,6 +72,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 LevelNumber;
+
+	UPROPERTY(BlueprintReadWrite)
+	FPlayerStats PlayerStats;
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
