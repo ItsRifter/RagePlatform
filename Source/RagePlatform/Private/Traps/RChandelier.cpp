@@ -1,6 +1,4 @@
 
-
-#include "Audio/VoicePlayer.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -97,11 +95,6 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 	}
 
 	PlayerCharacter->bIsAlive = false;
-
-	if (GameInstance->VoicelinePlayer)
-	{
-		GameInstance->VoicelinePlayer->PlayQuip(EQuip::Chandelier);
-	}
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{

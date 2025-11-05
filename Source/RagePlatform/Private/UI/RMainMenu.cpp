@@ -4,8 +4,6 @@
 #include "RMainMenu.h"
 
 #include "Components/Button.h"
-#include "Components/CheckBox.h"
-#include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void URMainMenu::NativeConstruct()
@@ -15,8 +13,6 @@ void URMainMenu::NativeConstruct()
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
 	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
-
-	EasyToggleBox->OnCheckStateChanged.AddDynamic(this, &URMainMenu::OnEasyToggle);
 }
 
 void URMainMenu::OnPlayButtonClicked()
@@ -35,14 +31,4 @@ void URMainMenu::OnQuitButtonClicked()
 {
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this,PlayerController,QuitPreference,false);
-}
-
-void URMainMenu::OnEasyToggle(bool bIsChecked)
-{
-	URGameInstance* GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
-
-	if (GameInstance)
-	{
-		GameInstance->bIsEasyMode = bIsChecked;
-	}
 }
