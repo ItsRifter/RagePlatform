@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RMainMenu.generated.h"
 
+class URPlayerName;
 class UButton;
 
 UCLASS()
@@ -32,7 +33,10 @@ protected:
 	APlayerController* PlayerController;
 
 	UPROPERTY(EditDefaultsOnly)
-	FName GameLevelName;
+	TSubclassOf<UUserWidget> PlayerNameBP;
+
+	UPROPERTY()
+	URPlayerName* PlayerNameWidget;
 
 	UFUNCTION()
 	void OnPlayButtonClicked();

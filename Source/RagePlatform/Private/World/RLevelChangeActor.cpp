@@ -84,15 +84,20 @@ void ARLevelChangeActor::OpenNextLevel()
 {
 	if (NextLevel != NAME_None)
 	{
-		ARagePlatGame* Gamemode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));
-		Gamemode->ResetCheckpoint();
+		if (NextLevel.ToString().Contains("MainMenu"))
+		{
+			GameInstance->OnGameEnd.Broadcast();
+			GameInstance->GameTimeVar = 0;
+		}
+		ARagePlatGame* GameMode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));
+		GameMode->ResetCheckpoint();
 
+		CompletedLevel(GameInstance->TimeVar, GameInstance->GameTimeVar);
 		UGameplayStatics::OpenLevel(this,NextLevel);
 		GameInstance->TimeVar = 0;
 		GameInstance->bCanCountGameTime = false;
 		GameInstance->bCanCountLevelTime = false;
 		GameInstance->bCanLook = false;
-		CompletedLevel(GameInstance->GameTimeVar);
 	}
 }
 
