@@ -42,7 +42,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget> FadeWidgetBP;
 
-	UPROPERTY(EditDefaultsOnly,Category = "Restart")
+	UPROPERTY(EditDefaultsOnly, Category = "Restart")
 	float RestartButtonVisibility;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -99,7 +99,7 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void JumpTrigger();
-	
+
 	void PauseGame();
 
 	UFUNCTION()
