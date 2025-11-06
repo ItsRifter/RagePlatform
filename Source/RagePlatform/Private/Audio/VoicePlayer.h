@@ -1,0 +1,74 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "VoicePlayer.generated.h"
+
+class USoundBase;
+
+UENUM()
+enum class EQuip : uint8
+{
+	Spikes				UMETA(DisplayName = "Spikes"),
+	Axe					UMETA(DisplayName = "SwingingAxe"),
+	Saw					UMETA(DisplayName = "Sawblade"),
+	Chandelier			UMETA(DisplayName = "Chandelier"),
+	LavaPit				UMETA(DisplayName = "LavaPit"),
+	PoisonPit			UMETA(DisplayName = "PoisonPit"),
+	Explosion			UMETA(DisplayName = "Explosions"),
+};
+
+UCLASS(Blueprintable)
+class AVoicePlayer : public AActor
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this actor's properties
+	AVoicePlayer();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> SpikeQuips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> AxeQuips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> ChandelierQuips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> LavaQuips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> PoisonQuips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> SawQuips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> ExplosionQuips;
+
+	UPROPERTY()
+	bool bWaitTimer;
+
+	UPROPERTY()
+	FTimerHandle WaitHandle;
+
+	UFUNCTION()
+	void ReadyNextQuip();
+
+public:
+
+	UFUNCTION()
+	void PlayQuip(EQuip QuipToPlay);
+
+private:
+
+	bool IsValidSoundArray(EQuip QuipCheck);
+};

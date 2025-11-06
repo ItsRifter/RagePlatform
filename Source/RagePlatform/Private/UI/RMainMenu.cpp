@@ -5,30 +5,30 @@
 
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
+#include "RPlayerName.h"
 
 void URMainMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	PlayerController = UGameplayStatics::GetPlayerController(this,0);
+	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
 }
 
 void URMainMenu::OnPlayButtonClicked()
 {
-	if (GameLevelName != NAME_None)
+	if (PlayerNameBP != nullptr)
 	{
-		UGameplayStatics::OpenLevel(this,GameLevelName,true);
-
-		const FInputModeGameOnly InputModeGameOnly;
-		PlayerController->SetInputMode(InputModeGameOnly);
-		PlayerController->SetShowMouseCursor(false);
+		UUserWidget* TempWidget = CreateWidget(GetWorld(), PlayerNameBP);
+		TempWidget->AddToViewport();
+		PlayerNameWidget = Cast<URPlayerName>(TempWidget);
+		RemoveFromParent();
 	}
 }
 
 void URMainMenu::OnQuitButtonClicked()
 {
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
-	UKismetSystemLibrary::QuitGame(this,PlayerController,QuitPreference,false);
+	UKismetSystemLibrary::QuitGame(this, PlayerController, QuitPreference, false);
 }

@@ -67,6 +67,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bCanLook;
 
+	UPROPERTY(BlueprintReadOnly)
+	class AVoicePlayer* VoicelinePlayer;
+
 	UPROPERTY(BlueprintReadWrite)
 	FText PlayerName;
 
