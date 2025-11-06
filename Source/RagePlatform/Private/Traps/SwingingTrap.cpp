@@ -1,9 +1,15 @@
+
+#include "Audio/VoicePlayer.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Curves/CurveFloat.h" 
+
+#include "Framework/RGameInstance.h"
+#include <Kismet/GameplayStatics.h>
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
+
 #include "Traps/SwingingTrap.h"
 
 ASwingingTrap::ASwingingTrap()
@@ -32,6 +38,8 @@ void ASwingingTrap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 void ASwingingTrap::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 	bDoPlayerKill = true;
 	bGoReverse = false;
@@ -122,6 +130,11 @@ void ASwingingTrap::KillPlayer(ARageCharacter* Player)
 	}
 
 	Player->PlayerFall(ImpactVelocity);
+
+	if (GameInstance->VoicelinePlayer)
+	{
+		GameInstance->VoicelinePlayer->PlayQuip(EQuip::Axe);
+	}
 
 	if (Player->Temp_Camera)
 	{

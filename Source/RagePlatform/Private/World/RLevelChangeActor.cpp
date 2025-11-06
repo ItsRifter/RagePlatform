@@ -53,6 +53,8 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{
+		OnLevelStartChange();
+
 		GetWorld()->GetTimerManager().SetTimer(
 			FadeHandle,
 			this, &ARLevelChangeActor::OpenNextLevel,
