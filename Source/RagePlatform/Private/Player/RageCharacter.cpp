@@ -162,8 +162,8 @@ void ARageCharacter::PauseGame()
 		{
 			PauseWidgetRef->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			PlayerController->SetShowMouseCursor(true);
-			const FInputModeUIOnly InputModeUIOnly;
-			PlayerController->SetInputMode(InputModeUIOnly);
+			const FInputModeGameAndUI InputModeGameAndUI;
+			PlayerController->SetInputMode(InputModeGameAndUI);
 
 			const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,PauseTexts.Num() - 1);
 			PauseWidgetRef->PauseText->SetText(PauseTexts[Index]);
