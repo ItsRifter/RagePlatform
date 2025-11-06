@@ -6,9 +6,10 @@
 #include "Blueprint/UserWidget.h"
 #include "RMainMenu.generated.h"
 
-class URPlayerName;
 class UButton;
-
+/**
+ * 
+ */
 UCLASS()
 class RAGEPLATFORM_API URMainMenu : public UUserWidget
 {
@@ -26,24 +27,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
 
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UCheckBox* EasyToggleBox;
-
 	UPROPERTY()
 	APlayerController* PlayerController;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> PlayerNameBP;
-
-	UPROPERTY()
-	URPlayerName* PlayerNameWidget;
+	FName GameLevelName;
 
 	UFUNCTION()
 	void OnPlayButtonClicked();
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
-
-	UFUNCTION()
-	void OnEasyToggle(bool bIsChecked);
 };

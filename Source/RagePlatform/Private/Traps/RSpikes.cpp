@@ -3,7 +3,6 @@
 
 #include "RSpikes.h"
 
-#include "Audio/VoicePlayer.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -11,6 +10,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
+
 
 // Sets default values
 ARSpikes::ARSpikes()
@@ -53,7 +53,6 @@ void ARSpikes::BeginPlay()
 	if (GameInstance)
 	{
 		GameInstance->OnGameRestart.AddDynamic(this, &ARSpikes::OnRestartDelegate);
-		//GameInstance->OnDeath.AddDynamic(this, )
 	}
 
 	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARSpikes::OnComponentBeginOverlap);
@@ -82,16 +81,13 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		{
 			PlayerCharacter->bIsAlive = false;
 			bSpikeResetComplete = false;
-
-
 			OnPlayerKill();
 
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
-				PlayerCharacter->GetActorLocation(),
-				GetActorLocation());
-				const FVector LaunchVelocity = LookAtRotation.Vector() * -200.f;
-				PlayerImpact = FVector(LaunchVelocity.X,LaunchVelocity.Y,250.f
-			);
+			PlayerCharacter->GetActorLocation(),
+			GetActorLocation());
+			const FVector LaunchVelocity = LookAtRotation.Vector() * -200.f;
+			PlayerImpact = FVector(LaunchVelocity.X,LaunchVelocity.Y,250.f);
 			
 			PlayerCharacter->PlayerFall(PlayerImpact);
 
@@ -132,11 +128,6 @@ void ARSpikes::OnMoveFinished()
 	const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
 	GameInstance->OnDeath.Broadcast(KillTexts[Index]);
 	
-	if (GameInstance->VoicelinePlayer)
-	{
-		GameInstance->VoicelinePlayer->PlayQuip(EQuip::Spikes);
-	}
-
 	GetWorld()->GetTimerManager().SetTimer(ReverseTimerHandle, this, &ARSpikes::ReverseSpike, 2.f, false);
 }
 

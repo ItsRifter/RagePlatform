@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "RageCharacter.generated.h"
 
-class URPauseWidget;
 class ARTempCamera;
 class URRestartWidget;
 class UInputAction;
@@ -37,20 +36,29 @@ protected:
 	UPROPERTY()
 	APlayerController* PlayerController;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget> RestartWidgetBP;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget> FadeWidgetBP;
-
-	UPROPERTY()
-	UUserWidget* RestartWidget;
 
 	UPROPERTY(EditDefaultsOnly,Category = "Restart")
 	float RestartButtonVisibility;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> PauseWidgetBP;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FText> PauseTexts;
+
+	UPROPERTY()
+	UUserWidget* RestartWidget;
+
 	UPROPERTY()
 	URRestartWidget* RestartWidgetRef;
+
+	UPROPERTY(BlueprintReadWrite)
+	class URPauseWidget* PauseWidgetRef;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;
@@ -82,12 +90,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	UInputAction* PauseAction;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> PauseWidgetBP;
-
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FText> PauseTexts;
-
 	UFUNCTION()
 	void OnDeathDelegate(const FText& DeathText);
 
@@ -97,7 +99,11 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void JumpTrigger();
+	
 	void PauseGame();
+
+	UFUNCTION()
+	void TimeCounter(float DeltaSeconds) const;
 
 public:
 	// Called to bind functionality to input
@@ -120,9 +126,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector DeathLocation;
 
-	UPROPERTY(BlueprintReadWrite)
-	URPauseWidget* PauseWidgetRef;
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void DrownPlayer(FVector HitLocation);
 
@@ -137,7 +140,4 @@ public:
 
 	UFUNCTION()
 	void CameraShake() const;
-
-	UFUNCTION()
-	void TimeCounter(float DeltaSeconds) const;
 };

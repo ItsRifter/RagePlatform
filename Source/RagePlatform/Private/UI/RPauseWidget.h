@@ -6,12 +6,10 @@
 #include "Blueprint/UserWidget.h"
 #include "RPauseWidget.generated.h"
 
-class UTextBlock;
 class URGameInstance;
 class UButton;
-/**
- * 
- */
+class UTextBlock;
+
 UCLASS()
 class URPauseWidget : public UUserWidget
 {
@@ -25,10 +23,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* MainMenuButton;
-	
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
-	
+
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
@@ -37,7 +35,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FName MainMenuLevelName;
-	
+
 	UFUNCTION()
 	void OnResumeButtonClicked();
 

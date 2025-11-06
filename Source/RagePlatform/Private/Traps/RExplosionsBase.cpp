@@ -3,7 +3,6 @@
 
 #include "RExplosionsBase.h"
 
-#include "Audio/VoicePlayer.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -39,10 +38,7 @@ void ARExplosionsBase::BeginPlay()
 
 	DeathOverlap->OnComponentBeginOverlap.AddDynamic(this, &ARExplosionsBase::OnComponentBeginOverlapKillBox);
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
-	if (GameInstance)
-	{
-		GameInstance->OnGameRestart.AddDynamic(this, &ARExplosionsBase::OnRestartDelegate);
-	}
+	GameInstance->OnGameRestart.AddDynamic(this, &ARExplosionsBase::OnRestartDelegate);
 }
 
 void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -56,11 +52,6 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			return;
 		}
 		
-		if (GameInstance->VoicelinePlayer)
-		{
-			GameInstance->VoicelinePlayer->PlayQuip(EQuip::Explosion);
-		}
-
 		if (ExplosionSound)
 		{
 			UGameplayStatics::PlaySound2D(this, ExplosionSound);
@@ -77,6 +68,11 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			GetActorLocation());
 
 		const FVector LaunchVelocity = LookAtRotation.Vector() * -450.0f;
+
+		/*PlayerCharacter->LaunchCharacter(
+			FVector(LaunchVelocity.X, LaunchVelocity.Y, 250.f),
+			true,
+			true);*/
 
 		PlayerCharacter->PlayerFall(FVector(LaunchVelocity.X, LaunchVelocity.Y, 200.0f));
 
@@ -101,7 +97,6 @@ void ARExplosionsBase::OnRestartDelegate()
 	{
 		ParticleSystemComponent->DestroyComponent();
 	}
-
 	StaticMesh->SetVisibility(true);
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	DeathOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
