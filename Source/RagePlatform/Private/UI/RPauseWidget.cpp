@@ -33,6 +33,7 @@ void URPauseWidget::OnMainMenuButtonClicked()
 	{
 		if (GameInstance)
 		{
+			GameInstance->OnGameEnd.Broadcast();
 			GameInstance->DeathCount = 0;
 		}
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);

@@ -4,9 +4,10 @@
 #include "World/RLevelChangeActor.h"
 
 #include "Components/BoxComponent.h"
-#include "Gameplay/RagePlatGame.h"
+#include "Framework/RGameInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Gameplay/RagePlatGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
 
@@ -35,6 +36,8 @@ void ARLevelChangeActor::BeginPlay()
 	bLevelChanged = false;
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
 	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
+
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	
 	PlayerOverlap->OnComponentBeginOverlap.AddDynamic(this,&ARLevelChangeActor::OnComponentBeginOverlap);
 }
@@ -79,10 +82,20 @@ void ARLevelChangeActor::OpenNextLevel()
 {
 	if (NextLevel != NAME_None)
 	{
-		ARagePlatGame* Gamemode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));
-		Gamemode->ResetCheckpoint();
+		if (NextLevel.ToString().Contains("MainMenu"))
+		{
+			GameInstance->OnGameEnd.Broadcast();
+			GameInstance->GameTimeVar = 0;
+		}
+		ARagePlatGame* GameMode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));
+		GameMode->ResetCheckpoint();
 
+		CompletedLevel(GameInstance->TimeVar, GameInstance->GameTimeVar);
 		UGameplayStatics::OpenLevel(this,NextLevel);
+		GameInstance->TimeVar = 0;
+		GameInstance->bCanCountGameTime = false;
+		GameInstance->bCanCountLevelTime = false;
+		GameInstance->bCanLook = false;
 	}
 }
 
