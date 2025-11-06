@@ -8,9 +8,8 @@
 
 class URGameInstance;
 class UButton;
-/**
- * 
- */
+class UTextBlock;
+
 UCLASS()
 class URPauseWidget : public UUserWidget
 {
@@ -24,10 +23,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* MainMenuButton;
-	
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
-	
+
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
@@ -36,7 +35,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FName MainMenuLevelName;
-	
+
 	UFUNCTION()
 	void OnResumeButtonClicked();
 
@@ -45,4 +44,14 @@ protected:
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
+
+public:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* TimeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* GameTimeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* PauseText;
 };

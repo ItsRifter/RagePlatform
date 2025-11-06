@@ -12,9 +12,7 @@ class UTextBlock;
 class ARageCharacter;
 class URGameInstance;
 class UButton;
-/**
- * 
- */
+
 UCLASS()
 class URRestartWidget : public UUserWidget
 {
@@ -60,7 +58,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	USizeBox* SizeBoxButtons;
 
-	UPROPERTY(meta = (BindWidgetAnim),BlueprintReadWrite, Transient)
+	UPROPERTY(meta = (BindWidgetAnim), BlueprintReadWrite, Transient)
 	UWidgetAnimation* RestartAnim;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -68,4 +66,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* DeathsCountText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* TimeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* GameTimeText;
 };

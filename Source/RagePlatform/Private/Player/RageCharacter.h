@@ -42,14 +42,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UUserWidget> FadeWidgetBP;
 
-	UPROPERTY()
-	UUserWidget* RestartWidget;
-
 	UPROPERTY(EditDefaultsOnly,Category = "Restart")
 	float RestartButtonVisibility;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> PauseWidgetBP;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FText> PauseTexts;
+
+	UPROPERTY()
+	UUserWidget* RestartWidget;
+
 	UPROPERTY()
 	URRestartWidget* RestartWidgetRef;
+
+	UPROPERTY(BlueprintReadWrite)
+	class URPauseWidget* PauseWidgetRef;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector StartLocation;
@@ -90,7 +99,11 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void JumpTrigger();
+	
 	void PauseGame();
+
+	UFUNCTION()
+	void TimeCounter(float DeltaSeconds) const;
 
 public:
 	// Called to bind functionality to input
