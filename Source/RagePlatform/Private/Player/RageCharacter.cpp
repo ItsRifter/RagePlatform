@@ -18,7 +18,7 @@
 // Sets default values
 ARageCharacter::ARageCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("MainCamera");
@@ -44,7 +44,7 @@ void ARageCharacter::BeginPlay()
 	}
 
 	PlayerController = Cast<APlayerController>(Controller);
-	
+
 	if (PlayerController)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -73,7 +73,7 @@ void ARageCharacter::BeginPlay()
 
 	if (PauseWidgetBP)
 	{
-		UUserWidget* PauseWidget = CreateWidget(GetWorld(),PauseWidgetBP);
+		UUserWidget* PauseWidget = CreateWidget(GetWorld(), PauseWidgetBP);
 		PauseWidgetRef = Cast<URPauseWidget>(PauseWidget);
 		PauseWidget->AddToViewport();
 	}
@@ -110,11 +110,11 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 		RestartWidgetRef->DeathText->SetText(DeathText);
 		GameInstance->DeathCount++;
 		RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
-		GetWorld()->GetTimerManager().SetTimer(RestartWidgetRef->VisibilityTimer,[this]
-		{
-			RestartWidgetRef->PlayAnimation(RestartWidgetRef->RestartAnim);
-			RestartWidgetRef->SizeBoxButtons->SetVisibility(ESlateVisibility::Visible);
-		},RestartButtonVisibility,false);
+		GetWorld()->GetTimerManager().SetTimer(RestartWidgetRef->VisibilityTimer, [this]
+			{
+				RestartWidgetRef->PlayAnimation(RestartWidgetRef->RestartAnim);
+				RestartWidgetRef->SizeBoxButtons->SetVisibility(ESlateVisibility::Visible);
+			}, RestartButtonVisibility, false);
 	}
 	RestartMenu();
 }
@@ -152,7 +152,7 @@ void ARageCharacter::PauseGame()
 	{
 		if (UGameplayStatics::IsGamePaused(this))
 		{
-			UGameplayStatics::SetGamePaused(this,false);
+			UGameplayStatics::SetGamePaused(this, false);
 			const FInputModeGameOnly InputModeGameOnly;
 			PlayerController->SetInputMode(InputModeGameOnly);
 			PlayerController->SetShowMouseCursor(false);
@@ -162,12 +162,13 @@ void ARageCharacter::PauseGame()
 		{
 			PauseWidgetRef->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			PlayerController->SetShowMouseCursor(true);
-			const FInputModeGameAndUI InputModeGameAndUI;
-			PlayerController->SetInputMode(InputModeGameAndUI);
 
-			const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,PauseTexts.Num() - 1);
+			const FInputModeUIOnly InputModeUIOnly;
+			PlayerController->SetInputMode(InputModeUIOnly);
+
+			const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0, PauseTexts.Num() - 1);
 			PauseWidgetRef->PauseText->SetText(PauseTexts[Index]);
-			UGameplayStatics::SetGamePaused(this,true);
+			UGameplayStatics::SetGamePaused(this, true);
 		}
 	}
 }
@@ -178,7 +179,7 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 	{
 		return;
 	}
-	
+
 	const FVector2D LookValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
@@ -188,7 +189,7 @@ void ARageCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void ARageCharacter::RestartMenu() 
+void ARageCharacter::RestartMenu()
 {
 	if (PlayerController)
 	{
@@ -247,12 +248,12 @@ void ARageCharacter::TimeCounter(float DeltaSeconds) const
 				RestartWidgetRef->GameTimeText->SetText(FText::FromString(GameTimeString));
 			}
 		}
-		
+
 		if (!GameInstance->bCanCountLevelTime)
 		{
 			return;
 		}
-	
+
 		GameInstance->TimeVar += DeltaSeconds;
 
 		const int32 TotalSeconds = FMath::FloorToInt(GameInstance->TimeVar);
