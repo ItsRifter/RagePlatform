@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* BackButton;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* SubmitButton;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> MainMenuBP;
 
@@ -39,4 +42,7 @@ protected:
 
 	UFUNCTION()
 	void OnBackButtonClicked();
+
+	UFUNCTION()
+	void OnSubmitButtonClicked();
 };
