@@ -1,9 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/RPauseWidget.h"
 
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -11,7 +9,7 @@ void URPauseWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	PlayerController = UGameplayStatics::GetPlayerController(this,0);
+	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	ResumeButton->OnClicked.AddDynamic(this, &URPauseWidget::OnResumeButtonClicked);
 	MainMenuButton->OnClicked.AddDynamic(this, &URPauseWidget::OnMainMenuButtonClicked);
@@ -20,7 +18,7 @@ void URPauseWidget::NativeConstruct()
 
 void URPauseWidget::OnResumeButtonClicked()
 {
-	UGameplayStatics::SetGamePaused(this,false);
+	UGameplayStatics::SetGamePaused(this, false);
 	const FInputModeGameOnly InputModeGameOnly;
 	PlayerController->SetInputMode(InputModeGameOnly);
 	PlayerController->SetShowMouseCursor(false);
@@ -33,7 +31,12 @@ void URPauseWidget::OnMainMenuButtonClicked()
 	{
 		if (GameInstance)
 		{
+			GameInstance->OnGameEnd.Broadcast();
 			GameInstance->DeathCount = 0;
+			GameInstance->TimeVar = 0;
+			GameInstance->bCanCountLevelTime = false;
+			GameInstance->GameTimeVar = 0;
+			GameInstance->bCanCountGameTime = false;
 		}
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}
@@ -42,5 +45,5 @@ void URPauseWidget::OnMainMenuButtonClicked()
 void URPauseWidget::OnQuitButtonClicked()
 {
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
-	UKismetSystemLibrary::QuitGame(this,PlayerController,QuitPreference,false);
+	UKismetSystemLibrary::QuitGame(this, PlayerController, QuitPreference, false);
 }
