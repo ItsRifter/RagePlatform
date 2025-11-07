@@ -38,8 +38,6 @@ void ARChandelier::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
@@ -65,8 +63,16 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 		return;
 	}
 
-	if (Cast<ARageCharacter>(OtherActor))
+	/*if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
+		if (!PlayerCharacter->bIsAlive)
+		{
+			return;
+		}
+
+		PlayerCharacter->bIsAlive = false;
+		PlayerCharacter->OnDeath(EKillerTrap::Chandelier);
+
 		if (KillSound)
 		{
 			UGameplayStatics::PlaySound2D(this, KillSound);
@@ -82,22 +88,21 @@ void ARChandelier::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overlappe
 			PlayerCharacter->Temp_Camera->FocusVar = this;
 			PlayerCharacter->Temp_Camera->StartFocus();
 		}
-	}
+	}*/
 }
 
 void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
                                                     bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!PlayerCharacter->bIsAlive)
-	{
-		return;
-	}
 
-	if (Cast<ARageCharacter>(OtherActor))
-	{
-		PlayerCharacter->bIsAlive = false;
-		
+	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
+	{	
+		if (!PlayerCharacter->bIsAlive)
+		{
+			return;
+		}
+
 		if (ActivateSound)
 		{
 			AudioComponent->SetSound(ActivateSound);
@@ -112,8 +117,28 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 			10.f,
 			500.f,
 			1500.f) * -1;
+
 		ChandelierMesh->AddImpulse(FVector(0.f, 0.f, ImpulseZ), NAME_None, true);
 		bChandelierFell = true;
+
+		PlayerCharacter->bIsAlive = false;
+		PlayerCharacter->OnDeath(EKillerTrap::Chandelier);
+
+		if (KillSound)
+		{
+			UGameplayStatics::PlaySound2D(this, KillSound);
+		}
+
+		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0, KillTexts.Num() - 1);
+
+		GameInstance->OnDeath.Broadcast(KillTexts[Index]);
+		PlayerCharacter->PlayerFall(FVector::ZeroVector);
+
+		if (PlayerCharacter->Temp_Camera)
+		{
+			PlayerCharacter->Temp_Camera->FocusVar = this;
+			PlayerCharacter->Temp_Camera->StartFocus();
+		}
 	}
 }
 
