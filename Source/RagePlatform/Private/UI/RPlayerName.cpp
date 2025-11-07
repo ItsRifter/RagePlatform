@@ -19,22 +19,33 @@ void URPlayerName::NativeConstruct()
 
 	PlayerNameEditable->SetHintText(FText::FromString(TEXT("Your Name")));
 	PlayerNameEditable->OnTextCommitted.AddDynamic(this, &URPlayerName::TextCommitted);
+	
 	BackButton->OnClicked.AddDynamic(this,&URPlayerName::OnBackButtonClicked);
+	SubmitButton->OnClicked.AddDynamic(this, &URPlayerName::OnSubmitButtonClicked);
 }
 
 void URPlayerName::TextCommitted(const FText& Text, ETextCommit::Type CommitMethod)
 {
-	if (GameLevelName != NAME_None && !Text.IsEmpty())
+	if (GameInstance)
 	{
-		UGameplayStatics::OpenLevel(this,GameLevelName,true);
+		GameInstance->PlayerName = Text;
+	}
+	
+	if (CommitMethod == ETextCommit::OnEnter)
+	{	
+		OnSubmitButtonClicked();
+	}
+}
+
+void URPlayerName::OnSubmitButtonClicked()
+{
+	if (GameLevelName != NAME_None && !GameInstance->PlayerName.IsEmpty())
+	{
+		UGameplayStatics::OpenLevel(this, GameLevelName, true);
 
 		const FInputModeGameOnly InputModeGameOnly;
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);
-		if (GameInstance)
-		{
-			GameInstance->PlayerName = Text;
-		}
 	}
 }
 

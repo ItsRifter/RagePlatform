@@ -94,10 +94,10 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 		return;
 	}
 
-	PlayerCharacter->bIsAlive = false;
-
 	if (Cast<ARageCharacter>(OtherActor))
 	{
+		PlayerCharacter->bIsAlive = false;
+		
 		if (ActivateSound)
 		{
 			AudioComponent->SetSound(ActivateSound);
