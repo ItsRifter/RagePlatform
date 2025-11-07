@@ -108,6 +108,7 @@ void ASawTrap::KillPlayer(ARageCharacter* Player)
 	}
 	
 	Super::KillPlayer(Player);
+	Player->OnDeath(EKillerTrap::Saw);
 
 	FVector LeftVector = -DefaultSceneRoot->GetRightVector() * 50.0f;
 

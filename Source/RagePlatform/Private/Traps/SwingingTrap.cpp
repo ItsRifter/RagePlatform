@@ -96,6 +96,7 @@ void ASwingingTrap::OnDeathDelegate(const FText& DeathText)
 void ASwingingTrap::KillPlayer(ARageCharacter* Player)
 {
 	Super::KillPlayer(Player);
+	Player->OnDeath(EKillerTrap::Axe);
 
 	float CurRoll = FMath::Abs(GetRootComponent()->GetRelativeRotation().Roll);
 
