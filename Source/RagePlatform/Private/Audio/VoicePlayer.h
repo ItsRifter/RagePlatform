@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Quips")
 	TArray<USoundBase*> ExplosionQuips;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Quips")
+	TArray<USoundBase*> ArrowQuips;
+
 	UPROPERTY()
 	bool bWaitTimer;
 
@@ -53,10 +56,10 @@ protected:
 
 public:
 
-	UFUNCTION()
-	void PlayQuip(EKillerTrap QuipToPlay);
+	UFUNCTION(BlueprintCallable)
+	void PlayQuip(ETrap QuipToPlay);
 
 private:
 
-	bool IsValidSoundArray(EKillerTrap QuipCheck);
+	bool IsValidSoundArray(ETrap QuipCheck);
 };
