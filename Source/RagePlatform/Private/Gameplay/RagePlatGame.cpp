@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+#include "RagePlatGame.h"
 
 #include "Framework/RGameInstance.h"
 #include "Gameplay/RagePlatGame.h"
@@ -7,8 +6,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/GameplayStatics.h"
 #include "World/Checkpoint.h"
-
-#include "RagePlatGame.h"
 
 void ARagePlatGame::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {

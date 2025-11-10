@@ -14,18 +14,6 @@ class UInputMappingContext;
 class URGameInstance;
 struct FInputActionValue;
 
-UENUM(BlueprintType)
-enum class EKillerTrap : uint8
-{
-	Spikes				UMETA(DisplayName = "Spikes"),
-	Axe					UMETA(DisplayName = "SwingingAxe"),
-	Saw					UMETA(DisplayName = "Sawblade"),
-	Chandelier			UMETA(DisplayName = "Chandelier"),
-	LavaPit				UMETA(DisplayName = "LavaPit"),
-	PoisonPit			UMETA(DisplayName = "PoisonPit"),
-	Explosion			UMETA(DisplayName = "Explosions"),
-};
-
 UCLASS()
 class ARageCharacter : public ACharacter
 {
@@ -153,6 +141,6 @@ public:
 	UFUNCTION()
 	void CameraShake() const;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnDeath(EKillerTrap TrapEnum);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OnDeath(ETrap TrapEnum);
 };
