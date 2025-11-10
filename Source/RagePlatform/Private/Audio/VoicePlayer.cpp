@@ -64,35 +64,35 @@ void AVoicePlayer::PlayQuip(ETrap QuipToPlay)
 	switch (QuipToPlay)
 	{
 		case ETrap::Spikes:
-			SoundToPlay = SpikeQuips[FMath::RandRange(0, SpikeQuips.Max() - 1)];
+			SoundToPlay = SpikeQuips[FMath::RandRange(0, SpikeQuips.Num()-1)];
 			break;
 
 		case ETrap::Axe:
-			SoundToPlay = AxeQuips[FMath::RandRange(0, AxeQuips.Max() - 1)];
+			SoundToPlay = AxeQuips[FMath::RandRange(0, AxeQuips.Num()-1)];
 			break;
 
 		case ETrap::Chandelier:
-			SoundToPlay = ChandelierQuips[FMath::RandRange(0, ChandelierQuips.Max() - 1)];
+			SoundToPlay = ChandelierQuips[FMath::RandRange(0, ChandelierQuips.Num()-1)];
 			break;
 
 		case ETrap::Explosion:
-			SoundToPlay = ExplosionQuips[FMath::RandRange(0, ExplosionQuips.Max() - 1)];
+			SoundToPlay = ExplosionQuips[FMath::RandRange(0, ExplosionQuips.Num()-1)];
 			break;
 
 		case ETrap::Saw:
-			SoundToPlay = SawQuips[FMath::RandRange(0, SawQuips.Max() - 1)];
+			SoundToPlay = SawQuips[FMath::RandRange(0, SawQuips.Num()-1)];
 			break;
 
 		case ETrap::LavaPit:
-			SoundToPlay = LavaQuips[FMath::RandRange(0, LavaQuips.Max() - 1)];
+			SoundToPlay = LavaQuips[FMath::RandRange(0, LavaQuips.Num()-1)];
 			break;
 
 		case ETrap::PoisonPit:
-			SoundToPlay = PoisonQuips[FMath::RandRange(0, PoisonQuips.Max() - 1)];
+			SoundToPlay = PoisonQuips[FMath::RandRange(0, PoisonQuips.Num()-1)];
 			break;
 
 		case ETrap::Arrows:
-			SoundToPlay = ArrowQuips[FMath::RandRange(0, ArrowQuips.Max() - 1)];
+			SoundToPlay = ArrowQuips[FMath::RandRange(0, ArrowQuips.Num()-1)];
 			break;
 	}
 
@@ -106,14 +106,14 @@ bool AVoicePlayer::IsValidSoundArray(ETrap QuipCheck)
 {
 	switch (QuipCheck)
 	{
-		case ETrap::Spikes:       return SpikeQuips.Num() != 0;
-		case ETrap::Axe:          return AxeQuips.Num() != 0;
-		case ETrap::Chandelier:   return ChandelierQuips.Num() != 0;
-		case ETrap::Explosion:    return ExplosionQuips.Num() != 0;
-		case ETrap::Saw:          return SawQuips.Num() != 0;
-		case ETrap::LavaPit:      return LavaQuips.Num() != 0;
-		case ETrap::PoisonPit:    return PoisonQuips.Num() != 0;
-		case ETrap::Arrows:		  return ArrowQuips.Num() != 0;
+		case ETrap::Spikes:       return SpikeQuips.Num() > 0;
+		case ETrap::Axe:          return AxeQuips.Num() > 0;
+		case ETrap::Chandelier:   return ChandelierQuips.Num() > 0;
+		case ETrap::Explosion:    return ExplosionQuips.Num() > 0;
+		case ETrap::Saw:          return SawQuips.Num() > 0;
+		case ETrap::LavaPit:      return LavaQuips.Num() > 0;
+		case ETrap::PoisonPit:    return PoisonQuips.Num() > 0;
+		case ETrap::Arrows:		  return ArrowQuips.Num() > 0;
 
 		default: return false;
 	}
