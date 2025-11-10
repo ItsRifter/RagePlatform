@@ -61,6 +61,18 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 			return;
 		}
 
+		PlayerCharacter->bIsAlive = false;
+
+		if (bIsPoison)
+		{
+			PlayerCharacter->OnDeath(EKillerTrap::PoisonPit);
+		}
+		else 
+		{
+			PlayerCharacter->OnDeath(EKillerTrap::LavaPit);
+		}
+		
+
 		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
 		
 		GameInstance->OnDeath.Broadcast(KillTexts[Index]);

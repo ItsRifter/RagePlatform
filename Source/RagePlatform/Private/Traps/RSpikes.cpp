@@ -80,6 +80,8 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (bSpikeResetComplete && PlayerCharacter->bIsAlive)
 		{
 			PlayerCharacter->bIsAlive = false;
+			PlayerCharacter->OnDeath(EKillerTrap::Spikes);
+
 			bSpikeResetComplete = false;
 			OnPlayerKill();
 

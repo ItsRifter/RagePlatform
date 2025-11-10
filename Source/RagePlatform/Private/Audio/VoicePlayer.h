@@ -8,18 +8,6 @@
 
 class USoundBase;
 
-UENUM()
-enum class EQuip : uint8
-{
-	Spikes				UMETA(DisplayName = "Spikes"),
-	Axe					UMETA(DisplayName = "SwingingAxe"),
-	Saw					UMETA(DisplayName = "Sawblade"),
-	Chandelier			UMETA(DisplayName = "Chandelier"),
-	LavaPit				UMETA(DisplayName = "LavaPit"),
-	PoisonPit			UMETA(DisplayName = "PoisonPit"),
-	Explosion			UMETA(DisplayName = "Explosions"),
-};
-
 UCLASS(Blueprintable)
 class AVoicePlayer : public AActor
 {
@@ -66,9 +54,9 @@ protected:
 public:
 
 	UFUNCTION()
-	void PlayQuip(EQuip QuipToPlay);
+	void PlayQuip(EKillerTrap QuipToPlay);
 
 private:
 
-	bool IsValidSoundArray(EQuip QuipCheck);
+	bool IsValidSoundArray(EKillerTrap QuipCheck);
 };

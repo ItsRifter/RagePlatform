@@ -22,9 +22,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
-	ARageCharacter* PlayerCharacter;
-
 	UPROPERTY(EditAnywhere, meta = (UIMin = "1", UIMax = "10"))
 	int32 FallSpeed;
 
