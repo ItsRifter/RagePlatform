@@ -21,6 +21,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	class URGameInstance* GameInstance;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Quips")
 	TArray<USoundBase*> SpikeQuips;
 
@@ -55,6 +58,9 @@ protected:
 	void ReadyNextQuip();
 
 public:
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanPlay;
 
 	UFUNCTION(BlueprintCallable)
 	void PlayQuip(ETrap QuipToPlay);

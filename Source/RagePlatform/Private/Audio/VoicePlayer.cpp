@@ -18,7 +18,9 @@ void AVoicePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	URGameInstance* GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	bCanPlay = true;
+
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	if (GameInstance)
 	{
@@ -34,9 +36,12 @@ void AVoicePlayer::ReadyNextQuip()
 
 void AVoicePlayer::PlayQuip(ETrap QuipToPlay)
 {
-	int8 Chance = FMath::RandRange(1, 5);
+	if (!bCanPlay)
+	{
+		return;
+	}
 
-	UE_LOGFMT(LogTemp, Warning, "Chance: {0}", Chance);
+	int8 Chance = FMath::RandRange(1, 5);
 
 	if (Chance < 5 || bWaitTimer)
 	{
@@ -54,39 +59,46 @@ void AVoicePlayer::PlayQuip(ETrap QuipToPlay)
 		return;
 	}
 
+	USoundBase* SoundToPlay = nullptr;
+
 	switch (QuipToPlay)
 	{
 		case ETrap::Spikes:
-			UGameplayStatics::PlaySound2D(GetWorld(), SpikeQuips[FMath::RandRange(0, SpikeQuips.Max() - 1)]);
+			SoundToPlay = SpikeQuips[FMath::RandRange(0, SpikeQuips.Max() - 1)];
 			break;
 
 		case ETrap::Axe:
-			UGameplayStatics::PlaySound2D(GetWorld(), AxeQuips[FMath::RandRange(0, AxeQuips.Max() - 1)]);
+			SoundToPlay = AxeQuips[FMath::RandRange(0, AxeQuips.Max() - 1)];
 			break;
 
 		case ETrap::Chandelier:
-			UGameplayStatics::PlaySound2D(GetWorld(), ChandelierQuips[FMath::RandRange(0, ChandelierQuips.Max() - 1)]);
+			SoundToPlay = ChandelierQuips[FMath::RandRange(0, ChandelierQuips.Max() - 1)];
 			break;
 
 		case ETrap::Explosion:
-			UGameplayStatics::PlaySound2D(GetWorld(), ExplosionQuips[FMath::RandRange(0, ExplosionQuips.Max() - 1)]);
+			SoundToPlay = ExplosionQuips[FMath::RandRange(0, ExplosionQuips.Max() - 1)];
 			break;
 
 		case ETrap::Saw:
-			UGameplayStatics::PlaySound2D(GetWorld(), SawQuips[FMath::RandRange(0, SawQuips.Max() - 1)]);
+			SoundToPlay = SawQuips[FMath::RandRange(0, SawQuips.Max() - 1)];
 			break;
 
 		case ETrap::LavaPit:
-			UGameplayStatics::PlaySound2D(GetWorld(), LavaQuips[FMath::RandRange(0, LavaQuips.Max() - 1)]);
+			SoundToPlay = LavaQuips[FMath::RandRange(0, LavaQuips.Max() - 1)];
 			break;
 
 		case ETrap::PoisonPit:
-			UGameplayStatics::PlaySound2D(GetWorld(), PoisonQuips[FMath::RandRange(0, PoisonQuips.Max() - 1)]);
+			SoundToPlay = PoisonQuips[FMath::RandRange(0, PoisonQuips.Max() - 1)];
 			break;
 
 		case ETrap::Arrows:
-			UGameplayStatics::PlaySound2D(GetWorld(), ArrowQuips[FMath::RandRange(0, ArrowQuips.Max() - 1)]);
+			SoundToPlay = ArrowQuips[FMath::RandRange(0, ArrowQuips.Max() - 1)];
 			break;
+	}
+
+	if (SoundToPlay)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SoundToPlay);
 	}
 }
 
