@@ -64,9 +64,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float GameTimeVar;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bCanLook;
-
 	UPROPERTY(BlueprintReadOnly)
 	class AVoicePlayer* VoicelinePlayer;
 

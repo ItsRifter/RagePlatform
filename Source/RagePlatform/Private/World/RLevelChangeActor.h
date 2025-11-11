@@ -41,6 +41,9 @@ protected:
 	UPROPERTY()
 	float FadeDelay;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* TransitionSound;
+
 	FTimerHandle FadeHandle;
 	bool bLevelChanged;
 

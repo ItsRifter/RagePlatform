@@ -3,6 +3,7 @@
 
 #include "RExplosionsBase.h"
 
+#include "Audio/VoicePlayer.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -10,6 +11,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
+#include "Traps/TrapEnum.h"
 
 // Sets default values
 ARExplosionsBase::ARExplosionsBase()
@@ -52,6 +54,10 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			return;
 		}
 		
+		PlayerCharacter->bIsAlive = false;
+		PlayerCharacter->OnDeath(ETrap::Explosion);
+		GameInstance->VoicelinePlayer->PlayQuip(ETrap::Explosion);
+
 		if (ExplosionSound)
 		{
 			UGameplayStatics::PlaySound2D(this, ExplosionSound);
