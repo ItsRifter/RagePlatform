@@ -35,7 +35,7 @@ void ARLevelChangeActor::BeginPlay()
 
 	bLevelChanged = false;
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
-	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
+	PlayerCharacter = Cast<ARageCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	
@@ -53,6 +53,11 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{
+		if (TransitionSound)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), TransitionSound);
+		}
+
 		GetWorld()->GetTimerManager().SetTimer(
 			FadeHandle,
 			this, &ARLevelChangeActor::OpenNextLevel,
@@ -65,6 +70,7 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 			{
 				PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 				PlayerCharacter->GetCharacterMovement()->MaxAcceleration = 0.f;
+				PlayerCharacter->bRestrictMouse = true;
 			}
 			
 			PlayerController->PlayerCameraManager->StartCameraFade(
@@ -95,7 +101,6 @@ void ARLevelChangeActor::OpenNextLevel()
 		GameInstance->TimeVar = 0;
 		GameInstance->bCanCountGameTime = false;
 		GameInstance->bCanCountLevelTime = false;
-		GameInstance->bCanLook = false;
 	}
 }
 

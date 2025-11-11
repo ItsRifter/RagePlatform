@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "RageCharacter.h"
 
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -6,7 +7,6 @@
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "InputActionValue.h"
-#include "RageCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
@@ -60,7 +60,22 @@ void ARageCharacter::BeginPlay()
 		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
 	}
 
-	SavedMaxAcceleration = 3072.0;
+	UCharacterMovementComponent* MovementComp = nullptr;
+
+	if (PlayerController->GetCharacter())
+	{
+		MovementComp = PlayerController->GetCharacter()->GetCharacterMovement();
+	}
+
+	if (MovementComp)
+	{
+		SavedMaxAcceleration = MovementComp->MaxAcceleration;
+	}
+	else 
+	{
+		SavedMaxAcceleration = 3072.0;
+	}
+
 
 	StartLocation = GetActorLocation();
 	StartRotation = GetActorRotation();
@@ -116,16 +131,23 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 			RestartWidgetRef->SizeBoxButtons->SetVisibility(ESlateVisibility::Visible);
 		},RestartButtonVisibility,false);
 	}
+
 	RestartMenu();
 }
 
 void ARageCharacter::OnRestartDelegate()
 {
+	bRestrictKeyboard = false;
 	Respawn();
 }
 
 void ARageCharacter::Move(const FInputActionValue& Value)
 {
+	if (bRestrictKeyboard)
+	{
+		return;
+	}
+
 	const FVector2D MoveValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
@@ -174,7 +196,7 @@ void ARageCharacter::PauseGame()
 
 void ARageCharacter::Look(const FInputActionValue& Value)
 {
-	if (!GameInstance->bCanLook)
+	if (bRestrictMouse)
 	{
 		return;
 	}
@@ -195,8 +217,11 @@ void ARageCharacter::RestartMenu()
 		bIsAlive = false;
 		RestartWidget->SetVisibility(ESlateVisibility::Visible);
 		PlayerController->SetShowMouseCursor(true);
+
 		GetCharacterMovement()->MaxAcceleration = 0.f;
 		GetCharacterMovement()->StopMovementImmediately();
+
+		bRestrictKeyboard = true;
 
 		const FInputModeUIOnly InputModeDataUI;
 		PlayerController->SetInputMode(InputModeDataUI);

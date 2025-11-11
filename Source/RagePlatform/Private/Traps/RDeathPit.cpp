@@ -3,12 +3,14 @@
 
 #include "Traps/RDeathPit.h"
 
+#include "Audio/VoicePlayer.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
+#include "Traps/TrapEnum.h"
 
 // Sets default values
 ARDeathPit::ARDeathPit()
@@ -65,11 +67,13 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 
 		if (bIsPoison)
 		{
-			PlayerCharacter->OnDeath(EKillerTrap::PoisonPit);
+			PlayerCharacter->OnDeath(ETrap::PoisonPit);
+			GameInstance->VoicelinePlayer->PlayQuip(ETrap::PoisonPit);
 		}
 		else 
 		{
-			PlayerCharacter->OnDeath(EKillerTrap::LavaPit);
+			PlayerCharacter->OnDeath(ETrap::LavaPit);
+			GameInstance->VoicelinePlayer->PlayQuip(ETrap::LavaPit);
 		}
 		
 
