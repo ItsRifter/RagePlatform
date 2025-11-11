@@ -81,4 +81,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
+
+	UFUNCTION(BlueprintCallable)
+	void SetOnGameEnd();
 };
