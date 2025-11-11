@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "RRestartWidget.h"
+
 #include "Components/Button.h"
 #include "Framework/RGameInstance.h"
 #include "UI/RRestartWidget.h"
@@ -9,6 +11,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
+#include "Traps/TrapEnum.h"
 
 void URRestartWidget::NativeConstruct()
 {

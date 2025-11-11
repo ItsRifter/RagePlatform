@@ -5,6 +5,7 @@
 #include <Framework/RGameInstance.h>
 #include <Kismet/GameplayStatics.h>
 #include "Player/RageCharacter.h"
+#include "Traps/TrapEnum.h"
 
 // Sets default values
 AVoicePlayer::AVoicePlayer()
@@ -17,7 +18,9 @@ void AVoicePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	URGameInstance* GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	bCanPlay = true;
+
+	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	if (GameInstance)
 	{
@@ -28,13 +31,17 @@ void AVoicePlayer::BeginPlay()
 void AVoicePlayer::ReadyNextQuip()
 {
 	bWaitTimer = false;
+	WaitHandle.Invalidate();
 }
 
-void AVoicePlayer::PlayQuip(EKillerTrap QuipToPlay)
+void AVoicePlayer::PlayQuip(ETrap QuipToPlay)
 {
-	int8 Chance = FMath::RandRange(1, 5);
+	if (!bCanPlay)
+	{
+		return;
+	}
 
-	UE_LOGFMT(LogTemp, Warning, "Chance: {0}", Chance);
+	int8 Chance = FMath::RandRange(1, 5);
 
 	if (Chance < 5 || bWaitTimer)
 	{
@@ -52,49 +59,61 @@ void AVoicePlayer::PlayQuip(EKillerTrap QuipToPlay)
 		return;
 	}
 
+	USoundBase* SoundToPlay = nullptr;
+
 	switch (QuipToPlay)
 	{
-		case EKillerTrap::Spikes:
-			UGameplayStatics::PlaySound2D(GetWorld(), SpikeQuips[FMath::RandRange(0, SpikeQuips.Max() - 1)]);
+		case ETrap::Spikes:
+			SoundToPlay = SpikeQuips[FMath::RandRange(0, SpikeQuips.Num()-1)];
 			break;
 
-		case EKillerTrap::Axe:
-			UGameplayStatics::PlaySound2D(GetWorld(), AxeQuips[FMath::RandRange(0, AxeQuips.Max() - 1)]);
+		case ETrap::Axe:
+			SoundToPlay = AxeQuips[FMath::RandRange(0, AxeQuips.Num()-1)];
 			break;
 
-		case EKillerTrap::Chandelier:
-			UGameplayStatics::PlaySound2D(GetWorld(), ChandelierQuips[FMath::RandRange(0, ChandelierQuips.Max() - 1)]);
+		case ETrap::Chandelier:
+			SoundToPlay = ChandelierQuips[FMath::RandRange(0, ChandelierQuips.Num()-1)];
 			break;
 
-		case EKillerTrap::Explosion:
-			UGameplayStatics::PlaySound2D(GetWorld(), ExplosionQuips[FMath::RandRange(0, ExplosionQuips.Max() - 1)]);
+		case ETrap::Explosion:
+			SoundToPlay = ExplosionQuips[FMath::RandRange(0, ExplosionQuips.Num()-1)];
 			break;
 
-		case EKillerTrap::Saw:
-			UGameplayStatics::PlaySound2D(GetWorld(), SawQuips[FMath::RandRange(0, SawQuips.Max() - 1)]);
+		case ETrap::Saw:
+			SoundToPlay = SawQuips[FMath::RandRange(0, SawQuips.Num()-1)];
 			break;
 
-		case EKillerTrap::LavaPit:
-			UGameplayStatics::PlaySound2D(GetWorld(), LavaQuips[FMath::RandRange(0, LavaQuips.Max() - 1)]);
+		case ETrap::LavaPit:
+			SoundToPlay = LavaQuips[FMath::RandRange(0, LavaQuips.Num()-1)];
 			break;
 
-		case EKillerTrap::PoisonPit:
-			UGameplayStatics::PlaySound2D(GetWorld(), PoisonQuips[FMath::RandRange(0, PoisonQuips.Max() - 1)]);
+		case ETrap::PoisonPit:
+			SoundToPlay = PoisonQuips[FMath::RandRange(0, PoisonQuips.Num()-1)];
 			break;
+
+		case ETrap::Arrows:
+			SoundToPlay = ArrowQuips[FMath::RandRange(0, ArrowQuips.Num()-1)];
+			break;
+	}
+
+	if (SoundToPlay)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SoundToPlay);
 	}
 }
 
-bool AVoicePlayer::IsValidSoundArray(EKillerTrap QuipCheck)
+bool AVoicePlayer::IsValidSoundArray(ETrap QuipCheck)
 {
 	switch (QuipCheck)
 	{
-		case EKillerTrap::Spikes:       return SpikeQuips.Num() != 0;
-		case EKillerTrap::Axe:          return AxeQuips.Num() != 0;
-		case EKillerTrap::Chandelier:   return ChandelierQuips.Num() != 0;
-		case EKillerTrap::Explosion:    return ExplosionQuips.Num() != 0;
-		case EKillerTrap::Saw:          return SawQuips.Num() != 0;
-		case EKillerTrap::LavaPit:      return LavaQuips.Num() != 0;
-		case EKillerTrap::PoisonPit:    return PoisonQuips.Num() != 0;
+		case ETrap::Spikes:       return SpikeQuips.Num() > 0;
+		case ETrap::Axe:          return AxeQuips.Num() > 0;
+		case ETrap::Chandelier:   return ChandelierQuips.Num() > 0;
+		case ETrap::Explosion:    return ExplosionQuips.Num() > 0;
+		case ETrap::Saw:          return SawQuips.Num() > 0;
+		case ETrap::LavaPit:      return LavaQuips.Num() > 0;
+		case ETrap::PoisonPit:    return PoisonQuips.Num() > 0;
+		case ETrap::Arrows:		  return ArrowQuips.Num() > 0;
 
 		default: return false;
 	}
