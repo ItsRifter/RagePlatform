@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "World/Checkpoint.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
@@ -8,6 +7,7 @@
 #include "Gameplay/RagePlatGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RageCharacter.h"
+#include "World/Checkpoint.h"
 
 // Sets default values
 ACheckpoint::ACheckpoint()

@@ -1,6 +1,4 @@
-#include "Traps/RChandelier.h"
 
-#include "Audio/VoicePlayer.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -8,7 +6,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
-#include "Traps/TrapEnum.h"
+#include "Traps/RChandelier.h"
 
 // Sets default values
 ARChandelier::ARChandelier()
@@ -124,8 +122,7 @@ void ARChandelier::OnComponentBeginOverlapPlayerBox(UPrimitiveComponent* Overlap
 		bChandelierFell = true;
 
 		PlayerCharacter->bIsAlive = false;
-		PlayerCharacter->OnDeath(ETrap::Chandelier);
-		GameInstance->VoicelinePlayer->PlayQuip(ETrap::Chandelier);
+		PlayerCharacter->OnDeath(EKillerTrap::Chandelier);
 
 		if (KillSound)
 		{
