@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "NPC/PatrolEnemy.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/InterpToMovementComponent.h"
+#include "NPC/PatrolEnemy.h"
 #include "World/PatrolNodes.h"
 
 // Sets default values

@@ -1,4 +1,4 @@
-#include "Trap.h"
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
+#include "Trap.h"
 
 // Sets default values
 ATrap::ATrap()

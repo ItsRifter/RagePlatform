@@ -3,7 +3,6 @@
 
 #include "RSpikes.h"
 
-#include "Audio/VoicePlayer.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -11,7 +10,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
-#include "Traps/TrapEnum.h"
 
 
 // Sets default values
@@ -82,8 +80,7 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (bSpikeResetComplete && PlayerCharacter->bIsAlive)
 		{
 			PlayerCharacter->bIsAlive = false;
-			PlayerCharacter->OnDeath(ETrap::Spikes);
-			GameInstance->VoicelinePlayer->PlayQuip(ETrap::Spikes);
+			PlayerCharacter->OnDeath(EKillerTrap::Spikes);
 
 			bSpikeResetComplete = false;
 			OnPlayerKill();

@@ -53,11 +53,6 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 
 	if (Cast<ARageCharacter>(OtherActor))
 	{
-		if (TransitionSound)
-		{
-			UGameplayStatics::PlaySound2D(GetWorld(), TransitionSound);
-		}
-
 		GetWorld()->GetTimerManager().SetTimer(
 			FadeHandle,
 			this, &ARLevelChangeActor::OpenNextLevel,

@@ -1,16 +1,14 @@
-#include "Traps/SawTrap.h"
+// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Audio/VoicePlayer.h"
+
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Curves/CurveFloat.h" 
-#include "Framework/RGameInstance.h"
-#include <Kismet/GameplayStatics.h>
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
-#include "Traps/TrapEnum.h"
+#include "Traps/SawTrap.h"
 
 ASawTrap::ASawTrap()
 {
@@ -110,8 +108,7 @@ void ASawTrap::KillPlayer(ARageCharacter* Player)
 	}
 	
 	Super::KillPlayer(Player);
-	Player->OnDeath(ETrap::Saw);
-	GameInstance->VoicelinePlayer->PlayQuip(ETrap::Saw);
+	Player->OnDeath(EKillerTrap::Saw);
 
 	FVector LeftVector = -DefaultSceneRoot->GetRightVector() * 50.0f;
 
