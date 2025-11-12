@@ -126,6 +126,14 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsAlive;
 
+	//Restrict the player from using mouse input and look (DOES NOT LOCK UI INPUT)
+	UPROPERTY(BlueprintReadWrite)
+	bool bRestrictMouse;
+
+	//Restrict the player from using keyboard input (DOES NOT LOCK UI INPUT)
+	UPROPERTY(BlueprintReadWrite)
+	bool bRestrictKeyboard;
+
 	UPROPERTY(BlueprintReadWrite)
 	ARTempCamera* Temp_Camera;
 
