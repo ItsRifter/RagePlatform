@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "RMainMenu.generated.h"
 
+class URPlayerName;
+class URLeaderboard;
 class UButton;
 
 UCLASS()
@@ -19,14 +21,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> PlayerNameBP;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> LeaderboardBP;
+
 	UPROPERTY()
-	class URPlayerName* PlayerNameWidget;
+	URPlayerName* PlayerNameWidget;
+
+	UPROPERTY()
+	URLeaderboard* LeaderboardWidget;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* PlayButton;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* OptionsButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* LeaderboardButton;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
@@ -39,6 +50,9 @@ protected:
 
 	UFUNCTION()
 	void OnPlayButtonClicked();
+
+	UFUNCTION()
+	void OnLeaderboardButtonClicked();
 
 	UFUNCTION()
 	void OnQuitButtonClicked();

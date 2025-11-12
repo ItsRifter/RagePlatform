@@ -52,6 +52,9 @@ protected:
 	bool bOpened;
 	
 public:
+	UPROPERTY(BlueprintReadWrite)
+	float GameTimeFloat;
+	
 	UFUNCTION(BlueprintCallable)
 	void PlayDropDownAnimation();
 
@@ -64,6 +67,7 @@ public:
 		FText LvlThreeTime,
 		FText LvlFourTime,
 		FText LvlFiveTime,
-		FText GameTimeText
+		FText GameTimeText,
+		float InGameTimeFloat
 	);
 };

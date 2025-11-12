@@ -45,7 +45,7 @@ void URPlayerStats::PlayDropDownAnimation()
 }
 
 void URPlayerStats::SetAllStats(const FText PlayerName, const FText Deaths, const FText LvlOneTime, const FText LvlTwoTime, const FText LvlThreeTime,
-	const FText LvlFourTime, const FText LvlFiveTime, const FText GameTimeText)
+	const FText LvlFourTime, const FText LvlFiveTime, const FText GameTimeText, float InGameTimeFloat)
 {
 	PlayerNameText->SetText(PlayerName);
 	DeathsCountText->SetText(Deaths);
@@ -55,4 +55,5 @@ void URPlayerStats::SetAllStats(const FText PlayerName, const FText Deaths, cons
 	LvlFourTimeText->SetText(LvlFourTime);
 	LvlFiveTimeText->SetText(LvlFiveTime);
 	GameTime->SetText(GameTimeText);
+	GameTimeFloat = InGameTimeFloat;
 }
