@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RageCharacter.generated.h"
 
+struct FPlayerStats;
 class ARTempCamera;
 class URRestartWidget;
 class UInputAction;
@@ -96,6 +97,12 @@ protected:
 	UFUNCTION()
 	void OnRestartDelegate();
 
+	UFUNCTION()
+	void OnGameEndDelegate();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SaveGame(FPlayerStats PlayerStats);
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void JumpTrigger();
@@ -103,7 +110,7 @@ protected:
 	void PauseGame();
 
 	UFUNCTION()
-	void TimeCounter(float DeltaSeconds) const;
+	void TimeCounter(float DeltaSeconds);
 
 public:
 	// Called to bind functionality to input
@@ -148,6 +155,9 @@ public:
 
 	UFUNCTION()
 	void CameraShake() const;
+
+	UFUNCTION(BlueprintCallable)
+	FText ConvertToTime(float TimeFloat);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void OnDeath(ETrap TrapEnum);

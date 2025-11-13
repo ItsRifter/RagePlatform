@@ -11,8 +11,6 @@
 void URPlayerName::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	GameLevelName = TEXT("Level1");
 
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));

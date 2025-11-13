@@ -70,7 +70,6 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 			{
 				PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 				PlayerCharacter->GetCharacterMovement()->MaxAcceleration = 0.f;
-				PlayerCharacter->bRestrictMouse = true;
 			}
 			
 			PlayerController->PlayerCameraManager->StartCameraFade(

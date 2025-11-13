@@ -21,7 +21,7 @@ struct FPlayerStats
 	FString DeathCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString GameTime;
+	float GameTime = 0;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
@@ -59,6 +59,9 @@ public:
 	bool bCanCountGameTime;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bCanLook;
+
+	UPROPERTY(BlueprintReadWrite)
 	float TimeVar;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -78,4 +81,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
+
+	UFUNCTION(BlueprintCallable)
+	void SetOnGameEnd();
 };

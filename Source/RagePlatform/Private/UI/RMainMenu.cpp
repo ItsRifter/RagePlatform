@@ -3,6 +3,7 @@
 
 #include "RMainMenu.h"
 
+#include "RLeaderboard.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "RPlayerName.h"
@@ -13,6 +14,7 @@ void URMainMenu::NativeConstruct()
 
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	LeaderboardButton->OnClicked.AddDynamic(this, &URMainMenu::OnLeaderboardButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
 }
 
@@ -23,6 +25,17 @@ void URMainMenu::OnPlayButtonClicked()
 		UUserWidget* TempWidget = CreateWidget(GetWorld(), PlayerNameBP);
 		TempWidget->AddToViewport();
 		PlayerNameWidget = Cast<URPlayerName>(TempWidget);
+		RemoveFromParent();
+	}
+}
+
+void URMainMenu::OnLeaderboardButtonClicked()
+{
+	if (LeaderboardBP != nullptr)
+	{
+		UUserWidget* TempWidget = CreateWidget(GetWorld(), LeaderboardBP);
+		TempWidget->AddToViewport();
+		LeaderboardWidget = Cast<URLeaderboard>(TempWidget);
 		RemoveFromParent();
 	}
 }
