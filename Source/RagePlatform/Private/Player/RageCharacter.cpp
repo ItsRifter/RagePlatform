@@ -63,7 +63,7 @@ void ARageCharacter::BeginPlay()
 		RestartWidget->AddToViewport();
 		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
 	}
-	
+
 	SavedMaxAcceleration = 3072.0;
 	
 	StartLocation = GetActorLocation();
@@ -127,6 +127,7 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 
 void ARageCharacter::OnRestartDelegate()
 {
+	bRestrictKeyboard = false;
 	GetCharacterMovement()->MaxAcceleration = SavedMaxAcceleration;
 	Respawn();
 }
@@ -152,6 +153,11 @@ void ARageCharacter::OnGameEndDelegate()
 
 void ARageCharacter::Move(const FInputActionValue& Value)
 {
+	if (bRestrictKeyboard)
+	{
+		return;
+	}
+
 	const FVector2D MoveValue = Value.Get<FVector2D>();
 
 	if (IsValid(Controller))
