@@ -122,6 +122,9 @@ public:
 	bool bIsAlive;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bRestrictKeyboard;
+
+	UPROPERTY(BlueprintReadWrite)
 	ARTempCamera* Temp_Camera;
 
 	UPROPERTY()

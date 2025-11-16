@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RLeaderboard.generated.h"
 
+class UImage;
 class UButton;
 class UVerticalBox;
 /**
@@ -28,6 +29,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> MainMenuBP;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> EndGameBP;
+
 	UFUNCTION()
 	void OnBackButtonClicked();
+
+public:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UImage* Background;
+	
+	UPROPERTY()
+	FLinearColor MainMenuColor;
+
+	UPROPERTY()
+	FLinearColor GameEndColor;
 };
