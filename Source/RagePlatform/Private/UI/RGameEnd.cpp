@@ -1,36 +1,32 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RMainMenu.h"
+#include "RGameEnd.h"
 
 #include "RLeaderboard.h"
 #include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
-#include "RPlayerName.h"
 #include "Components/Image.h"
+#include "Kismet/GameplayStatics.h"
 
-void URMainMenu::NativeConstruct()
+void URGameEnd::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
-	LeaderboardButton->OnClicked.AddDynamic(this, &URMainMenu::OnLeaderboardButtonClicked);
-	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
+	MainMenuButton->OnClicked.AddDynamic(this, &URGameEnd::OnMainMenuButtonClicked);
+	LeaderboardButton->OnClicked.AddDynamic(this, &URGameEnd::OnLeaderboardButtonClicked);
+	QuitButton->OnClicked.AddDynamic(this, &URGameEnd::OnQuitButtonClicked);
 }
 
-void URMainMenu::OnPlayButtonClicked()
+void URGameEnd::OnMainMenuButtonClicked()
 {
-	if (PlayerNameBP != nullptr)
+	if (MainMenuLevelName != NAME_None)
 	{
-		UUserWidget* TempWidget = CreateWidget(GetWorld(), PlayerNameBP);
-		TempWidget->AddToViewport();
-		PlayerNameWidget = Cast<URPlayerName>(TempWidget);
-		RemoveFromParent();
+		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}
 }
 
-void URMainMenu::OnLeaderboardButtonClicked()
+void URGameEnd::OnLeaderboardButtonClicked()
 {
 	if (LeaderboardBP != nullptr)
 	{
@@ -38,13 +34,13 @@ void URMainMenu::OnLeaderboardButtonClicked()
 		TempWidget->AddToViewport();
 		LeaderboardWidget = Cast<URLeaderboard>(TempWidget);
 		FSlateBrush SlateBrush;
-		SlateBrush.TintColor = LeaderboardWidget->MainMenuColor;
+		SlateBrush.TintColor = LeaderboardWidget->GameEndColor;
 		LeaderboardWidget->Background->SetBrush(SlateBrush);
 		SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
-void URMainMenu::OnQuitButtonClicked()
+void URGameEnd::OnQuitButtonClicked()
 {
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this, PlayerController, QuitPreference, false);

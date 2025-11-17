@@ -10,7 +10,10 @@ void URPlayerStats::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	PlayerNameButton->OnClicked.AddDynamic(this, &URPlayerStats::PlayDropDownAnimation);
+	if (PlayerNameButton)
+	{
+		PlayerNameButton->OnClicked.AddDynamic(this, &URPlayerStats::PlayDropDownAnimation);
+	}
 }
 
 void URPlayerStats::PlayDropDownAnimation()

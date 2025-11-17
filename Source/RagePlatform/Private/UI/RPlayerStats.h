@@ -55,7 +55,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float GameTimeFloat;
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void PlayDropDownAnimation();
 
 	UFUNCTION(BlueprintCallable)
