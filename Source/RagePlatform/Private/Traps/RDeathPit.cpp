@@ -2,7 +2,7 @@
 
 
 #include "Traps/RDeathPit.h"
-
+#include "TrapEnums.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -60,6 +60,18 @@ void ARDeathPit::OnComponentBeginOverlapKillBox(UPrimitiveComponent* OverlappedC
 		{
 			return;
 		}
+
+		PlayerCharacter->bIsAlive = false;
+
+		if (bIsPoison)
+		{
+			PlayerCharacter->OnDeath(ETrap::PoisonPit);
+		}
+		else 
+		{
+			PlayerCharacter->OnDeath(ETrap::LavaPit);
+		}
+		
 
 		const int32 Index = UKismetMathLibrary::RandomIntegerInRange(0,KillTexts.Num() - 1);
 		

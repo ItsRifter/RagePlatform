@@ -3,6 +3,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Traps/SpikeTrap.h"
+#include "TrapEnums.h"
 
 ASpikeTrap::ASpikeTrap()
 {

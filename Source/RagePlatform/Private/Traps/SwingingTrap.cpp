@@ -1,4 +1,5 @@
 #include "Components/BoxComponent.h"
+#include "TrapEnums.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Curves/CurveFloat.h" 
@@ -96,6 +97,7 @@ void ASwingingTrap::OnDeathDelegate(const FText& DeathText)
 void ASwingingTrap::KillPlayer(ARageCharacter* Player)
 {
 	Super::KillPlayer(Player);
+	Player->OnDeath(ETrap::Axe);
 
 	float CurRoll = FMath::Abs(GetRootComponent()->GetRelativeRotation().Roll);
 

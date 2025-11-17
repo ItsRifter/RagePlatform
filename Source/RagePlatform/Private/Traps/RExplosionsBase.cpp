@@ -2,7 +2,7 @@
 
 
 #include "RExplosionsBase.h"
-
+#include "TrapEnums.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"

@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "TrapEnums.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -108,6 +108,7 @@ void ASawTrap::KillPlayer(ARageCharacter* Player)
 	}
 	
 	Super::KillPlayer(Player);
+	Player->OnDeath(ETrap::Saw);
 
 	FVector LeftVector = -DefaultSceneRoot->GetRightVector() * 50.0f;
 

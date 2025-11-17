@@ -64,9 +64,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float GameTimeVar;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bCanLook;
-
 	UPROPERTY(BlueprintReadOnly)
 	class AVoicePlayer* VoicelinePlayer;
 
@@ -81,4 +78,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
+
+	UFUNCTION(BlueprintCallable)
+	void SetOnGameEnd();
 };

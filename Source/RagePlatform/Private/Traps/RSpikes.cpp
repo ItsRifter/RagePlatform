@@ -2,7 +2,7 @@
 
 
 #include "RSpikes.h"
-
+#include "TrapEnums.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
@@ -80,6 +80,8 @@ void ARSpikes::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (bSpikeResetComplete && PlayerCharacter->bIsAlive)
 		{
 			PlayerCharacter->bIsAlive = false;
+			PlayerCharacter->OnDeath(ETrap::Spikes);
+
 			bSpikeResetComplete = false;
 			OnPlayerKill();
 
