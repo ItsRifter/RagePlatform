@@ -28,9 +28,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnd);
 
-/**
- * 
- */
 UCLASS()
 class URGameInstance : public UGameInstance
 {
@@ -78,6 +75,27 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	FPlayerStats PlayerStats;
+
+	UPROPERTY(BlueprintReadWrite)
+	float MasterVolume = 0.8f;
+
+	UPROPERTY(BlueprintReadWrite)
+	float VfxVolume = 0.8f;
+
+	UPROPERTY(BlueprintReadWrite)
+	float DialogueVolume = 0.8f;
+
+	UPROPERTY(BlueprintReadWrite)
+	float MusicVolume = 0.8f;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bUseDyslexicFont = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	class UFont* DefaultFont;
+
+	UPROPERTY(BlueprintReadWrite)
+	class UFont* DyslexicFont;
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);

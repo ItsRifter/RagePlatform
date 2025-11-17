@@ -1,7 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "RMainMenu.h"
+﻿#include "RMainMenu.h"
 
 #include "RLeaderboard.h"
 #include "Components/Button.h"
@@ -14,8 +11,12 @@ void URMainMenu::NativeConstruct()
 	Super::NativeConstruct();
 
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
 	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	OptionsButton->OnClicked.AddDynamic(this, &URMainMenu::OnOptionsButtonClicked);
+
 	LeaderboardButton->OnClicked.AddDynamic(this, &URMainMenu::OnLeaderboardButtonClicked);
+	
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
 }
 
@@ -26,6 +27,17 @@ void URMainMenu::OnPlayButtonClicked()
 		UUserWidget* TempWidget = CreateWidget(GetWorld(), PlayerNameBP);
 		TempWidget->AddToViewport();
 		PlayerNameWidget = Cast<URPlayerName>(TempWidget);
+		RemoveFromParent();
+	}
+}
+
+void URMainMenu::OnOptionsButtonClicked()
+{
+	if (OptionsMenuBP != nullptr)
+	{
+		UUserWidget* TempWidget = CreateWidget(GetWorld(), OptionsMenuBP);
+		TempWidget->AddToViewport();
+		//OptionsWidget = Cast<UROptionsMenu>(TempWidget);
 		RemoveFromParent();
 	}
 }

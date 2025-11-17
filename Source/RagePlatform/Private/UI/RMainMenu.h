@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -22,10 +20,16 @@ protected:
 	TSubclassOf<UUserWidget> PlayerNameBP;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> OptionsMenuBP;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> LeaderboardBP;
 
 	UPROPERTY()
 	URPlayerName* PlayerNameWidget;
+
+	UPROPERTY()
+	class UROptionsMenu* OptionsWidget;
 
 	UPROPERTY()
 	URLeaderboard* LeaderboardWidget;
@@ -50,6 +54,9 @@ protected:
 
 	UFUNCTION()
 	void OnPlayButtonClicked();
+
+	UFUNCTION()
+	void OnOptionsButtonClicked();
 
 	UFUNCTION()
 	void OnLeaderboardButtonClicked();
