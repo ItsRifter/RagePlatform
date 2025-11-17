@@ -23,6 +23,7 @@ void URPlayerName::NativeConstruct()
 	SubmitButton->OnClicked.AddDynamic(this, &URPlayerName::OnSubmitButtonClicked);
 
 	CheckSlotLengthFull();
+	PlayerNameEditable->SetFocus();
 	WarningSizeBox->SetVisibility(ESlateVisibility::Hidden);
 }
 
@@ -30,13 +31,19 @@ void URPlayerName::TextCommitted(const FText& Text, ETextCommit::Type CommitMeth
 {
 	if (!bSlotFull)
 	{
+		if (Text.IsEmpty())
+		{
+			PlayerNameEditable->SetFocus();
+			return;
+		}
+		
 		if (GameInstance)
 		{
 			GameInstance->PlayerName = Text;
 		}
 	
 		if (CommitMethod == ETextCommit::OnEnter)
-		{	
+		{
 			OnSubmitButtonClicked();
 		}
 	}
@@ -54,7 +61,7 @@ void URPlayerName::OnSubmitButtonClicked()
 		return;
 	}
 	
-	if (GameLevelName != NAME_None)
+	if (GameLevelName != NAME_None && !GameInstance->PlayerName.IsEmpty())
 	{
 		UGameplayStatics::OpenLevel(this, GameLevelName, true);
 
