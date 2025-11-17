@@ -5,6 +5,7 @@
 
 #include "Components/Button.h"
 #include "Components/EditableText.h"
+#include "Components/SizeBox.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -20,24 +21,40 @@ void URPlayerName::NativeConstruct()
 	
 	BackButton->OnClicked.AddDynamic(this,&URPlayerName::OnBackButtonClicked);
 	SubmitButton->OnClicked.AddDynamic(this, &URPlayerName::OnSubmitButtonClicked);
+
+	CheckSlotLengthFull();
+	WarningSizeBox->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void URPlayerName::TextCommitted(const FText& Text, ETextCommit::Type CommitMethod)
 {
-	if (GameInstance)
+	if (!bSlotFull)
 	{
-		GameInstance->PlayerName = Text;
-	}
+		if (GameInstance)
+		{
+			GameInstance->PlayerName = Text;
+		}
 	
-	if (CommitMethod == ETextCommit::OnEnter)
-	{	
-		OnSubmitButtonClicked();
+		if (CommitMethod == ETextCommit::OnEnter)
+		{	
+			OnSubmitButtonClicked();
+		}
+	}
+	else
+	{
+		WarningSizeBox->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
 void URPlayerName::OnSubmitButtonClicked()
 {
-	if (GameLevelName != NAME_None && !GameInstance->PlayerName.IsEmpty())
+	if (bSlotFull)
+	{
+		WarningSizeBox->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
+	
+	if (GameLevelName != NAME_None)
 	{
 		UGameplayStatics::OpenLevel(this, GameLevelName, true);
 

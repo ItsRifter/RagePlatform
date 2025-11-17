@@ -89,7 +89,6 @@ void ARLevelChangeActor::OpenNextLevel()
 	{
 		if (NextLevel.ToString().Contains("MainMenu"))
 		{
-			GameInstance->OnGameEnd.Broadcast();
 			GameInstance->GameTimeVar = 0;
 		}
 		ARagePlatGame* GameMode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));

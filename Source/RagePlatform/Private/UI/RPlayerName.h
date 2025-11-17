@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "RPlayerName.generated.h"
 
+class USizeBox;
 class UButton;
 class URGameInstance;
 class UEditableText;
@@ -28,6 +29,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* SubmitButton;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* WarningSizeBox;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> MainMenuBP;
 
@@ -37,8 +41,14 @@ protected:
 	UPROPERTY()
 	URGameInstance* GameInstance;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bSlotFull;
+
 	UFUNCTION()
 	void TextCommitted(const FText& Text, ETextCommit::Type CommitMethod);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void CheckSlotLengthFull();
 
 	UFUNCTION()
 	void OnBackButtonClicked();
