@@ -77,18 +77,6 @@ public:
 	FPlayerStats PlayerStats;
 
 	UPROPERTY(BlueprintReadWrite)
-	float MasterVolume = 0.8f;
-
-	UPROPERTY(BlueprintReadWrite)
-	float VfxVolume = 0.8f;
-
-	UPROPERTY(BlueprintReadWrite)
-	float DialogueVolume = 0.8f;
-
-	UPROPERTY(BlueprintReadWrite)
-	float MusicVolume = 0.8f;
-
-	UPROPERTY(BlueprintReadWrite)
 	bool bUseDyslexicFont = false;
 
 	UPROPERTY(BlueprintReadWrite)
