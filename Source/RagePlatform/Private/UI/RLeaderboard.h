@@ -26,12 +26,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* BackButton;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> MainMenuBP;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> EndGameBP;
-
 	UFUNCTION()
 	void OnBackButtonClicked();
 

@@ -59,6 +59,7 @@ void URRestartWidget::OnMainMenuButtonClicked()
 	{
 		if (GameInstance)
 		{
+			GameInstance->OnGameClosed.Broadcast();
 			GameInstance->DeathCount = 0;
 		}
 		UGameplayStatics::OpenLevel(this,MainMenuLevel);

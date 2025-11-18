@@ -21,12 +21,9 @@ void URLeaderboard::NativeConstruct()
 
 void URLeaderboard::OnBackButtonClicked()
 {
-	if (MainMenuBP != nullptr && EndGameBP != nullptr)
+	if (UUserWidget* Parent = GetTypedOuter<UUserWidget>())
 	{
-		if (UUserWidget* Parent = GetTypedOuter<UUserWidget>())
-		{
-			Parent->SetVisibility(ESlateVisibility::Visible);
-			RemoveFromParent();
-		}
+		Parent->SetVisibility(ESlateVisibility::Visible);
+		RemoveFromParent();
 	}
 }

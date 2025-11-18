@@ -8,15 +8,23 @@
 #include "Kismet/GameplayStatics.h"
 #include "RPlayerName.h"
 #include "Components/Image.h"
+#include "Components/Overlay.h"
 
 void URMainMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	//Main Menu Buttons
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	NewGameButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	ContinueButton->OnClicked.AddDynamic(this, &URMainMenu::OnContinueButtonClicked);
 	LeaderboardButton->OnClicked.AddDynamic(this, &URMainMenu::OnLeaderboardButtonClicked);
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
+
+	//Continue Menu Buttons
+	ContinueAcceptedButton->OnClicked.AddDynamic(this, &URMainMenu::OnContinueAcceptButtonClicked);
+	NewGameAcceptedButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	ContinueBackButton->OnClicked.AddDynamic(this, &URMainMenu::OnBackButtonClicked);
 }
 
 void URMainMenu::OnPlayButtonClicked()
@@ -28,6 +36,11 @@ void URMainMenu::OnPlayButtonClicked()
 		PlayerNameWidget = Cast<URPlayerName>(TempWidget);
 		RemoveFromParent();
 	}
+}
+
+void URMainMenu::OnContinueButtonClicked()
+{
+	ContinueOverlay->SetVisibility(ESlateVisibility::Visible);
 }
 
 void URMainMenu::OnLeaderboardButtonClicked()
@@ -48,4 +61,14 @@ void URMainMenu::OnQuitButtonClicked()
 {
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this, PlayerController, QuitPreference, false);
+}
+
+void URMainMenu::OnBackButtonClicked()
+{
+	ContinueOverlay->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void URMainMenu::OnContinueAcceptButtonClicked()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, "Continue");
 }
