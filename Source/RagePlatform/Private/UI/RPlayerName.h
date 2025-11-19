@@ -55,4 +55,7 @@ protected:
 
 	UFUNCTION()
 	void OnSubmitButtonClicked();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ClearProgressSaveGame();
 };

@@ -1,23 +1,30 @@
-﻿#include "RMainMenu.h"
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "RMainMenu.h"
 
 #include "RLeaderboard.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "RPlayerName.h"
 #include "Components/Image.h"
+#include "Components/Overlay.h"
 
 void URMainMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	//Main Menu Buttons
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-
-	PlayButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
-	OptionsButton->OnClicked.AddDynamic(this, &URMainMenu::OnOptionsButtonClicked);
-
+	NewGameButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	ContinueButton->OnClicked.AddDynamic(this, &URMainMenu::OnContinueButtonClicked);
 	LeaderboardButton->OnClicked.AddDynamic(this, &URMainMenu::OnLeaderboardButtonClicked);
-	
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
+
+	//Continue Menu Buttons
+	ContinueAcceptedButton->OnClicked.AddDynamic(this, &URMainMenu::OnContinueAcceptButtonClicked);
+	NewGameAcceptedButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
+	ContinueBackButton->OnClicked.AddDynamic(this, &URMainMenu::OnBackButtonClicked);
 }
 
 void URMainMenu::OnPlayButtonClicked()
@@ -31,15 +38,9 @@ void URMainMenu::OnPlayButtonClicked()
 	}
 }
 
-void URMainMenu::OnOptionsButtonClicked()
+void URMainMenu::OnContinueButtonClicked()
 {
-	if (OptionsMenuBP != nullptr)
-	{
-		UUserWidget* TempWidget = CreateWidget(GetWorld(), OptionsMenuBP);
-		TempWidget->AddToViewport();
-		//OptionsWidget = Cast<UROptionsMenu>(TempWidget);
-		RemoveFromParent();
-	}
+	ContinueOverlay->SetVisibility(ESlateVisibility::Visible);
 }
 
 void URMainMenu::OnLeaderboardButtonClicked()
@@ -60,4 +61,14 @@ void URMainMenu::OnQuitButtonClicked()
 {
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this, PlayerController, QuitPreference, false);
+}
+
+void URMainMenu::OnBackButtonClicked()
+{
+	ContinueOverlay->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void URMainMenu::OnContinueAcceptButtonClicked()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, "Continue");
 }

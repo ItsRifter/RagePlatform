@@ -59,6 +59,7 @@ void URRestartWidget::OnMainMenuButtonClicked()
 	{
 		if (GameInstance)
 		{
+			GameInstance->OnGameClosed.Broadcast();
 			GameInstance->DeathCount = 0;
 		}
 		UGameplayStatics::OpenLevel(this,MainMenuLevel);
@@ -67,6 +68,8 @@ void URRestartWidget::OnMainMenuButtonClicked()
 
 void URRestartWidget::OnQuitButtonClicked()
 {
+	GameInstance->OnGameClosed.Broadcast();
+	
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this,PlayerController,QuitPreference,false);
 }

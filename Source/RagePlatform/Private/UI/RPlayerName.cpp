@@ -23,7 +23,6 @@ void URPlayerName::NativeConstruct()
 	SubmitButton->OnClicked.AddDynamic(this, &URPlayerName::OnSubmitButtonClicked);
 
 	CheckSlotLengthFull();
-	PlayerNameEditable->SetFocus();
 	WarningSizeBox->SetVisibility(ESlateVisibility::Hidden);
 }
 
@@ -33,7 +32,6 @@ void URPlayerName::TextCommitted(const FText& Text, ETextCommit::Type CommitMeth
 	{
 		if (Text.IsEmpty())
 		{
-			PlayerNameEditable->SetFocus();
 			return;
 		}
 		
@@ -63,6 +61,7 @@ void URPlayerName::OnSubmitButtonClicked()
 	
 	if (GameLevelName != NAME_None && !GameInstance->PlayerName.IsEmpty())
 	{
+		ClearProgressSaveGame();
 		UGameplayStatics::OpenLevel(this, GameLevelName, true);
 
 		const FInputModeGameOnly InputModeGameOnly;
@@ -73,6 +72,7 @@ void URPlayerName::OnSubmitButtonClicked()
 
 void URPlayerName::OnBackButtonClicked()
 {
+	
 	if (MainMenuBP != nullptr)
 	{
 		UUserWidget* TempWidget = CreateWidget(GetWorld(), MainMenuBP);

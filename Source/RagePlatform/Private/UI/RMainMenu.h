@@ -1,9 +1,12 @@
-﻿#pragma once
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "RMainMenu.generated.h"
 
+class UOverlay;
 class URPlayerName;
 class URLeaderboard;
 class UButton;
@@ -20,22 +23,19 @@ protected:
 	TSubclassOf<UUserWidget> PlayerNameBP;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> OptionsMenuBP;
-
-	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> LeaderboardBP;
 
 	UPROPERTY()
 	URPlayerName* PlayerNameWidget;
 
 	UPROPERTY()
-	class UROptionsMenu* OptionsWidget;
-
-	UPROPERTY()
 	URLeaderboard* LeaderboardWidget;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UButton* PlayButton;
+	UButton* NewGameButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* ContinueButton;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* OptionsButton;
@@ -46,6 +46,22 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* QuitButton;
 
+	//Continue Menu
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UOverlay* ContinueOverlay;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* ContinueAcceptedButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* NewGameAcceptedButton;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* ContinueBackButton;
+
+	//////////////////////////////////////////////////////////////
+	
 	UPROPERTY()
 	APlayerController* PlayerController;
 
@@ -56,11 +72,17 @@ protected:
 	void OnPlayButtonClicked();
 
 	UFUNCTION()
-	void OnOptionsButtonClicked();
+	void OnContinueButtonClicked();
 
 	UFUNCTION()
 	void OnLeaderboardButtonClicked();
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
+
+	UFUNCTION()
+	void OnBackButtonClicked();
+
+	UFUNCTION()
+	void OnContinueAcceptButtonClicked();
 };

@@ -62,6 +62,10 @@ void ARageCharacter::BeginPlay()
 		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
 		RestartWidget->AddToViewport();
 		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
+		if (RestartWidgetRef)
+		{
+			RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		}
 	}
 
 	SavedMaxAcceleration = 3072.0;
@@ -81,6 +85,10 @@ void ARageCharacter::BeginPlay()
 		UUserWidget* PauseWidget = CreateWidget(GetWorld(),PauseWidgetBP);
 		PauseWidgetRef = Cast<URPauseWidget>(PauseWidget);
 		PauseWidget->AddToViewport();
+		if (PauseWidgetRef)
+		{
+			PauseWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		}
 	}
 
 	bIsAlive = true;
@@ -115,6 +123,10 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 		RestartWidgetRef->DeathText->SetText(DeathText);
 		GameInstance->DeathCount++;
 		RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		if (PauseWidgetRef)
+		{
+			PauseWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		}
 		GetWorld()->GetTimerManager().SetTimer(RestartWidgetRef->VisibilityTimer,[this]
 		{
 			RestartWidgetRef->PlayAnimation(RestartWidgetRef->RestartAnim);
@@ -180,6 +192,11 @@ void ARageCharacter::JumpTrigger()
 
 void ARageCharacter::PauseGame()
 {
+	if (!GameInstance->bCanPause)
+	{
+		return;
+	}
+	
 	if (PauseWidgetRef)
 	{
 		if (UGameplayStatics::IsGamePaused(this))
@@ -278,25 +295,11 @@ void ARageCharacter::TimeCounter(float DeltaSeconds)
 		if (GameInstance->bCanCountGameTime)
 		{
 			GameInstance->GameTimeVar += DeltaSeconds;
-
-			if (PauseWidgetRef && RestartWidgetRef)
-			{
-				PauseWidgetRef->GameTimeText->SetText(ConvertToTime(GameInstance->GameTimeVar));
-				RestartWidgetRef->GameTimeText->SetText(ConvertToTime(GameInstance->GameTimeVar));
-			}
 		}
 		
-		if (!GameInstance->bCanCountLevelTime)
+		if (GameInstance->bCanCountLevelTime)
 		{
-			return;
-		}
-	
-		GameInstance->TimeVar += DeltaSeconds;
-
-		if (PauseWidgetRef && RestartWidgetRef)
-		{
-			PauseWidgetRef->TimeText->SetText(ConvertToTime(GameInstance->TimeVar));
-			RestartWidgetRef->TimeText->SetText(ConvertToTime(GameInstance->TimeVar));
+			GameInstance->TimeVar += DeltaSeconds;
 		}
 	}
 }

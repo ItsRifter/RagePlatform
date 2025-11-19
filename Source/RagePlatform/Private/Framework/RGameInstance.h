@@ -27,6 +27,7 @@ struct FPlayerStats
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameClosed);
 
 UCLASS()
 class URGameInstance : public UGameInstance
@@ -39,6 +40,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGameRestart OnGameRestart;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGameClosed OnGameClosed;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGameEnd OnGameEnd;
@@ -59,6 +63,9 @@ public:
 	bool bCanLook;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bCanPause;
+
+	UPROPERTY(BlueprintReadWrite)
 	float TimeVar;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -72,6 +79,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 LevelNumber;
+	
+	UPROPERTY(BlueprintReadWrite)
+	FName LevelName;
 
 	UPROPERTY(BlueprintReadWrite)
 	FPlayerStats PlayerStats;

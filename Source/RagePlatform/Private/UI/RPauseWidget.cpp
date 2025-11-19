@@ -31,6 +31,7 @@ void URPauseWidget::OnMainMenuButtonClicked()
 	{
 		if (GameInstance)
 		{
+			GameInstance->OnGameClosed.Broadcast();
 			GameInstance->DeathCount = 0;
 			GameInstance->TimeVar = 0;
 			GameInstance->bCanCountLevelTime = false;
@@ -43,6 +44,8 @@ void URPauseWidget::OnMainMenuButtonClicked()
 
 void URPauseWidget::OnQuitButtonClicked()
 {
+	GameInstance->OnGameClosed.Broadcast();
+	
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this, PlayerController, QuitPreference, false);
 }
