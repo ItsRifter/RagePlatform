@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> LeaderboardBP;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> OptionsMenuBP;
+
 	UPROPERTY()
 	URPlayerName* PlayerNameWidget;
 
@@ -70,6 +73,9 @@ protected:
 
 	UFUNCTION()
 	void OnPlayButtonClicked();
+
+	UFUNCTION()
+	void OnOptionsButtonClicked();
 
 	UFUNCTION()
 	void OnContinueButtonClicked();

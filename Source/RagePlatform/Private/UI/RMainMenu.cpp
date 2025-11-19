@@ -16,9 +16,14 @@ void URMainMenu::NativeConstruct()
 
 	//Main Menu Buttons
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
 	NewGameButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
 	ContinueButton->OnClicked.AddDynamic(this, &URMainMenu::OnContinueButtonClicked);
+
+	OptionsButton->OnClicked.AddDynamic(this, &URMainMenu::OnOptionsButtonClicked);
+
 	LeaderboardButton->OnClicked.AddDynamic(this, &URMainMenu::OnLeaderboardButtonClicked);
+
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
 
 	//Continue Menu Buttons
@@ -41,6 +46,17 @@ void URMainMenu::OnPlayButtonClicked()
 void URMainMenu::OnContinueButtonClicked()
 {
 	ContinueOverlay->SetVisibility(ESlateVisibility::Visible);
+}
+
+void URMainMenu::OnOptionsButtonClicked()
+{
+	if (OptionsMenuBP != nullptr)
+	{
+		UUserWidget* TempWidget = CreateWidget(GetWorld(), OptionsMenuBP);
+		TempWidget->AddToViewport();
+		//OptionsWidget = Cast<UROptionsMenu>(TempWidget);
+		RemoveFromParent();
+	}
 }
 
 void URMainMenu::OnLeaderboardButtonClicked()
