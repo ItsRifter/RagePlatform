@@ -62,6 +62,7 @@ void URPlayerName::OnSubmitButtonClicked()
 	if (GameLevelName != NAME_None && !GameInstance->PlayerName.IsEmpty())
 	{
 		ClearProgressSaveGame();
+		GameInstance->bContinueClicked = false;
 		UGameplayStatics::OpenLevel(this, GameLevelName, true);
 
 		const FInputModeGameOnly InputModeGameOnly;

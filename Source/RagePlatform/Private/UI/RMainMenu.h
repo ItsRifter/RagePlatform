@@ -52,9 +52,6 @@ protected:
 	UOverlay* ContinueOverlay;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UButton* ContinueAcceptedButton;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UButton* NewGameAcceptedButton;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -82,7 +79,4 @@ protected:
 
 	UFUNCTION()
 	void OnBackButtonClicked();
-
-	UFUNCTION()
-	void OnContinueAcceptButtonClicked();
 };

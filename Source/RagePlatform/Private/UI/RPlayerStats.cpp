@@ -9,42 +9,6 @@
 void URPlayerStats::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if (PlayerNameButton)
-	{
-		PlayerNameButton->OnClicked.AddDynamic(this, &URPlayerStats::PlayDropDownAnimation);
-	}
-}
-
-void URPlayerStats::PlayDropDownAnimation()
-{
-	if (!IsAnimationPlaying(DropDown))
-	{
-		if (bOpened)
-		{
-			PlayAnimation(
-				DropDown,
-				0,
-				1,
-				EUMGSequencePlayMode::Reverse
-				,1,
-				false);
-
-			bOpened = false;
-		}
-		else
-		{
-			PlayAnimation(
-				DropDown,
-				0,
-				1,
-				EUMGSequencePlayMode::Forward
-				,1,
-				false);
-
-			bOpened = true;
-		}
-	}
 }
 
 void URPlayerStats::SetAllStats(const FText PlayerName, const FText Deaths, const FText LvlOneTime, const FText LvlTwoTime, const FText LvlThreeTime,
