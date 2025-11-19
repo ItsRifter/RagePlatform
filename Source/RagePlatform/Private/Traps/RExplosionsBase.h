@@ -22,7 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(VisibleDefaultsOnly)
@@ -48,6 +48,12 @@ protected:
 										AActor* OtherActor, UPrimitiveComponent* OtherComp,
 										int32 OtherBodyIndex, bool bFromSweep,
 										const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPlayerKill();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DecalVisible();
 
 	UFUNCTION()
 	void OnRestartDelegate();
