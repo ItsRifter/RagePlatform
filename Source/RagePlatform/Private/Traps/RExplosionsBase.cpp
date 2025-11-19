@@ -2,8 +2,7 @@
 
 
 #include "RExplosionsBase.h"
-
-#include "Audio/VoicePlayer.h"
+#include "Traps/TrapEnum.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,7 +10,6 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
-#include "Traps/TrapEnum.h"
 
 // Sets default values
 ARExplosionsBase::ARExplosionsBase()
@@ -47,6 +45,8 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
                                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
                                                       bool bFromSweep, const FHitResult& SweepResult)
 {
+	OnPlayerKill();
+
 	if (ARageCharacter* PlayerCharacter = Cast<ARageCharacter>(OtherActor))
 	{
 		if (!PlayerCharacter->bIsAlive)
@@ -54,10 +54,6 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			return;
 		}
 		
-		PlayerCharacter->bIsAlive = false;
-		PlayerCharacter->OnDeath(ETrap::Explosion);
-		GameInstance->VoicelinePlayer->PlayQuip(ETrap::Explosion);
-
 		if (ExplosionSound)
 		{
 			UGameplayStatics::PlaySound2D(this, ExplosionSound);
@@ -88,7 +84,10 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			PlayerCharacter->Temp_Camera->StartFocus();
 		}
 
+		PlayerCharacter->OnDeath(ETrap::Explosion);
+
 		StaticMesh->SetVisibility(false);
+		DecalVisible();
 		StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		DeathOverlap->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -99,11 +98,14 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 
 void ARExplosionsBase::OnRestartDelegate()
 {
+	
+
 	if (ParticleSystemComponent)
 	{
 		ParticleSystemComponent->DestroyComponent();
 	}
 	StaticMesh->SetVisibility(true);
+	DecalVisible();
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	DeathOverlap->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
