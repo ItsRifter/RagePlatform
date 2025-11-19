@@ -68,6 +68,8 @@ void URRestartWidget::OnMainMenuButtonClicked()
 
 void URRestartWidget::OnQuitButtonClicked()
 {
+	GameInstance->OnGameClosed.Broadcast();
+	
 	const TEnumAsByte<EQuitPreference::Type> QuitPreference = EQuitPreference::Quit;
 	UKismetSystemLibrary::QuitGame(this,PlayerController,QuitPreference,false);
 }

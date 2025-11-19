@@ -66,6 +66,9 @@ public:
 	bool bCanLook;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bCanPause;
+
+	UPROPERTY(BlueprintReadWrite)
 	float TimeVar;
 
 	UPROPERTY(BlueprintReadWrite)
