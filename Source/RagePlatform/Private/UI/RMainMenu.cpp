@@ -27,7 +27,6 @@ void URMainMenu::NativeConstruct()
 	QuitButton->OnClicked.AddDynamic(this, &URMainMenu::OnQuitButtonClicked);
 
 	//Continue Menu Buttons
-	ContinueAcceptedButton->OnClicked.AddDynamic(this, &URMainMenu::OnContinueAcceptButtonClicked);
 	NewGameAcceptedButton->OnClicked.AddDynamic(this, &URMainMenu::OnPlayButtonClicked);
 	ContinueBackButton->OnClicked.AddDynamic(this, &URMainMenu::OnBackButtonClicked);
 }
@@ -82,9 +81,4 @@ void URMainMenu::OnQuitButtonClicked()
 void URMainMenu::OnBackButtonClicked()
 {
 	ContinueOverlay->SetVisibility(ESlateVisibility::Hidden);
-}
-
-void URMainMenu::OnContinueAcceptButtonClicked()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, "Continue");
 }
