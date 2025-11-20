@@ -73,7 +73,6 @@ void URPlayerName::OnSubmitButtonClicked()
 
 void URPlayerName::OnBackButtonClicked()
 {
-	
 	if (MainMenuBP != nullptr)
 	{
 		UUserWidget* TempWidget = CreateWidget(GetWorld(), MainMenuBP);
