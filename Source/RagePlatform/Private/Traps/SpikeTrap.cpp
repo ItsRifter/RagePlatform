@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Traps/SpikeTrap.h"
-
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Traps/SpikeTrap.h"
+#include "TrapEnums.h"
 
 ASpikeTrap::ASpikeTrap()
 {

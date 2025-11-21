@@ -2,7 +2,7 @@
 
 
 #include "RExplosionsBase.h"
-#include "Traps/TrapEnum.h"
+#include "TrapEnums.h"
 #include "Components/BoxComponent.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -84,7 +84,7 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			PlayerCharacter->Temp_Camera->StartFocus();
 		}
 
-		PlayerCharacter->OnDeath(ETrap::Explosion);
+		
 
 		StaticMesh->SetVisibility(false);
 		DecalVisible();

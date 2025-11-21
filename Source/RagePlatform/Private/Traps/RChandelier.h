@@ -53,7 +53,7 @@ protected:
 	FRotator StartRotation;
 
 	UPROPERTY()
-	class URGameInstance* GameInstance;
+	class  URGameInstance* GameInstance;
 
 	UFUNCTION()
 	void OnDeathDelegate(const FText& DeathText);

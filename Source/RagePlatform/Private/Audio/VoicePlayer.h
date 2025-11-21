@@ -21,9 +21,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY()
-	class URGameInstance* GameInstance;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Quips")
 	TArray<USoundBase*> SpikeQuips;
 
@@ -45,9 +42,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Quips")
 	TArray<USoundBase*> ExplosionQuips;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Quips")
-	TArray<USoundBase*> ArrowQuips;
-
 	UPROPERTY()
 	bool bWaitTimer;
 
@@ -59,10 +53,7 @@ protected:
 
 public:
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bCanPlay;
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void PlayQuip(ETrap QuipToPlay);
 
 private:

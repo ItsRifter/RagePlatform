@@ -1,16 +1,11 @@
-
-#include "Traps/SwingingTrap.h"
-
-#include "Audio/VoicePlayer.h"
 #include "Components/BoxComponent.h"
+#include "TrapEnums.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Curves/CurveFloat.h" 
-#include "Framework/RGameInstance.h"
 #include "Player/RageCharacter.h"
 #include "Player/RTempCamera.h"
 #include "Traps/SwingingTrap.h"
-#include "Traps/TrapEnum.h"
 
 ASwingingTrap::ASwingingTrap()
 {
@@ -103,7 +98,6 @@ void ASwingingTrap::KillPlayer(ARageCharacter* Player)
 {
 	Super::KillPlayer(Player);
 	Player->OnDeath(ETrap::Axe);
-	GameInstance->VoicelinePlayer->PlayQuip(ETrap::Axe);
 
 	float CurRoll = FMath::Abs(GetRootComponent()->GetRelativeRotation().Roll);
 
