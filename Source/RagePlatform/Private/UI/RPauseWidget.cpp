@@ -39,6 +39,7 @@ void URPauseWidget::OnMainMenuButtonClicked()
 			GameInstance->bCanCountGameTime = false;
 			GameInstance->bIsEasyMode = false;
 		}
+
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}
 }

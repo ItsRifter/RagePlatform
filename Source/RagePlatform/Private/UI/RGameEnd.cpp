@@ -27,8 +27,6 @@ void URGameEnd::OnMainMenuButtonClicked()
 		GameInstance->bIsEasyMode = false;
 		GameInstance->DeathCount = 0;
 
-		GameInstance->OnGameClosed.Broadcast();
-
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}
 }
