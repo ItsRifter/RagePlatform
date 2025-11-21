@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* GameTime;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsOnEasy;
+
 	bool bOpened;
 	
 public:

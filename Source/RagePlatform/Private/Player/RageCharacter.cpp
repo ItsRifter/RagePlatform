@@ -153,7 +153,8 @@ void ARageCharacter::OnGameEndDelegate()
 		TempPlayerStats.LevelTime = GameInstance->PlayerStats.LevelTime;
 		TempPlayerStats.DeathCount = FString::FromInt(GameInstance->DeathCount);
 		TempPlayerStats.GameTime = GameInstance->GameTimeVar;
-		
+		TempPlayerStats.bIsEasyMode = GameInstance->bIsEasyMode;
+
 		GameInstance->PlayerStats = TempPlayerStats;
 		SaveGame(GameInstance->PlayerStats);
 

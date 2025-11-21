@@ -22,6 +22,9 @@ struct FPlayerStats
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float GameTime = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsEasyMode = false;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);

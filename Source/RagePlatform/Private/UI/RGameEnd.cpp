@@ -6,6 +6,7 @@
 #include "RLeaderboard.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
+#include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void URGameEnd::NativeConstruct()
@@ -22,6 +23,12 @@ void URGameEnd::OnMainMenuButtonClicked()
 {
 	if (MainMenuLevelName != NAME_None)
 	{
+		URGameInstance* GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
+		GameInstance->bIsEasyMode = false;
+		GameInstance->DeathCount = 0;
+
+		GameInstance->OnGameClosed.Broadcast();
+
 		UGameplayStatics::OpenLevel(this, MainMenuLevelName, true);
 	}
 }
