@@ -46,12 +46,10 @@ protected:
 	void OnQuitButtonClicked();
 
 public:
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* TimeText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* GameTimeText;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* PauseText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* DeathsCountText;
 };

@@ -46,16 +46,6 @@ void ACheckpoint::BeginPlay()
 void ACheckpoint::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-
-    // Only assign and increment if we are running in the game world
-    /*if (GetWorld() && GetWorld()->IsGameWorld())
-    {
-        CheckpointIndex = NextCheckpointIndex;
-
-        NextCheckpointIndex++;
-
-        UE_LOG(LogTemp, Warning, TEXT("Runtime Checkpoint assigned index: %d"), CheckpointIndex);
-    }*/
 }
 
 void ACheckpoint::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 

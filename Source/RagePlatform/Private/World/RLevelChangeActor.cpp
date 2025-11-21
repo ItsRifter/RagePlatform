@@ -65,7 +65,6 @@ void ARLevelChangeActor::OnComponentBeginOverlap(UPrimitiveComponent* Overlapped
 			{
 				PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 				PlayerCharacter->GetCharacterMovement()->MaxAcceleration = 0.f;
-				PlayerCharacter->bRestrictMouse = true;
 			}
 			
 			PlayerController->PlayerCameraManager->StartCameraFade(
@@ -85,7 +84,6 @@ void ARLevelChangeActor::OpenNextLevel()
 	{
 		if (NextLevel.ToString().Contains("MainMenu"))
 		{
-			GameInstance->OnGameEnd.Broadcast();
 			GameInstance->GameTimeVar = 0;
 		}
 		ARagePlatGame* GameMode = Cast<ARagePlatGame>(UGameplayStatics::GetGameMode(this));

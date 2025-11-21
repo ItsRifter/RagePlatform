@@ -19,8 +19,8 @@ class RAGEPLATFORM_API URPlayerStats : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UButton* PlayerNameButton;
+	/*UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UButton* PlayerNameButton;*/
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* PlayerNameText;
@@ -46,14 +46,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* GameTime;
 
-	UPROPERTY(meta = (BindWidgetAnim), BlueprintReadWrite, Transient)
-	UWidgetAnimation* DropDown;
-
 	bool bOpened;
 	
 public:
-	UFUNCTION(BlueprintCallable)
-	void PlayDropDownAnimation();
+	UPROPERTY(BlueprintReadWrite)
+	float GameTimeFloat;
 
 	UFUNCTION(BlueprintCallable)
 	void SetAllStats(
@@ -64,6 +61,7 @@ public:
 		FText LvlThreeTime,
 		FText LvlFourTime,
 		FText LvlFiveTime,
-		FText GameTimeText
+		FText GameTimeText,
+		float InGameTimeFloat
 	);
 };

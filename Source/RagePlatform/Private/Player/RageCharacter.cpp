@@ -41,6 +41,10 @@ void ARageCharacter::BeginPlay()
 	{
 		GameInstance->OnDeath.AddDynamic(this, &ARageCharacter::OnDeathDelegate);
 		GameInstance->OnGameRestart.AddDynamic(this, &ARageCharacter::OnRestartDelegate);
+		GameInstance->OnGameEnd.AddDynamic(this, &ARageCharacter::OnGameEndDelegate);
+		GameInstance->bCanCountLevelTime = false;
+		GameInstance->bCanCountGameTime = false;
+		GameInstance->bCanLook = false;
 	}
 
 	PlayerController = Cast<APlayerController>(Controller);
@@ -58,27 +62,17 @@ void ARageCharacter::BeginPlay()
 		RestartWidget = CreateWidget(GetWorld(), RestartWidgetBP);
 		RestartWidget->AddToViewport();
 		RestartWidgetRef = Cast<URRestartWidget>(RestartWidget);
+		if (RestartWidgetRef)
+		{
+			RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		}
 	}
 
-	UCharacterMovementComponent* MovementComp = nullptr;
-
-	if (PlayerController->GetCharacter())
-	{
-		MovementComp = PlayerController->GetCharacter()->GetCharacterMovement();
-	}
-
-	if (MovementComp)
-	{
-		SavedMaxAcceleration = MovementComp->MaxAcceleration;
-	}
-	else 
-	{
-		SavedMaxAcceleration = 3072.0;
-	}
-
-
+	SavedMaxAcceleration = 3072.0;
+	
 	StartLocation = GetActorLocation();
 	StartRotation = GetActorRotation();
+	
 	if (PlayerController)
 	{
 		StartControllerRotation = PlayerController->GetControlRotation();
@@ -91,6 +85,10 @@ void ARageCharacter::BeginPlay()
 		UUserWidget* PauseWidget = CreateWidget(GetWorld(),PauseWidgetBP);
 		PauseWidgetRef = Cast<URPauseWidget>(PauseWidget);
 		PauseWidget->AddToViewport();
+		if (PauseWidgetRef)
+		{
+			PauseWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		}
 	}
 
 	bIsAlive = true;
@@ -125,6 +123,10 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 		RestartWidgetRef->DeathText->SetText(DeathText);
 		GameInstance->DeathCount++;
 		RestartWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		if (PauseWidgetRef)
+		{
+			PauseWidgetRef->DeathsCountText->SetText(FText::AsNumber(GameInstance->DeathCount));
+		}
 		GetWorld()->GetTimerManager().SetTimer(RestartWidgetRef->VisibilityTimer,[this]
 		{
 			RestartWidgetRef->PlayAnimation(RestartWidgetRef->RestartAnim);
@@ -138,7 +140,27 @@ void ARageCharacter::OnDeathDelegate(const FText& DeathText)
 void ARageCharacter::OnRestartDelegate()
 {
 	bRestrictKeyboard = false;
+	GetCharacterMovement()->MaxAcceleration = SavedMaxAcceleration;
 	Respawn();
+}
+
+void ARageCharacter::OnGameEndDelegate()
+{
+	if (GameInstance)
+	{
+		FPlayerStats TempPlayerStats;
+		TempPlayerStats.PlayerName = GameInstance->PlayerStats.PlayerName;
+		TempPlayerStats.LevelTime = GameInstance->PlayerStats.LevelTime;
+		TempPlayerStats.DeathCount = FString::FromInt(GameInstance->DeathCount);
+		TempPlayerStats.GameTime = GameInstance->GameTimeVar;
+		
+		GameInstance->PlayerStats = TempPlayerStats;
+		SaveGame(GameInstance->PlayerStats);
+
+		const FPlayerStats EmptyPlayerStat;
+		GameInstance->PlayerStats = EmptyPlayerStat;
+		GameInstance->LevelNumber = 0;
+	}
 }
 
 void ARageCharacter::Move(const FInputActionValue& Value)
@@ -170,6 +192,11 @@ void ARageCharacter::JumpTrigger()
 
 void ARageCharacter::PauseGame()
 {
+	if (!GameInstance->bCanPause)
+	{
+		return;
+	}
+	
 	if (PauseWidgetRef)
 	{
 		if (UGameplayStatics::IsGamePaused(this))
@@ -196,7 +223,7 @@ void ARageCharacter::PauseGame()
 
 void ARageCharacter::Look(const FInputActionValue& Value)
 {
-	if (bRestrictMouse)
+	if (!GameInstance->bCanLook)
 	{
 		return;
 	}
@@ -220,8 +247,6 @@ void ARageCharacter::RestartMenu()
 
 		GetCharacterMovement()->MaxAcceleration = 0.f;
 		GetCharacterMovement()->StopMovementImmediately();
-
-		bRestrictKeyboard = true;
 
 		const FInputModeUIOnly InputModeDataUI;
 		PlayerController->SetInputMode(InputModeDataUI);
@@ -251,46 +276,30 @@ void ARageCharacter::CameraShake() const
 	}
 }
 
-void ARageCharacter::TimeCounter(float DeltaSeconds) const
+FText ARageCharacter::ConvertToTime(const float TimeFloat)
+{
+	const int32 TotalSeconds = FMath::FloorToInt(TimeFloat);
+	const int32 Minutes = (TotalSeconds % 3600) / 60;
+	const int32 Seconds = TotalSeconds % 60;
+	const int32 Milliseconds = FMath::RoundToInt((TimeFloat - TotalSeconds) * 100.0f);
+
+	const FString TimeString = FString::Printf(TEXT("%02d:%02d:%02d"), Minutes, Seconds, Milliseconds);
+
+	return FText::FromString(TimeString);
+}
+
+void ARageCharacter::TimeCounter(float DeltaSeconds)
 {
 	if (GameInstance)
 	{
 		if (GameInstance->bCanCountGameTime)
 		{
 			GameInstance->GameTimeVar += DeltaSeconds;
-
-			const int32 GameTotalSeconds = FMath::FloorToInt(GameInstance->GameTimeVar);
-			const int32 GameMinutes = (GameTotalSeconds % 3600) / 60;
-			const int32 GameSeconds = GameTotalSeconds % 60;
-			const int32 GameMilliseconds = FMath::RoundToInt((GameInstance->GameTimeVar - GameTotalSeconds) * 100.0f);
-
-			const FString GameTimeString = FString::Printf(TEXT("%02d:%02d:%02d"), GameMinutes, GameSeconds, GameMilliseconds);
-
-			if (PauseWidgetRef && RestartWidgetRef)
-			{
-				PauseWidgetRef->GameTimeText->SetText(FText::FromString(GameTimeString));
-				RestartWidgetRef->GameTimeText->SetText(FText::FromString(GameTimeString));
-			}
 		}
 		
-		if (!GameInstance->bCanCountLevelTime)
+		if (GameInstance->bCanCountLevelTime)
 		{
-			return;
-		}
-	
-		GameInstance->TimeVar += DeltaSeconds;
-
-		const int32 TotalSeconds = FMath::FloorToInt(GameInstance->TimeVar);
-		const int32 Minutes = (TotalSeconds % 3600) / 60;
-		const int32 Seconds = TotalSeconds % 60;
-		const int32 Milliseconds = FMath::RoundToInt((GameInstance->TimeVar - TotalSeconds) * 100.0f);
-
-		const FString TimeString = FString::Printf(TEXT("%02d:%02d:%02d"), Minutes, Seconds, Milliseconds);
-
-		if (PauseWidgetRef && RestartWidgetRef)
-		{
-			PauseWidgetRef->TimeText->SetText(FText::FromString(TimeString));
-			RestartWidgetRef->TimeText->SetText(FText::FromString(TimeString));
+			GameInstance->TimeVar += DeltaSeconds;
 		}
 	}
 }

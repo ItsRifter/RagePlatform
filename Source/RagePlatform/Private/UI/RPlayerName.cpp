@@ -5,14 +5,13 @@
 
 #include "Components/Button.h"
 #include "Components/EditableText.h"
+#include "Components/SizeBox.h"
 #include "Framework/RGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void URPlayerName::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	GameLevelName = TEXT("Level1");
 
 	PlayerController = UGameplayStatics::GetPlayerController(this,0);
 	GameInstance = Cast<URGameInstance>(UGameplayStatics::GetGameInstance(this));
@@ -22,25 +21,48 @@ void URPlayerName::NativeConstruct()
 	
 	BackButton->OnClicked.AddDynamic(this,&URPlayerName::OnBackButtonClicked);
 	SubmitButton->OnClicked.AddDynamic(this, &URPlayerName::OnSubmitButtonClicked);
+
+	CheckSlotLengthFull();
+	WarningSizeBox->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void URPlayerName::TextCommitted(const FText& Text, ETextCommit::Type CommitMethod)
 {
-	if (GameInstance)
+	if (!bSlotFull)
 	{
-		GameInstance->PlayerName = Text;
-	}
+		if (Text.IsEmpty())
+		{
+			return;
+		}
+		
+		if (GameInstance)
+		{
+			GameInstance->PlayerName = Text;
+		}
 	
-	if (CommitMethod == ETextCommit::OnEnter)
-	{	
-		OnSubmitButtonClicked();
+		if (CommitMethod == ETextCommit::OnEnter)
+		{
+			OnSubmitButtonClicked();
+		}
+	}
+	else
+	{
+		WarningSizeBox->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
 void URPlayerName::OnSubmitButtonClicked()
 {
+	if (bSlotFull)
+	{
+		WarningSizeBox->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
+	
 	if (GameLevelName != NAME_None && !GameInstance->PlayerName.IsEmpty())
 	{
+		ClearProgressSaveGame();
+		GameInstance->bContinueClicked = false;
 		UGameplayStatics::OpenLevel(this, GameLevelName, true);
 
 		const FInputModeGameOnly InputModeGameOnly;
@@ -51,6 +73,7 @@ void URPlayerName::OnSubmitButtonClicked()
 
 void URPlayerName::OnBackButtonClicked()
 {
+	
 	if (MainMenuBP != nullptr)
 	{
 		UUserWidget* TempWidget = CreateWidget(GetWorld(), MainMenuBP);

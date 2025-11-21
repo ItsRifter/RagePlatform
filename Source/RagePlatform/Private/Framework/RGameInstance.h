@@ -21,16 +21,14 @@ struct FPlayerStats
 	FString DeathCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString GameTime;
+	float GameTime = 0;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, const FText&, DeathText);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameRestart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameClosed);
 
-/**
- * 
- */
 UCLASS()
 class URGameInstance : public UGameInstance
 {
@@ -42,6 +40,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGameRestart OnGameRestart;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGameClosed OnGameClosed;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGameEnd OnGameEnd;
@@ -59,10 +60,19 @@ public:
 	bool bCanCountGameTime;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bCanLook;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanPause;
+
+	UPROPERTY(BlueprintReadWrite)
 	float TimeVar;
 
 	UPROPERTY(BlueprintReadWrite)
 	float GameTimeVar;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bContinueClicked;
 
 	UPROPERTY(BlueprintReadOnly)
 	class AVoicePlayer* VoicelinePlayer;
@@ -72,9 +82,21 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 LevelNumber;
+	
+	UPROPERTY(BlueprintReadWrite)
+	FName LevelName;
 
 	UPROPERTY(BlueprintReadWrite)
 	FPlayerStats PlayerStats;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bUseDyslexicFont = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	class UFont* DefaultFont;
+
+	UPROPERTY(BlueprintReadWrite)
+	class UFont* DyslexicFont;
 
 	UFUNCTION(BlueprintCallable)
 	void SetOnPlayerDeath(const TArray<FText>& DeathText);
