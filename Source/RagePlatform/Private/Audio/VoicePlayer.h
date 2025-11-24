@@ -53,6 +53,9 @@ protected:
 
 public:
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanPlay;
+
 	UFUNCTION()
 	void PlayQuip(ETrap QuipToPlay);
 

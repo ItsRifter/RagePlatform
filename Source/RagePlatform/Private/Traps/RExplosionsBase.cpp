@@ -77,14 +77,13 @@ void ARExplosionsBase::OnComponentBeginOverlapKillBox(UPrimitiveComponent* Overl
 			true);*/
 
 		PlayerCharacter->PlayerFall(FVector(LaunchVelocity.X, LaunchVelocity.Y, 200.0f));
+		PlayerCharacter->OnDeath(ETrap::Explosion);
 
 		if (PlayerCharacter->Temp_Camera)
 		{
 			PlayerCharacter->Temp_Camera->FocusVar = this;
 			PlayerCharacter->Temp_Camera->StartFocus();
 		}
-
-		
 
 		StaticMesh->SetVisibility(false);
 		DecalVisible();
